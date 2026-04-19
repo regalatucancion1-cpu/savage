@@ -164,19 +164,24 @@ export default function Home() {
 
       {/* LEAVE THE STAGE — teaser */}
       <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] items-center">
+        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] items-center max-w-6xl">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
               Leave the stage
             </p>
-            <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
-              Sax, guitar, drums.
+            <h2 className="font-display mt-6 text-[2.25rem] md:text-[5rem] leading-[0.9] uppercase">
+              Sax. Guitar. Drums.
               <br />
-              <span className="text-savage-yellow">In the crowd.</span>
+              <span className="text-savage-yellow">Right in your face.</span>
             </h2>
-            <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-xl">
-              Mid-show, the musicians step off the stage and play next to your
-              guests. That&apos;s the move nobody films at a normal wedding.
+            <p className="mt-7 text-xl md:text-2xl text-savage-white/90 leading-[1.25] max-w-xl font-medium">
+              Mid-show the stage empties. The band walks straight into the
+              dancefloor and plays inches from your guests. Sweat, brass,
+              strobes, zero distance.
+            </p>
+            <p className="mt-4 text-base md:text-lg text-savage-white/70 leading-relaxed max-w-xl">
+              This is the three minutes everyone films. The reason the group
+              chat won&apos;t shut up the next morning.
             </p>
             <Link
               href="/what-we-do"
@@ -186,12 +191,12 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
+          <div className="relative aspect-[4/5] max-w-sm w-full mx-auto overflow-hidden rounded-2xl">
             <Image
               src="/sp1-vintage.jpg"
               alt="Savage Party — the band"
               fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
+              sizes="(min-width: 1024px) 30vw, 80vw"
               className="object-cover object-center"
             />
           </div>
