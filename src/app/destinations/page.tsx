@@ -1,0 +1,112 @@
+import Link from "next/link";
+import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Destinations · wedding DJ and live band across Spain",
+  description:
+    "Savage Party plays weddings across Barcelona, Valencia, Madrid and on request across Spain, the Balearic Islands, France, Italy and Portugal.",
+  alternates: { canonical: "/destinations" },
+};
+
+const MAIN_CITIES = ["Barcelona", "Valencia", "Madrid"];
+
+const ON_REQUEST = [
+  "Costa Brava",
+  "Sitges",
+  "Marbella",
+  "Ibiza",
+  "Mallorca",
+  "Menorca",
+  "South of France",
+  "Italy",
+  "Portugal",
+];
+
+export default function DestinationsPage() {
+  return (
+    <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
+      <header className="flex items-center justify-between border-b border-savage-white/10 px-6 py-5 md:px-14">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/logo-savage.png"
+            alt="Savage Party"
+            width={140}
+            height={40}
+            priority
+          />
+        </Link>
+        <Link
+          href="/build-your-show"
+          className="text-xs uppercase tracking-[0.3em] text-savage-yellow hover:underline"
+        >
+          Build your show →
+        </Link>
+      </header>
+
+      <section className="px-6 py-16 md:px-14 md:py-24">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          Where we play
+        </p>
+        <h1 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+          Barcelona, Valencia,
+          <br />
+          <span className="text-savage-yellow">Madrid and beyond.</span>
+        </h1>
+        <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
+          Based in Barcelona. Pricing applies to weddings within 50 km of
+          Barcelona. For venues further away, travel and logistics are priced
+          transparently once we know the exact location.
+        </p>
+      </section>
+
+      <section className="px-6 pb-20 md:px-14 md:pb-28 space-y-12">
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+            Main cities
+          </p>
+          <ul className="mt-4 grid gap-4 md:grid-cols-3">
+            {MAIN_CITIES.map((city) => (
+              <li
+                key={city}
+                className="rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-6 py-8 text-2xl font-medium"
+              >
+                {city}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+            Also on request
+          </p>
+          <ul className="mt-4 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
+            {ON_REQUEST.map((city) => (
+              <li
+                key={city}
+                className="rounded-xl border border-savage-white/10 px-5 py-4 text-savage-white/85"
+              >
+                {city}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-savage-white/60">
+          Don&apos;t see your venue? Ask us anyway. If the plane flies there,
+          we probably can too.
+        </p>
+      </section>
+
+      <footer className="border-t border-savage-white/10 px-6 py-10 md:px-14 mt-auto">
+        <div className="flex flex-wrap items-center justify-between gap-6 text-xs uppercase tracking-[0.3em] text-savage-white/60">
+          <span>© {new Date().getFullYear()} Savage Party · Barcelona</span>
+          <Link href="/" className="hover:text-savage-yellow">
+            Back home
+          </Link>
+        </div>
+      </footer>
+    </main>
+  );
+}
