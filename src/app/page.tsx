@@ -190,19 +190,18 @@ export default function Home() {
               Leave the stage
             </p>
             <h2 className="font-display mt-6 text-[2.25rem] md:text-[4.75rem] leading-[0.85] uppercase">
-              No stage.
+              The wedding
               <br />
-              No distance.
+              that feels
               <br />
-              <span className="text-savage-yellow">No filter.</span>
+              <span className="text-savage-yellow">like a club.</span>
             </h2>
             <p className="mt-8 text-lg md:text-xl text-savage-white/90 leading-[1.35] max-w-xl font-medium">
-              Halfway through, we walk off. Sax between your tables, drums
-              cutting through the middle, guitar six inches from your guests.
-              Phones up, throats shredded, sweat on the ceiling.
-            </p>
-            <p className="mt-4 text-base text-savage-white/70 leading-relaxed max-w-xl">
-              The night splits in two. Before this moment, and after.
+              Three hours, one continuous set. DJ and live band locked
+              together. Sax walks between your tables, drums roll through the
+              crowd, guitar plays from the middle of the floor. The energy
+              doesn&apos;t drop, the music doesn&apos;t stop, the dancefloor
+              doesn&apos;t empty until you say so.
             </p>
             <Link
               href="/what-we-do"
