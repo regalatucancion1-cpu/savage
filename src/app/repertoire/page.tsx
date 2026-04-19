@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
 
 export const metadata: Metadata = {
-  title: "Repertoire · the 2027 set list",
+  title: "Wedding setlist · Savage Party repertoire 2027",
   description:
-    "The Savage Party 2027 set list for weddings. Seven blocks: chill vibing, funky + 80's, international hits, rock & classic, drums show, hip hop & R&B, DJ selection.",
+    "Browse the Savage Party wedding repertoire. Hundreds of tracks across disco, funk, Latin pop, hip hop, R&B and rock classics. You pick the songs, we build the night.",
   alternates: { canonical: "/repertoire" },
 };
 
@@ -33,35 +33,31 @@ export default function RepertoirePage() {
 
       <section className="px-6 py-16 md:px-14 md:py-24">
         <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-          The repertoire
+          Wedding repertoire · 2027
         </p>
         <h1 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
-          The 2027 set list.
+          The library.
           <br />
-          <span className="text-savage-yellow">Seven blocks, one night.</span>
+          <span className="text-savage-yellow">Your call.</span>
         </h1>
         <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
-          This is our current set list. Every show is built from these blocks
-          and tuned to your crowd. Pick what you love, flag what you don&apos;t
-          want, and we&apos;ll handle the order.
+          Everything we play at weddings, grouped by style so it&apos;s easy to
+          browse. The show is not split into fixed blocks, you pick the songs
+          you love and flag what you don&apos;t. We read the floor and handle
+          the order on the night.
         </p>
       </section>
 
       <section className="px-6 pb-24 md:px-14 md:pb-32">
         <div className="grid gap-6 md:grid-cols-2">
-          {REPERTOIRE_CATEGORIES.map((cat, i) => (
-            <div
+          {REPERTOIRE_CATEGORIES.map((cat) => (
+            <article
               key={cat.id}
               className="rounded-3xl border border-savage-white/10 bg-savage-ink/30 p-7"
             >
-              <div className="flex items-baseline gap-3">
-                <span className="font-display text-2xl text-savage-yellow">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h2 className="text-lg md:text-xl font-medium text-savage-white">
-                  {cat.title}
-                </h2>
-              </div>
+              <h2 className="text-lg md:text-xl font-medium text-savage-yellow uppercase tracking-[0.15em]">
+                {cat.title}
+              </h2>
               <ul className="mt-5 space-y-2 text-savage-white/80 leading-relaxed">
                 {cat.songs.map((song) => (
                   <li key={song} className="text-sm md:text-base">
@@ -69,13 +65,13 @@ export default function RepertoirePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </article>
           ))}
         </div>
 
         <p className="mt-10 text-savage-white/60 text-sm max-w-2xl">
-          The DJ selection can be extended with your suggestions. Between
-          blocks, the DJ keeps the room moving so the night never drops.
+          Missing a song? Add it in the planner. The DJ selection extends with
+          your suggestions, and the night never drops between your picks.
         </p>
 
         <div className="mt-10">

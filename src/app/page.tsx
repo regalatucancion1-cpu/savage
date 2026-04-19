@@ -13,10 +13,30 @@ const BLOG_TEASERS = POSTS.slice(0, 3).map((p) => ({
   excerpt: p.excerpt,
 }));
 
-const REPERTOIRE_TEASERS = REPERTOIRE_CATEGORIES.slice(0, 3).map((c) => ({
-  title: c.title,
-  songs: c.songs.slice(0, 4),
-}));
+const REPERTOIRE_TAGS = [
+  "Funk",
+  "Disco",
+  "Latin pop",
+  "Hip hop",
+  "R&B",
+  "Rock classics",
+  "80's",
+  "House",
+];
+
+const REPERTOIRE_SAMPLE = [
+  "Uptown Funk — Bruno Mars",
+  "Don't Stop 'Til You Get Enough — Michael Jackson",
+  "Espresso — Sabrina Carpenter",
+  "Crazy in Love — Beyoncé",
+  "Mr Brightside — The Killers",
+  "Temperature — Sean Paul",
+  "September — Earth, Wind & Fire",
+  "Tití Me Preguntó — Bad Bunny",
+  "Levitating — Dua Lipa",
+  "Superstition — Stevie Wonder",
+];
+void REPERTOIRE_CATEGORIES;
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -162,43 +182,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LEAVE THE STAGE — teaser */}
+      {/* LEAVE THE STAGE — cinematic strip */}
       <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] items-center max-w-6xl">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-              Leave the stage
-            </p>
-            <h2 className="font-display mt-6 text-[2.25rem] md:text-[5rem] leading-[0.9] uppercase">
-              Sax. Guitar. Drums.
-              <br />
-              <span className="text-savage-yellow">Right in your face.</span>
-            </h2>
-            <p className="mt-7 text-xl md:text-2xl text-savage-white/90 leading-[1.25] max-w-xl font-medium">
-              Mid-show the stage empties. The band walks straight into the
-              dancefloor and plays inches from your guests. Sweat, brass,
-              strobes, zero distance.
-            </p>
-            <p className="mt-4 text-base md:text-lg text-savage-white/70 leading-relaxed max-w-xl">
-              This is the three minutes everyone films. The reason the group
-              chat won&apos;t shut up the next morning.
+        <div className="max-w-4xl">
+          <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+            Leave the stage
+          </p>
+          <h2 className="font-display mt-6 text-[2.25rem] md:text-[5.25rem] leading-[0.85] uppercase">
+            Sax. Guitar. Drums.
+            <br />
+            <span className="text-savage-yellow">Right in your face.</span>
+          </h2>
+        </div>
+
+        <div className="mt-12 relative aspect-[21/9] w-full overflow-hidden rounded-3xl border border-savage-white/10">
+          <Image
+            src="/sp1-vintage.jpg"
+            alt="Savage Party live on the dancefloor"
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_30%]"
+            priority={false}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-savage-black via-savage-black/40 to-transparent" />
+          <div
+            className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none"
+            style={{
+              backgroundImage:
+                "radial-gradient(rgba(255,255,255,0.7) 0.5px, transparent 0.5px)",
+              backgroundSize: "3px 3px",
+            }}
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 bottom-0 p-6 md:p-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+            <p className="max-w-xl text-lg md:text-2xl leading-[1.25] text-savage-white font-medium">
+              Mid-show the stage empties. The band walks into the dancefloor
+              and plays inches from your guests. Sweat, brass, zero distance.
             </p>
             <Link
               href="/what-we-do"
-              className="mt-8 inline-flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
+              className="shrink-0 self-start md:self-auto inline-flex items-center gap-2 rounded-full border border-savage-yellow/60 bg-savage-black/50 px-5 py-2.5 text-xs uppercase tracking-[0.3em] text-savage-yellow backdrop-blur-sm hover:bg-savage-yellow hover:text-savage-ink transition"
             >
               How the night works →
             </Link>
-          </div>
-
-          <div className="relative aspect-[4/5] max-w-sm w-full mx-auto overflow-hidden rounded-2xl">
-            <Image
-              src="/sp1-vintage.jpg"
-              alt="Savage Party — the band"
-              fill
-              sizes="(min-width: 1024px) 30vw, 80vw"
-              className="object-cover object-center"
-            />
           </div>
         </div>
       </section>
@@ -249,49 +275,56 @@ export default function Home() {
         </div>
       </section>
 
-      {/* REPERTOIRE — teaser */}
+      {/* REPERTOIRE — library/menu, not blocks */}
       <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-24 md:px-14 md:py-32">
         <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
           Repertoire
         </p>
-        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
-          Seven blocks.
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+          Your songs.
           <br />
-          <span className="text-savage-yellow">Yours, curated.</span>
+          <span className="text-savage-yellow">Your call.</span>
         </h2>
-        <p className="mt-6 text-lg md:text-xl text-savage-cream/80 leading-relaxed max-w-2xl">
-          A taste of the 2027 set list. The full list lives on a separate page.
+        <p className="mt-6 text-lg md:text-xl text-savage-cream/85 leading-relaxed max-w-2xl">
+          Hundreds of tracks from disco, funk, Latin pop, hip hop and classic
+          rock. You mark what you love in the planner. We build the wedding
+          night around it.
         </p>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {REPERTOIRE_TEASERS.map((cat, i) => (
-            <div
-              key={cat.title}
-              className="rounded-3xl border border-savage-cream/10 bg-savage-black/30 p-7"
+        <ul className="mt-10 flex flex-wrap gap-2 max-w-3xl">
+          {REPERTOIRE_TAGS.map((tag) => (
+            <li
+              key={tag}
+              className="rounded-full border border-savage-cream/20 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-savage-cream/80"
             >
-              <div className="flex items-baseline gap-3">
-                <span className="font-display text-2xl text-savage-yellow">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <h3 className="text-lg font-medium text-savage-cream">
-                  {cat.title}
-                </h3>
-              </div>
-              <ul className="mt-4 space-y-2 text-sm text-savage-cream/80 leading-relaxed">
-                {cat.songs.map((s) => (
-                  <li key={s}>{s}</li>
-                ))}
-              </ul>
-            </div>
+              {tag}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-12 grid gap-x-10 gap-y-3 md:grid-cols-2 max-w-4xl">
+          {REPERTOIRE_SAMPLE.map((song) => (
+            <p
+              key={song}
+              className="border-b border-savage-cream/10 pb-3 text-savage-cream/90"
+            >
+              {song}
+            </p>
           ))}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-12 flex flex-wrap items-center gap-4">
           <Link
             href="/repertoire"
-            className="inline-flex items-center gap-2 rounded-full border border-savage-cream/40 px-6 py-3 text-sm uppercase tracking-[0.3em] text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
+            className="inline-flex items-center gap-2 rounded-full bg-savage-yellow px-6 py-3 text-sm font-semibold text-savage-ink hover:brightness-110 transition"
           >
-            See the full set list →
+            Browse the full library →
+          </Link>
+          <Link
+            href="/build-your-show"
+            className="text-xs uppercase tracking-[0.3em] text-savage-cream/70 hover:text-savage-yellow"
+          >
+            Build your setlist
           </Link>
         </div>
       </section>
