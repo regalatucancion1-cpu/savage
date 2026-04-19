@@ -194,7 +194,7 @@ export default function Home() {
               <br />
               that feels
               <br />
-              <span className="text-savage-yellow">like a club.</span>
+              <span className="text-savage-yellow">like a festival.</span>
             </h2>
             <p className="mt-8 text-lg md:text-xl text-savage-white/90 leading-[1.35] max-w-xl font-medium">
               Three hours, one continuous set. DJ and live band locked
