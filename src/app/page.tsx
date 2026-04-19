@@ -182,49 +182,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* LEAVE THE STAGE — cinematic strip */}
+      {/* LEAVE THE STAGE */}
       <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <div className="max-w-4xl">
-          <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-            Leave the stage
-          </p>
-          <h2 className="font-display mt-6 text-[2.25rem] md:text-[5.25rem] leading-[0.85] uppercase">
-            Sax. Guitar. Drums.
-            <br />
-            <span className="text-savage-yellow">Right in your face.</span>
-          </h2>
-        </div>
-
-        <div className="mt-12 relative aspect-[21/9] w-full overflow-hidden rounded-3xl border border-savage-white/10">
-          <Image
-            src="/sp1-vintage.jpg"
-            alt="Savage Party live on the dancefloor"
-            fill
-            sizes="100vw"
-            className="object-cover object-[center_30%]"
-            priority={false}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-savage-black via-savage-black/40 to-transparent" />
-          <div
-            className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none"
-            style={{
-              backgroundImage:
-                "radial-gradient(rgba(255,255,255,0.7) 0.5px, transparent 0.5px)",
-              backgroundSize: "3px 3px",
-            }}
-            aria-hidden
-          />
-          <div className="absolute inset-x-0 bottom-0 p-6 md:p-10 flex flex-col md:flex-row md:items-end md:justify-between gap-5">
-            <p className="max-w-xl text-lg md:text-2xl leading-[1.25] text-savage-white font-medium">
-              Mid-show the stage empties. The band walks into the dancefloor
-              and plays inches from your guests. Sweat, brass, zero distance.
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20 items-center max-w-6xl">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+              Leave the stage
+            </p>
+            <h2 className="font-display mt-6 text-[2.25rem] md:text-[4.75rem] leading-[0.9] uppercase">
+              At one point,
+              <br />
+              the stage
+              <br />
+              <span className="text-savage-yellow">goes quiet.</span>
+            </h2>
+            <p className="mt-8 text-lg md:text-xl text-savage-white/85 leading-relaxed max-w-xl">
+              Then the band walks into the room. Sax next to one table, drums
+              in the middle, guitar weaving between your guests. The music
+              stops happening in front of them and starts happening between
+              them.
             </p>
             <Link
               href="/what-we-do"
-              className="shrink-0 self-start md:self-auto inline-flex items-center gap-2 rounded-full border border-savage-yellow/60 bg-savage-black/50 px-5 py-2.5 text-xs uppercase tracking-[0.3em] text-savage-yellow backdrop-blur-sm hover:bg-savage-yellow hover:text-savage-ink transition"
+              className="mt-10 inline-flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
             >
               How the night works →
             </Link>
+          </div>
+
+          <div className="relative aspect-[4/5] max-w-sm w-full mx-auto overflow-hidden rounded-2xl">
+            <Image
+              src="/sp1-vintage.jpg"
+              alt="Savage Party live band Spain, sax player in the crowd at a destination wedding"
+              fill
+              sizes="(min-width: 1024px) 30vw, 80vw"
+              className="object-cover object-center"
+            />
           </div>
         </div>
       </section>
