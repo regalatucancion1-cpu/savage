@@ -181,11 +181,11 @@ export default function Home() {
 
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
             <Image
-              src="/sp11.jpg"
-              alt="Savage Party roaming into the crowd"
+              src="/sp1-vintage.jpg"
+              alt="Savage Party — the band"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
-              className="object-cover object-[center_25%]"
+              className="object-cover object-center"
             />
           </div>
         </div>
