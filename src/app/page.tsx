@@ -189,18 +189,20 @@ export default function Home() {
             <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
               Leave the stage
             </p>
-            <h2 className="font-display mt-6 text-[2.25rem] md:text-[4.75rem] leading-[0.9] uppercase">
-              At one point,
+            <h2 className="font-display mt-6 text-[2.25rem] md:text-[4.75rem] leading-[0.85] uppercase">
+              No stage.
               <br />
-              the stage
+              No distance.
               <br />
-              <span className="text-savage-yellow">goes quiet.</span>
+              <span className="text-savage-yellow">No filter.</span>
             </h2>
-            <p className="mt-8 text-lg md:text-xl text-savage-white/85 leading-relaxed max-w-xl">
-              Then the band walks into the room. Sax next to one table, drums
-              in the middle, guitar weaving between your guests. The music
-              stops happening in front of them and starts happening between
-              them.
+            <p className="mt-8 text-lg md:text-xl text-savage-white/90 leading-[1.35] max-w-xl font-medium">
+              Halfway through, we walk off. Sax between your tables, drums
+              cutting through the middle, guitar six inches from your guests.
+              Phones up, throats shredded, sweat on the ceiling.
+            </p>
+            <p className="mt-4 text-base text-savage-white/70 leading-relaxed max-w-xl">
+              The night splits in two. Before this moment, and after.
             </p>
             <Link
               href="/what-we-do"
