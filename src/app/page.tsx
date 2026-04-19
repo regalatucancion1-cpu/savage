@@ -1,7 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
+import { POSTS } from "@/content/posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
+
+const BLOG_TEASERS = POSTS.slice(0, 3).map((p) => ({
+  slug: p.slug,
+  category: p.category,
+  title: p.title,
+  excerpt: p.excerpt,
+}));
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -145,7 +153,7 @@ export default function Home() {
         <div className="relative grid gap-12 lg:grid-cols-[1fr_1.2fr] items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-              01 · The roaming
+              01 · Leave the stage
             </p>
             <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
               The band
@@ -190,20 +198,79 @@ export default function Home() {
         </div>
       </section>
 
-      {/* THE NIGHT — timeline */}
-      <section className="relative border-t border-savage-white/10 bg-savage-cream text-savage-ink px-6 py-24 md:px-14 md:py-32">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-ink/60">
-          02 · The night
+      {/* VIDEOS */}
+      <section id="live" className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          02 · Watch us live
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
-          Three hours after dinner.
+          The room, mid-song.
           <br />
-          <span className="text-savage-red">No filler.</span>
+          <span className="text-savage-yellow">Not a promo reel.</span>
         </h2>
-        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-ink/80">
-          Savage Party plays post-dinner only. We show up when the couple cuts
-          the cake and we don&apos;t stop until the floor is ours.
+        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
+          Unedited clips from real weddings. Different venues, different
+          crowds, same move: the band walks off the stage.
         </p>
+
+        <div className="mt-14 grid gap-5 md:grid-cols-2">
+          {[
+            { title: "Castell de Caramany", place: "Costa Brava · 2025" },
+            { title: "Ca's Patró March", place: "Mallorca · 2024" },
+            { title: "Hacienda Na Xamena", place: "Ibiza · 2024" },
+            { title: "Finca El Patio", place: "Marbella · 2024" },
+          ].map((v) => (
+            <figure
+              key={v.title}
+              className="group relative aspect-video overflow-hidden rounded-2xl border border-savage-white/10 bg-savage-ink/60"
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-savage-yellow/60 bg-savage-black/40 text-savage-yellow backdrop-blur-sm transition group-hover:scale-110">
+                  ▶
+                </span>
+              </div>
+              <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-savage-black/90 to-transparent p-5">
+                <span className="font-display uppercase text-lg">{v.title}</span>
+                <span className="text-xs uppercase tracking-[0.3em] text-savage-white/70">
+                  {v.place}
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        <p className="mt-8 text-savage-white/60">
+          Video placeholders. Real clips dropping soon. Ask for private links
+          with full songs and no watermarks.
+        </p>
+      </section>
+
+      {/* WHAT WE DO — explanation + timeline */}
+      <section className="relative border-t border-savage-white/10 bg-savage-cream text-savage-ink px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-ink/60">
+          03 · What we do
+        </p>
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+          A DJ. A live band.
+          <br />
+          <span className="text-savage-red">One continuous night.</span>
+        </h2>
+        <div className="mt-8 grid gap-10 lg:grid-cols-2">
+          <p className="text-lg md:text-xl text-savage-ink/85 leading-relaxed max-w-xl">
+            Savage Party is a DJ plus three live musicians, built for one job:
+            turn your post-dinner hours into a concert your guests will talk
+            about for years. We play after dinner only, three hours straight, no
+            filler. The DJ holds the groove, the band steps in and out. When
+            the sax, guitar and drums leave the stage, the dancefloor becomes
+            the stage.
+          </p>
+          <p className="text-lg md:text-xl text-savage-ink/85 leading-relaxed max-w-xl">
+            It&apos;s not a wedding band. It&apos;s not a DJ with add-ons. It&apos;s
+            one act, one sound, built around your taste and your crowd.
+            One hundred percent customisable, down to the last song, the last
+            cue, the first dance. You tell us what you love. We do the rest.
+          </p>
+        </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           <TimelineCard
@@ -225,10 +292,135 @@ export default function Home() {
         </div>
       </section>
 
+      {/* REPERTOIRE */}
+      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          04 · The repertoire
+        </p>
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+          Hundreds of tracks.
+          <br />
+          <span className="text-savage-yellow">Yours, curated.</span>
+        </h2>
+        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
+          Six decades, six genres. Funk, disco, Motown, house, Latin, pop.
+          Your setlist is built around what you love and what makes your crowd
+          move, not around a fixed repertoire.
+        </p>
+
+        <ul className="mt-14 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            "Superstition — Stevie Wonder",
+            "September — Earth, Wind & Fire",
+            "Don't Stop Me Now — Queen",
+            "Uptown Funk — Bruno Mars",
+            "Dance the Night — Dua Lipa",
+            "Get Lucky — Daft Punk",
+            "Mr Brightside — The Killers",
+            "Valerie — Amy Winehouse",
+            "Blinding Lights — The Weeknd",
+            "One Kiss — Calvin Harris",
+            "Pepas — Farruko",
+            "Bailando — Enrique Iglesias",
+          ].map((song) => (
+            <li
+              key={song}
+              className="rounded-xl border border-savage-white/10 bg-savage-ink/40 px-5 py-4 text-savage-white/90"
+            >
+              {song}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-8 flex flex-wrap gap-4 text-savage-white/70">
+          <span>·  Funk</span>
+          <span>·  Disco</span>
+          <span>·  Motown</span>
+          <span>·  House</span>
+          <span>·  Latin</span>
+          <span>·  Pop &amp; rock</span>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          05 · Couples say
+        </p>
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+          Real nights.
+          <br />
+          <span className="text-savage-yellow">Real words.</span>
+        </h2>
+
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          <Testimonial
+            quote="The moment the sax walked off the stage and came to us, the whole room lost it. Half our guests are still texting us about it."
+            name="Sarah &amp; James"
+            venue="Ibiza · 2024"
+          />
+          <Testimonial
+            quote="We wanted a DJ. We ended up with a show. Best decision of the whole wedding."
+            name="Clara &amp; Marc"
+            venue="Mallorca · 2024"
+          />
+          <Testimonial
+            quote="No filler, no cringe speeches, no karaoke. Three hours, the floor never emptied. Exactly what we asked for."
+            name="Anna &amp; Theo"
+            venue="Costa Brava · 2025"
+          />
+        </div>
+
+        <p className="mt-8 text-savage-cream/60 text-sm">
+          Placeholder quotes until the 2025 season reviews land. Ask us for
+          couple references, we&apos;ll put you directly in touch.
+        </p>
+      </section>
+
+      {/* FEATURED IN / BRANDS */}
+      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          06 · Featured in
+        </p>
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+          Venues, brands
+          <br />
+          <span className="text-savage-yellow">and the press.</span>
+        </h2>
+        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
+          A handful of the partners, venues and publications we&apos;ve played
+          with or been featured by.
+        </p>
+
+        <ul className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {[
+            "Vogue España",
+            "Tatler Spain",
+            "Condé Nast Traveller",
+            "Castell de Caramany",
+            "Hacienda Na Xamena",
+            "Ca's Patró March",
+            "Finca El Patio",
+            "Mas Marroch",
+          ].map((brand) => (
+            <li
+              key={brand}
+              className="flex items-center justify-center rounded-2xl border border-savage-white/10 bg-savage-ink/30 px-6 py-10 text-center text-sm uppercase tracking-[0.2em] text-savage-white/70"
+            >
+              {brand}
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-8 text-savage-white/50 text-sm">
+          Logos placeholder. Real marks go here once clearance confirmed.
+        </p>
+      </section>
+
       {/* WHERE — destinations */}
       <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
         <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-          03 · Where we play
+          07 · Where we play
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
           Destination weddings,
@@ -273,7 +465,7 @@ export default function Home() {
       {/* HOW IT WORKS */}
       <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-24 md:px-14 md:py-32">
         <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-          04 · How it works
+          08 · How it works
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
           Three steps.
@@ -297,6 +489,56 @@ export default function Home() {
             title="Customise the show"
             body="Private planner (not a form, a conversation with the band) to tune setlist, do-not-plays, first dance, special moments."
           />
+        </div>
+      </section>
+
+      {/* BLOG */}
+      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
+        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          09 · From the road
+        </p>
+        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+          Notes for couples
+          <br />
+          <span className="text-savage-yellow">planning a destination wedding.</span>
+        </h2>
+        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
+          Short, honest writing on music, timings, venues and how to keep the
+          dancefloor full. Read before you book anyone.
+        </p>
+
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {BLOG_TEASERS.map((p) => (
+            <Link
+              key={p.slug}
+              href={`/blog/${p.slug}`}
+              className="group flex flex-col rounded-3xl border border-savage-white/10 bg-savage-ink/30 overflow-hidden transition hover:border-savage-yellow/60"
+            >
+              <div className="aspect-[16/10] bg-gradient-to-br from-savage-ink to-savage-black border-b border-savage-white/5 flex items-center justify-center text-savage-white/20">
+                ■
+              </div>
+              <div className="p-6">
+                <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+                  {p.category}
+                </p>
+                <h3 className="font-display uppercase text-xl mt-3 leading-tight group-hover:text-savage-yellow transition">
+                  {p.title}
+                </h3>
+                <p className="mt-3 text-savage-white/70 text-sm leading-relaxed">
+                  {p.excerpt}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-10">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 rounded-full border border-savage-white/40 px-6 py-3 text-sm uppercase tracking-[0.3em] text-savage-white hover:border-savage-yellow hover:text-savage-yellow transition"
+          >
+            Read the blog →
+          </Link>
         </div>
       </section>
 
@@ -339,6 +581,9 @@ export default function Home() {
           <div className="flex gap-6">
             <Link href="/build-your-show" className="hover:text-savage-yellow">
               Build your show
+            </Link>
+            <Link href="/blog" className="hover:text-savage-yellow">
+              Blog
             </Link>
             <Link
               href="/design-system"
@@ -404,5 +649,34 @@ function HowStep({ n, title, body }: { n: string; title: string; body: string })
       <p className="font-display uppercase text-xl mt-4">{title}</p>
       <p className="mt-3 leading-relaxed text-savage-cream/80">{body}</p>
     </div>
+  );
+}
+
+function Testimonial({
+  quote,
+  name,
+  venue,
+}: {
+  quote: string;
+  name: string;
+  venue: string;
+}) {
+  return (
+    <figure className="rounded-3xl border border-savage-cream/10 bg-savage-black/40 p-8 flex flex-col">
+      <p className="font-display text-4xl text-savage-yellow leading-none">&ldquo;</p>
+      <blockquote
+        className="mt-2 text-lg leading-relaxed text-savage-cream/90"
+        dangerouslySetInnerHTML={{ __html: quote }}
+      />
+      <figcaption className="mt-6 pt-6 border-t border-savage-cream/10">
+        <p
+          className="font-display uppercase text-savage-cream"
+          dangerouslySetInnerHTML={{ __html: name }}
+        />
+        <p className="text-xs uppercase tracking-[0.3em] text-savage-cream/60 mt-1">
+          {venue}
+        </p>
+      </figcaption>
+    </figure>
   );
 }

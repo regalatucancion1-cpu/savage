@@ -347,11 +347,11 @@ function Shell({
       <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
         {overline}
       </p>
-      <h1 className="font-display uppercase text-3xl md:text-5xl mt-4 leading-[0.9]">
+      <h1 className="mt-4 text-3xl md:text-4xl leading-tight font-medium text-savage-white max-w-3xl">
         {title}
       </h1>
       {subtitle && (
-        <p className="font-editorial italic mt-4 text-lg md:text-xl text-savage-cream max-w-2xl">
+        <p className="mt-5 text-base md:text-lg text-savage-white/75 leading-relaxed max-w-2xl">
           {subtitle}
         </p>
       )}
@@ -474,7 +474,7 @@ function CheckboxGroup({
   return (
     <div>
       {title && (
-        <p className="font-display uppercase text-xl text-savage-yellow mb-4">
+        <p className="text-lg font-medium text-savage-white mb-4">
           {title}
         </p>
       )}
@@ -527,7 +527,7 @@ function RadioGroup({
             }`}
           >
             <span
-              className={`font-display uppercase ${
+              className={`text-base font-medium ${
                 active ? "text-savage-yellow" : "text-savage-white"
               }`}
             >
@@ -550,10 +550,10 @@ function Step1({ onNext }: { onNext: () => void }) {
       subtitle="Hey. We're so excited to be part of your night. This isn't just a form, it's the starting point of something epic. Takes about 10 minutes: pick your favourite songs, tell us your vibe, and we'll handle the rest."
     >
       <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-        <p className="font-display uppercase text-2xl text-savage-yellow">
+        <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
           Heads up before we start
         </p>
-        <ul className="mt-4 space-y-3 text-savage-cream/90 leading-relaxed">
+        <ul className="mt-4 space-y-3 text-savage-white/85 leading-relaxed">
           <li>· Your progress saves automatically on this device.</li>
           <li>· No wrong answers. If you&apos;re not sure, skip it.</li>
           <li>· The more honest your answers, the better your night.</li>
@@ -573,20 +573,19 @@ function Step2({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
     >
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-          <p className="font-display uppercase text-xl text-savage-yellow">
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
             What we bring
           </p>
-          <p className="mt-3 text-savage-cream/90 leading-relaxed">
-            DJ plus three live musicians, full PA, in-ear monitors, dancefloor
-            lighting if your venue needs it. We arrive early, soundcheck, and
-            the night runs on our cues.
+          <p className="mt-3 text-savage-white/85 leading-relaxed">
+            DJ plus three live musicians. Sax, guitar and drums that leave the
+            stage mid-show and play right inside your crowd.
           </p>
         </div>
         <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-          <p className="font-display uppercase text-xl text-savage-yellow">
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
             What we need from you
           </p>
-          <p className="mt-3 text-savage-cream/90 leading-relaxed">
+          <p className="mt-3 text-savage-white/85 leading-relaxed">
             Your taste, your crowd, your must-plays and your don&apos;t-plays.
             Bring energy. There are no wrong answers, just the ones that make
             the night yours.
@@ -678,7 +677,7 @@ function Step4({
     >
       <div className="space-y-10">
         <div>
-          <p className="font-display uppercase text-xl text-savage-yellow">
+          <p className="text-lg font-medium text-savage-white">
             Genres you love
           </p>
           <p className="text-savage-white/60 text-sm mt-1">Pick as many as you want.</p>
@@ -701,7 +700,7 @@ function Step4({
         />
 
         <div>
-          <p className="font-display uppercase text-xl text-savage-yellow">
+          <p className="text-lg font-medium text-savage-white">
             Music decades that define you
           </p>
           <div className="mt-4">
@@ -951,7 +950,7 @@ function Step10({ onNext, onBack }: { onNext: () => void; onBack: () => void }) 
       title="About the DJ coverage."
       subtitle="Two live sets plus DJ before, between and after. The transitions are seamless. You won't feel the band leaving the stage, because the DJ is already there."
     >
-      <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6 space-y-4 text-savage-cream/90 leading-relaxed">
+      <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6 space-y-4 text-savage-white/85 leading-relaxed">
         <p>
           When the band takes their 5-minute break mid-show, the DJ bridges it
           without breaking the energy. Same tone, same BPM range, same room.
@@ -961,7 +960,7 @@ function Step10({ onNext, onBack }: { onNext: () => void; onBack: () => void }) 
           That&apos;s when we take deeper requests from the room. The 1 or 2
           extra hours can be booked in the contract.
         </p>
-        <p className="font-editorial italic text-savage-yellow text-xl">
+        <p className="text-savage-yellow">
           We want to know everything. Even the weird stuff.
         </p>
       </div>
