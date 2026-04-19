@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { POSTS } from "@/content/posts";
+import { AudioPlayer } from "@/components/AudioPlayer";
+import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
 
@@ -28,12 +30,13 @@ const structuredData = {
         { "@type": "Person", name: "Christian Pujol", roles: "DJ" },
       ],
       areaServed: [
+        { "@type": "Place", name: "Barcelona" },
+        { "@type": "Place", name: "Valencia" },
+        { "@type": "Place", name: "Madrid" },
         { "@type": "Country", name: "Spain" },
         { "@type": "Place", name: "Ibiza" },
         { "@type": "Place", name: "Mallorca" },
         { "@type": "Place", name: "Costa Brava" },
-        { "@type": "Country", name: "France" },
-        { "@type": "Country", name: "Italy" },
       ],
     },
     {
@@ -48,8 +51,8 @@ const structuredData = {
         addressLocality: "Barcelona",
         addressCountry: "ES",
       },
-      telephone: "+34",
-      email: "chrislogz0@gmail.com",
+      telephone: ["+34681955024", "+34634038685"],
+      email: "contact@savageparty.es",
     },
   ],
 };
@@ -61,6 +64,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <AudioPlayer src="/dj-mix.mp3" label="Savage · DJ Mix" />
 
       {/* HERO */}
       <section className="relative flex min-h-screen flex-col overflow-hidden bg-savage-black">
@@ -175,25 +179,14 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="relative grid grid-cols-2 gap-3">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
-              <Image
-                src="/sp11.jpg"
-                alt="Savage Party roaming"
-                fill
-                sizes="(min-width: 1024px) 25vw, 50vw"
-                className="object-cover object-[center_25%]"
-              />
-            </div>
-            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl mt-10">
-              <Image
-                src="/sp8.jpg"
-                alt="Savage Party live"
-                fill
-                sizes="(min-width: 1024px) 25vw, 50vw"
-                className="object-cover object-[center_25%]"
-              />
-            </div>
+          <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
+            <Image
+              src="/sp11.jpg"
+              alt="Savage Party roaming into the crowd"
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover object-[center_25%]"
+            />
           </div>
         </div>
       </section>
@@ -298,48 +291,45 @@ export default function Home() {
           04 · The repertoire
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
-          Hundreds of tracks.
+          The 2027 setlist.
           <br />
-          <span className="text-savage-yellow">Yours, curated.</span>
+          <span className="text-savage-yellow">Seven blocks, one night.</span>
         </h2>
-        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
-          Six decades, six genres. Funk, disco, Motown, house, Latin, pop.
-          Your setlist is built around what you love and what makes your crowd
-          move, not around a fixed repertoire.
+        <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
+          This is our current set list. Every show is built from these blocks
+          and tuned to your crowd. Pick what you love, flag what you don&apos;t
+          want, and we&apos;ll handle the order.
         </p>
 
-        <ul className="mt-14 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {[
-            "Superstition — Stevie Wonder",
-            "September — Earth, Wind & Fire",
-            "Don't Stop Me Now — Queen",
-            "Uptown Funk — Bruno Mars",
-            "Dance the Night — Dua Lipa",
-            "Get Lucky — Daft Punk",
-            "Mr Brightside — The Killers",
-            "Valerie — Amy Winehouse",
-            "Blinding Lights — The Weeknd",
-            "One Kiss — Calvin Harris",
-            "Pepas — Farruko",
-            "Bailando — Enrique Iglesias",
-          ].map((song) => (
-            <li
-              key={song}
-              className="rounded-xl border border-savage-white/10 bg-savage-ink/40 px-5 py-4 text-savage-white/90"
+        <div className="mt-14 grid gap-6 md:grid-cols-2">
+          {REPERTOIRE_CATEGORIES.map((cat, i) => (
+            <div
+              key={cat.id}
+              className="rounded-3xl border border-savage-white/10 bg-savage-ink/30 p-7"
             >
-              {song}
-            </li>
+              <div className="flex items-baseline gap-3">
+                <span className="font-display text-2xl text-savage-yellow">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="text-lg md:text-xl font-medium text-savage-white">
+                  {cat.title}
+                </h3>
+              </div>
+              <ul className="mt-5 space-y-2 text-savage-white/80 leading-relaxed">
+                {cat.songs.map((song) => (
+                  <li key={song} className="text-sm md:text-base">
+                    {song}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
-
-        <div className="mt-8 flex flex-wrap gap-4 text-savage-white/70">
-          <span>·  Funk</span>
-          <span>·  Disco</span>
-          <span>·  Motown</span>
-          <span>·  House</span>
-          <span>·  Latin</span>
-          <span>·  Pop &amp; rock</span>
         </div>
+
+        <p className="mt-8 text-savage-white/60 text-sm">
+          The DJ selection can be extended with your suggestions. Between
+          blocks, the DJ keeps the room moving so the night never drops.
+        </p>
       </section>
 
       {/* TESTIMONIALS */}
@@ -423,38 +413,58 @@ export default function Home() {
           07 · Where we play
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
-          Destination weddings,
+          Barcelona, Valencia,
           <br />
-          <span className="text-savage-yellow">Mediterranean and beyond.</span>
+          <span className="text-savage-yellow">Madrid and beyond.</span>
         </h2>
-        <p className="font-editorial italic mt-6 text-xl md:text-2xl max-w-2xl text-savage-cream">
-          Based in Barcelona. We travel with full gear and in-ear monitors.
-          Travel is transparent, we don&apos;t hide it in packages.
+        <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
+          Based in Barcelona. We play weddings across Spain and travel on
+          request. Travel is transparent, we don&apos;t hide it in packages.
         </p>
 
-        <ul className="mt-14 grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {[
-            "Barcelona",
-            "Ibiza",
-            "Mallorca",
-            "Menorca",
-            "Costa Brava",
-            "Sitges",
-            "Valencia",
-            "Madrid",
-            "Marbella",
-            "South of France",
-            "Italy",
-            "Portugal",
-          ].map((city) => (
-            <li
-              key={city}
-              className="rounded-2xl border border-savage-white/10 px-5 py-4 text-lg"
-            >
-              {city}
-            </li>
-          ))}
-        </ul>
+        <div className="mt-14 space-y-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+              Main cities
+            </p>
+            <ul className="mt-4 grid gap-4 md:grid-cols-3">
+              {["Barcelona", "Valencia", "Madrid"].map((city) => (
+                <li
+                  key={city}
+                  className="rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-6 py-6 text-xl font-medium"
+                >
+                  {city}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+              Also on request
+            </p>
+            <ul className="mt-4 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
+              {[
+                "Costa Brava",
+                "Sitges",
+                "Marbella",
+                "Ibiza",
+                "Mallorca",
+                "Menorca",
+                "South of France",
+                "Italy",
+                "Portugal",
+              ].map((city) => (
+                <li
+                  key={city}
+                  className="rounded-xl border border-savage-white/10 px-5 py-3 text-savage-white/85"
+                >
+                  {city}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
         <p className="mt-8 text-savage-white/60">
           Don&apos;t see your venue? Ask us anyway. If the plane flies there, we
@@ -565,7 +575,7 @@ export default function Home() {
               Build your show →
             </Link>
             <a
-              href="mailto:chrislogz0@gmail.com?subject=Savage%20Party%20booking%20inquiry"
+              href="mailto:contact@savageparty.es?subject=Savage%20Party%20booking%20inquiry"
               className="rounded-full border border-savage-white/40 px-7 py-4 text-savage-white hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Write us directly
@@ -575,23 +585,73 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-savage-white/10 px-6 py-10 md:px-14">
-        <div className="flex flex-wrap items-center justify-between gap-6 text-xs uppercase tracking-[0.3em] text-savage-white/60">
-          <span>© {new Date().getFullYear()} Savage Party · Barcelona</span>
-          <div className="flex gap-6">
-            <Link href="/build-your-show" className="hover:text-savage-yellow">
-              Build your show
-            </Link>
-            <Link href="/blog" className="hover:text-savage-yellow">
-              Blog
-            </Link>
-            <Link
-              href="/design-system"
-              className="hover:text-savage-yellow opacity-60"
-            >
-              Design system
-            </Link>
+      <footer className="border-t border-savage-white/10 px-6 py-14 md:px-14 md:py-20">
+        <div className="grid gap-10 md:grid-cols-3">
+          <div>
+            <Image
+              src="/logo-savage.png"
+              alt="Savage Party"
+              width={140}
+              height={40}
+            />
+            <p className="mt-4 text-sm text-savage-white/60 leading-relaxed max-w-xs">
+              DJ + live band for destination weddings. Based in Barcelona,
+              playing across Spain and the Mediterranean.
+            </p>
           </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+              Contact
+            </p>
+            <ul className="mt-4 space-y-2 text-savage-white/85">
+              <li>
+                <a
+                  href="mailto:contact@savageparty.es"
+                  className="hover:text-savage-yellow"
+                >
+                  contact@savageparty.es
+                </a>
+              </li>
+              <li>
+                <a href="tel:+34681955024" className="hover:text-savage-yellow">
+                  +34 681 955 024
+                </a>
+              </li>
+              <li>
+                <a href="tel:+34634038685" className="hover:text-savage-yellow">
+                  +34 634 038 685
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+              Explore
+            </p>
+            <ul className="mt-4 space-y-2 text-savage-white/85">
+              <li>
+                <Link href="/build-your-show" className="hover:text-savage-yellow">
+                  Build your show
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-savage-yellow">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/design-system"
+                  className="hover:text-savage-yellow opacity-60"
+                >
+                  Design system
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-12 pt-6 border-t border-savage-white/10 text-xs uppercase tracking-[0.3em] text-savage-white/50">
+          © {new Date().getFullYear()} Savage Party · Barcelona
         </div>
       </footer>
     </main>
