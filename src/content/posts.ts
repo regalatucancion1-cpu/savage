@@ -7,6 +7,8 @@ export type Post = {
   readingTime: string;
   seoDescription: string;
   body: string[];
+  heroImage?: string;
+  heroAlt?: string;
 };
 
 export const POSTS: Post[] = [
@@ -20,6 +22,9 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "Choosing between a wedding DJ and a DJ plus live band for your destination wedding in Spain, Ibiza or Mallorca. What each one delivers, what it costs you, and which couple each fits.",
+    heroImage: "/venues/party-81.jpg",
+    heroAlt:
+      "Destination wedding dancefloor in Spain lit up during a Savage Party DJ and live band set",
     body: [
       "A DJ on his own can absolutely run a great wedding. We won't pretend otherwise. What a DJ plus live band changes is the shape of the night, not the quality of the music.",
       "The short version: a live band takes your guests out of playlist mode and into show mode. For the first two hours of dancing, the room is not reacting to tracks they already know, it's reacting to people playing in front of them. That lifts the ceiling of the night.",
@@ -39,6 +44,9 @@ export const POSTS: Post[] = [
     readingTime: "6 min",
     seoDescription:
       "A complete destination wedding music timeline for Spain. Ceremony, cocktail, dinner, dancing and late night, with exact timings and what acts to book for each slot.",
+    heroImage: "/venues/img_0858.jpg",
+    heroAlt:
+      "Outdoor destination wedding in Catalonia at golden hour, guests around long tables",
     body: [
       "Most destination weddings in Spain run from 18:00 to 04:00. Ten hours is long. The music timeline is how you keep the energy alive without burning your guests out.",
       "Ceremony (30 min): acoustic. Solo guitar, string duo, or solo sax. Nothing overwhelming. The music is there so the silence isn't.",
@@ -60,6 +68,9 @@ export const POSTS: Post[] = [
     readingTime: "4 min",
     seoDescription:
       "Ibiza or Mallorca for your destination wedding: a vendor's honest comparison of venues, guest experience, late-night rules, travel and music culture.",
+    heroImage: "/venues/img_3598.jpg",
+    heroAlt:
+      "Destination wedding villa in the Balearic Islands with a Savage Party live band performing",
     body: [
       "We play both islands. We love both. They are not the same wedding.",
       "Ibiza: high-energy, late-night friendly, internationally confident. The villas are huge. The cost is high. Late-night closures are more common. The guest experience is closer to a festival with a ceremony attached.",
@@ -79,6 +90,9 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "How to plan music for a 200-guest destination wedding. Bands, DJs, sound systems and timing rules that keep the dancefloor full from first dance to last call.",
+    heroImage: "/venues/img_3595.jpg",
+    heroAlt:
+      "Large destination wedding dancefloor packed with guests during a DJ and live band peak set",
     body: [
       "Below 80 guests, almost any music setup works. Above 200, the margin for error disappears. The dancefloor either fills or it splits in two, and once it splits it's hard to pull back.",
       "What works at 200+ guests: one continuous act from first dance to close. No long transitions. No act changes mid-peak. A DJ plus live band covers this naturally. Two separate acts with a break in between does not.",

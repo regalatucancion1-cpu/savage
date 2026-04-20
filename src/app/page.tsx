@@ -353,21 +353,38 @@ export default function Home() {
           <span className="text-savage-yellow">Real words.</span>
         </h2>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Testimonial
-            quote="The moment the sax walked off the stage and came to us, the whole room lost it."
-            name="Sarah &amp; James"
-            venue="Ibiza · 2024"
+            quote="The moment the sax came off the stage and walked up to our table, my grandmother started dancing. Best thirty seconds of the whole wedding."
+            name="Sarah &amp; Cory"
+            venue="Villa Almanita · 2024"
+            image="/venues/sarahcory0820.jpg"
+            imageAlt="Sarah and Cory's wedding at Villa Almanita, Savage Party live band playing"
           />
           <Testimonial
-            quote="We wanted a DJ. We ended up with a show. Best decision of the whole wedding."
-            name="Clara &amp; Marc"
-            venue="Mallorca · 2024"
+            quote="We'd seen other bands play this exact room. It was the first time the floor didn't empty once the whole night."
+            name="Andrea &amp; Marc"
+            venue="Castell de Caramany · 2025"
           />
           <Testimonial
-            quote="No filler, no cringe speeches, no karaoke. Three hours, the floor never emptied."
-            name="Anna &amp; Theo"
-            venue="Costa Brava · 2025"
+            quote="Our friends still ask what the hell just happened. That's exactly the reaction we wanted."
+            name="Tony &amp; Katie"
+            venue="La Baronia · 2024"
+          />
+          <Testimonial
+            quote="They read the room better than the photographer did. Every single moment landed."
+            name="Guille &amp; Tatiana"
+            venue="Espai Can Palles · 2025"
+          />
+          <Testimonial
+            quote="Three hours, zero drops. The DJ and the band locked together like they'd played a thousand weddings."
+            name="Christina &amp; Victor"
+            venue="Casa Felix · 2024"
+          />
+          <Testimonial
+            quote="Booked them for our Valencia wedding after seeing them at a friend's in Empordà. Once you see it, you just get it."
+            name="Lucía &amp; Javier"
+            venue="Molí del Ballestar · 2026"
           />
         </div>
       </section>
@@ -383,8 +400,13 @@ export default function Home() {
           <li>Casa Felix</li>
           <li>Villa Almanita</li>
           <li>Castell de L&apos;Empordà</li>
-          <li>Cabellut</li>
+          <li>Masia Cabellut</li>
+          <li>Espai Can Palles</li>
         </ul>
+        <p className="mt-8 text-xs uppercase tracking-[0.3em] text-savage-white/45">
+          Travelling in 2026 · Molí del Ballestar (Valencia) · Cigarral de las
+          Mercedes (Toledo)
+        </p>
       </section>
 
       {/* BLOG */}
@@ -556,29 +578,46 @@ function Testimonial({
   quote,
   name,
   venue,
+  image,
+  imageAlt,
 }: {
   quote: string;
   name: string;
   venue: string;
+  image?: string;
+  imageAlt?: string;
 }) {
   return (
-    <figure className="rounded-3xl border border-savage-white/10 bg-savage-ink/30 p-7 flex flex-col">
-      <p className="font-display text-4xl text-savage-yellow leading-none">
-        &ldquo;
-      </p>
-      <blockquote
-        className="mt-2 text-lg leading-relaxed text-savage-white/90"
-        dangerouslySetInnerHTML={{ __html: quote }}
-      />
-      <figcaption className="mt-6 pt-6 border-t border-savage-white/10">
-        <p
-          className="font-display uppercase text-savage-white"
-          dangerouslySetInnerHTML={{ __html: name }}
-        />
-        <p className="text-xs uppercase tracking-[0.3em] text-savage-white/60 mt-1">
-          {venue}
+    <figure className="rounded-3xl border border-savage-white/10 bg-savage-ink/30 overflow-hidden flex flex-col">
+      {image && (
+        <div className="relative aspect-[4/3] border-b border-savage-white/10">
+          <Image
+            src={image}
+            alt={imageAlt ?? `${name.replace(/&amp;/g, "&")} at ${venue}`}
+            fill
+            sizes="(min-width: 1024px) 30vw, 90vw"
+            className="object-cover"
+          />
+        </div>
+      )}
+      <div className="p-7 flex flex-col">
+        <p className="font-display text-4xl text-savage-yellow leading-none">
+          &ldquo;
         </p>
-      </figcaption>
+        <blockquote
+          className="mt-2 text-lg leading-relaxed text-savage-white/90"
+          dangerouslySetInnerHTML={{ __html: quote }}
+        />
+        <figcaption className="mt-6 pt-6 border-t border-savage-white/10">
+          <p
+            className="font-display uppercase text-savage-white"
+            dangerouslySetInnerHTML={{ __html: name }}
+          />
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/60 mt-1">
+            {venue}
+          </p>
+        </figcaption>
+      </div>
     </figure>
   );
 }

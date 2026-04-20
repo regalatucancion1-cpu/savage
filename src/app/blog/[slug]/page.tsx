@@ -28,11 +28,13 @@ export async function generateMetadata({
       url: `/blog/${post.slug}`,
       type: "article",
       publishedTime: post.date,
+      images: post.heroImage ? [post.heroImage] : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.seoDescription,
+      images: post.heroImage ? [post.heroImage] : undefined,
     },
   };
 }
@@ -62,6 +64,7 @@ export default async function BlogPostPage({
       },
     },
     mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    image: post.heroImage ? [`${SITE_URL}${post.heroImage}`] : undefined,
   };
 
   const related = POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
@@ -107,6 +110,19 @@ export default async function BlogPostPage({
             year: "numeric",
           })}
         </p>
+
+        {post.heroImage && (
+          <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-3xl border border-savage-white/10">
+            <Image
+              src={post.heroImage}
+              alt={post.heroAlt ?? post.title}
+              fill
+              sizes="(min-width: 1024px) 800px, 90vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
         <div className="mt-10 space-y-6 text-lg text-savage-white/85 leading-relaxed">
           {post.body.map((para, i) => (
