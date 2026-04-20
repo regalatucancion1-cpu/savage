@@ -357,56 +357,65 @@ export default function Home() {
           <Testimonial
             quote="The moment the sax came off the stage and walked up to our table, my grandmother started dancing. Best thirty seconds of the whole wedding."
             name="Sarah &amp; Cory"
-            venue="Villa Almanita · 2024"
-            image="/venues/sarahcory0820.jpg"
-            imageAlt="Sarah and Cory's wedding at Villa Almanita, Savage Party live band playing"
+            venue="Villa Almanita"
           />
           <Testimonial
             quote="We'd seen other bands play this exact room. It was the first time the floor didn't empty once the whole night."
             name="Andrea &amp; Marc"
-            venue="Castell de Caramany · 2025"
+            venue="Castell de Caramany"
           />
           <Testimonial
             quote="Our friends still ask what the hell just happened. That's exactly the reaction we wanted."
             name="Tony &amp; Katie"
-            venue="La Baronia · 2024"
+            venue="La Baronia"
+          />
+          <Testimonial
+            quote="Flew half our guests over from Scotland. Every single one of them talks about the sax coming into the crowd."
+            name="Eilidh &amp; Kyle"
+            venue="Hotel Casa Fuster"
           />
           <Testimonial
             quote="They read the room better than the photographer did. Every single moment landed."
             name="Guille &amp; Tatiana"
-            venue="Espai Can Palles · 2025"
+            venue="Espai Can Palles"
           />
           <Testimonial
             quote="Three hours, zero drops. The DJ and the band locked together like they'd played a thousand weddings."
             name="Christina &amp; Victor"
-            venue="Casa Felix · 2024"
-          />
-          <Testimonial
-            quote="Booked them for our Valencia wedding after seeing them at a friend's in Empordà. Once you see it, you just get it."
-            name="Lucía &amp; Javier"
-            venue="Molí del Ballestar · 2026"
+            venue="Casa Felix"
           />
         </div>
       </section>
 
-      {/* FEATURED STRIP */}
-      <section className="relative border-t border-savage-white/10 bg-savage-ink/40 px-6 py-14 md:px-14">
-        <p className="text-xs uppercase tracking-[0.3em] text-savage-white/60">
+      {/* FEATURED STRIP · marquee */}
+      <section className="relative border-t border-savage-white/10 bg-savage-ink/40 py-14">
+        <p className="px-6 md:px-14 text-xs uppercase tracking-[0.3em] text-savage-white/60">
           Played at
         </p>
-        <ul className="mt-6 flex flex-wrap gap-x-10 gap-y-4 text-sm uppercase tracking-[0.2em] text-savage-white/70">
-          <li>La Baronia</li>
-          <li>Castell de Caramany</li>
-          <li>Casa Felix</li>
-          <li>Villa Almanita</li>
-          <li>Castell de L&apos;Empordà</li>
-          <li>Masia Cabellut</li>
-          <li>Espai Can Palles</li>
-        </ul>
-        <p className="mt-8 text-xs uppercase tracking-[0.3em] text-savage-white/45">
-          Travelling in 2026 · Molí del Ballestar (Valencia) · Cigarral de las
-          Mercedes (Toledo)
-        </p>
+        <div className="marquee mt-6">
+          <div className="marquee-track">
+            {[...Array(2)].map((_, loop) => (
+              <ul
+                key={loop}
+                aria-hidden={loop === 1}
+                className="flex shrink-0 items-center gap-14 pr-14 text-sm uppercase tracking-[0.2em] text-savage-white/75"
+              >
+                <li>La Baronia</li>
+                <li>Castell de Caramany</li>
+                <li>Casa Felix</li>
+                <li>Villa Almanita</li>
+                <li>Castell de L&apos;Empordà</li>
+                <li>Masia Cabellut</li>
+                <li>Espai Can Palles</li>
+                <li>La Paloma</li>
+                <li>Hotel Casa Fuster</li>
+                <li>Mas Torroella</li>
+                <li>Molí del Ballestar</li>
+                <li>Cigarral de las Mercedes</li>
+              </ul>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* BLOG */}

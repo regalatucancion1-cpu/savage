@@ -125,9 +125,25 @@ export default async function BlogPostPage({
         )}
 
         <div className="mt-10 space-y-6 text-lg text-savage-white/85 leading-relaxed">
-          {post.body.map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
+          {post.body.map((para, i) => {
+            const insertImageAfter = Math.floor(post.body.length / 2);
+            return (
+              <div key={i} className="space-y-6">
+                <p>{para}</p>
+                {post.midImage && i === insertImageAfter - 1 && (
+                  <figure className="relative my-4 aspect-[16/9] overflow-hidden rounded-3xl border border-savage-white/10">
+                    <Image
+                      src={post.midImage}
+                      alt={post.midImageAlt ?? post.title}
+                      fill
+                      sizes="(min-width: 1024px) 800px, 90vw"
+                      className="object-cover"
+                    />
+                  </figure>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="mt-16 rounded-3xl border border-savage-yellow/40 bg-savage-yellow/5 p-8">

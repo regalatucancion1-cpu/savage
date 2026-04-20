@@ -9,6 +9,8 @@ export type Post = {
   body: string[];
   heroImage?: string;
   heroAlt?: string;
+  midImage?: string;
+  midImageAlt?: string;
 };
 
 export const POSTS: Post[] = [
@@ -25,6 +27,9 @@ export const POSTS: Post[] = [
     heroImage: "/venues/party-81.jpg",
     heroAlt:
       "Destination wedding dancefloor in Spain lit up during a Savage Party DJ and live band set",
+    midImage: "/venues/sarahcory0824.jpg",
+    midImageAlt:
+      "Savage Party live band playing sax in the middle of a destination wedding crowd in Spain",
     body: [
       "A DJ on his own can absolutely run a great wedding. We won't pretend otherwise. What a DJ plus live band changes is the shape of the night, not the quality of the music.",
       "The short version: a live band takes your guests out of playlist mode and into show mode. For the first two hours of dancing, the room is not reacting to tracks they already know, it's reacting to people playing in front of them. That lifts the ceiling of the night.",
@@ -47,6 +52,9 @@ export const POSTS: Post[] = [
     heroImage: "/venues/img_0858.jpg",
     heroAlt:
       "Outdoor destination wedding in Catalonia at golden hour, guests around long tables",
+    midImage: "/venues/img_3597.jpg",
+    midImageAlt:
+      "Guests seated at long tables during a destination wedding cocktail hour in Spain",
     body: [
       "Most destination weddings in Spain run from 18:00 to 04:00. Ten hours is long. The music timeline is how you keep the energy alive without burning your guests out.",
       "Ceremony (30 min): acoustic. Solo guitar, string duo, or solo sax. Nothing overwhelming. The music is there so the silence isn't.",
@@ -71,6 +79,9 @@ export const POSTS: Post[] = [
     heroImage: "/venues/img_3598.jpg",
     heroAlt:
       "Destination wedding villa in the Balearic Islands with a Savage Party live band performing",
+    midImage: "/venues/img_3600.jpg",
+    midImageAlt:
+      "Dancefloor at a Balearic Islands villa wedding during a DJ and live band set",
     body: [
       "We play both islands. We love both. They are not the same wedding.",
       "Ibiza: high-energy, late-night friendly, internationally confident. The villas are huge. The cost is high. Late-night closures are more common. The guest experience is closer to a festival with a ceremony attached.",
@@ -93,6 +104,9 @@ export const POSTS: Post[] = [
     heroImage: "/venues/img_3595.jpg",
     heroAlt:
       "Large destination wedding dancefloor packed with guests during a DJ and live band peak set",
+    midImage: "/venues/img_6370.jpg",
+    midImageAlt:
+      "Crowd reaction during the peak of a 200 guest destination wedding live show in Spain",
     body: [
       "Below 80 guests, almost any music setup works. Above 200, the margin for error disappears. The dancefloor either fills or it splits in two, and once it splits it's hard to pull back.",
       "What works at 200+ guests: one continuous act from first dance to close. No long transitions. No act changes mid-peak. A DJ plus live band covers this naturally. Two separate acts with a break in between does not.",
