@@ -375,15 +375,15 @@ export default function Home() {
       {/* FEATURED STRIP */}
       <section className="relative border-t border-savage-white/10 bg-savage-ink/40 px-6 py-14 md:px-14">
         <p className="text-xs uppercase tracking-[0.3em] text-savage-white/60">
-          Featured in
+          Played at
         </p>
         <ul className="mt-6 flex flex-wrap gap-x-10 gap-y-4 text-sm uppercase tracking-[0.2em] text-savage-white/70">
-          <li>Vogue España</li>
-          <li>Tatler Spain</li>
-          <li>Condé Nast Traveller</li>
+          <li>La Baronia</li>
           <li>Castell de Caramany</li>
-          <li>Hacienda Na Xamena</li>
-          <li>Mas Marroch</li>
+          <li>Casa Felix</li>
+          <li>Villa Almanita</li>
+          <li>Castell de L&apos;Empordà</li>
+          <li>Cabellut</li>
         </ul>
       </section>
 
