@@ -2,7 +2,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { POSTS } from "@/content/posts";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { LiteYouTube } from "@/components/LiteYouTube";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
+
+const LIVE_VIDEOS: { id: string; title: string; orientation: "landscape" | "portrait" }[] = [
+  { id: "lvhUTYOjDPU", title: "Live set · full performance", orientation: "landscape" },
+  { id: "fbNAAY5r4-M", title: "Live · roaming through the crowd", orientation: "portrait" },
+];
+
+const TOP_VIDEOS: { id: string; title: string; orientation: "landscape" | "portrait" }[] = [
+  { id: "tdIqG_vv7tM", title: "Top · sax on the floor", orientation: "portrait" },
+  { id: "3ovpgXyN9Dc", title: "Top · dancefloor drop", orientation: "portrait" },
+  { id: "Iu85UvapaYA", title: "Top · horns in the crowd", orientation: "portrait" },
+  { id: "KbYpB6_v2Nc", title: "Top · night peak", orientation: "portrait" },
+  { id: "FOGHvcF17Wo", title: "Top · full-room energy", orientation: "landscape" },
+];
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
 
@@ -211,19 +225,19 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="relative aspect-[4/5] max-w-sm w-full mx-auto overflow-hidden rounded-2xl">
+          <div className="relative aspect-[2/3] max-w-sm w-full mx-auto overflow-hidden rounded-2xl bg-savage-ink/40">
             <Image
               src="/sp1-vintage.jpg"
               alt="Savage Party live band Spain, sax player in the crowd at a destination wedding"
               fill
               sizes="(min-width: 1024px) 30vw, 80vw"
-              className="object-cover object-center"
+              className="object-contain object-center"
             />
           </div>
         </div>
       </section>
 
-      {/* VIDEOS — teaser */}
+      {/* VIDEOS — live + top moments */}
       <section
         id="live"
         className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32"
@@ -241,31 +255,36 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {[
-            { title: "Castell de Caramany", place: "Costa Brava · 2025" },
-            { title: "Ca's Patró March", place: "Mallorca · 2024" },
-            { title: "Hacienda Na Xamena", place: "Ibiza · 2024" },
-          ].map((v) => (
-            <figure
-              key={v.title}
-              className="group relative aspect-video overflow-hidden rounded-2xl border border-savage-white/10 bg-savage-ink/60"
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full border border-savage-yellow/60 bg-savage-black/40 text-savage-yellow backdrop-blur-sm transition group-hover:scale-110">
-                  ▶
-                </span>
-              </div>
-              <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-savage-black/90 to-transparent p-4">
-                <span className="font-display uppercase text-sm">
-                  {v.title}
-                </span>
-                <span className="text-[10px] uppercase tracking-[0.3em] text-savage-white/70">
-                  {v.place}
-                </span>
-              </figcaption>
-            </figure>
-          ))}
+        <div className="mt-14">
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+            Full live performance
+          </p>
+          <div className="mt-5 grid gap-5 md:grid-cols-[2fr_1fr]">
+            {LIVE_VIDEOS.map((v) => (
+              <LiteYouTube
+                key={v.id}
+                videoId={v.id}
+                title={v.title}
+                orientation={v.orientation}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-14">
+          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+            Top moments
+          </p>
+          <div className="mt-5 grid gap-5 grid-cols-2 md:grid-cols-5">
+            {TOP_VIDEOS.map((v) => (
+              <LiteYouTube
+                key={v.id}
+                videoId={v.id}
+                title={v.title}
+                orientation={v.orientation}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
