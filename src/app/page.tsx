@@ -25,6 +25,8 @@ const BLOG_TEASERS = POSTS.slice(0, 3).map((p) => ({
   category: p.category,
   title: p.title,
   excerpt: p.excerpt,
+  heroImage: p.heroImage,
+  heroAlt: p.heroAlt,
 }));
 
 const REPERTOIRE_TAGS = [
@@ -446,8 +448,20 @@ export default function Home() {
               href={`/blog/${p.slug}`}
               className="group flex flex-col rounded-3xl border border-savage-white/10 bg-savage-ink/30 overflow-hidden transition hover:border-savage-yellow/60"
             >
-              <div className="aspect-[16/10] bg-gradient-to-br from-savage-ink to-savage-black border-b border-savage-white/5 flex items-center justify-center text-savage-white/20">
-                ■
+              <div className="relative aspect-[16/10] border-b border-savage-white/5 bg-savage-ink overflow-hidden">
+                {p.heroImage ? (
+                  <Image
+                    src={p.heroImage}
+                    alt={p.heroAlt ?? p.title}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 90vw"
+                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-savage-white/20">
+                    ■
+                  </div>
+                )}
               </div>
               <div className="p-6">
                 <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
