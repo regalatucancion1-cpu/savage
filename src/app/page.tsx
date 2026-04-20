@@ -5,17 +5,17 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
 
-const LIVE_VIDEOS: { id: string; title: string; orientation: "landscape" | "portrait" }[] = [
-  { id: "lvhUTYOjDPU", title: "Live set · full performance", orientation: "landscape" },
-  { id: "fbNAAY5r4-M", title: "Live · roaming through the crowd", orientation: "portrait" },
+const HORIZONTAL_VIDEOS: { id: string; title: string }[] = [
+  { id: "lvhUTYOjDPU", title: "Highlights La Paloma · ESL Night" },
+  { id: "FOGHvcF17Wo", title: "Savage Party 2025" },
 ];
 
-const TOP_VIDEOS: { id: string; title: string; orientation: "landscape" | "portrait" }[] = [
-  { id: "tdIqG_vv7tM", title: "Top · sax on the floor", orientation: "portrait" },
-  { id: "3ovpgXyN9Dc", title: "Top · dancefloor drop", orientation: "portrait" },
-  { id: "Iu85UvapaYA", title: "Top · horns in the crowd", orientation: "portrait" },
-  { id: "KbYpB6_v2Nc", title: "Top · night peak", orientation: "portrait" },
-  { id: "FOGHvcF17Wo", title: "Top · full-room energy", orientation: "landscape" },
+const VERTICAL_VIDEOS: { id: string; title: string }[] = [
+  { id: "fbNAAY5r4-M", title: "SP Live 2025" },
+  { id: "tdIqG_vv7tM", title: "Savage Party 2026" },
+  { id: "3ovpgXyN9Dc", title: "Savage Almanita 2025" },
+  { id: "Iu85UvapaYA", title: "Savage Party · La Baronia" },
+  { id: "KbYpB6_v2Nc", title: "Savage Party 2025" },
 ];
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
@@ -257,15 +257,15 @@ export default function Home() {
 
         <div className="mt-14">
           <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
-            Full live performance
+            Highlights
           </p>
-          <div className="mt-5 grid gap-5 md:grid-cols-[2fr_1fr]">
-            {LIVE_VIDEOS.map((v) => (
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            {HORIZONTAL_VIDEOS.map((v) => (
               <LiteYouTube
                 key={v.id}
                 videoId={v.id}
                 title={v.title}
-                orientation={v.orientation}
+                orientation="landscape"
               />
             ))}
           </div>
@@ -273,15 +273,15 @@ export default function Home() {
 
         <div className="mt-14">
           <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
-            Top moments
+            Top moments · shorts
           </p>
-          <div className="mt-5 grid gap-5 grid-cols-2 md:grid-cols-5">
-            {TOP_VIDEOS.map((v) => (
+          <div className="mt-5 grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+            {VERTICAL_VIDEOS.map((v) => (
               <LiteYouTube
                 key={v.id}
                 videoId={v.id}
                 title={v.title}
-                orientation={v.orientation}
+                orientation="portrait"
               />
             ))}
           </div>
