@@ -40,18 +40,6 @@ const REPERTOIRE_TAGS = [
   "House",
 ];
 
-const REPERTOIRE_SAMPLE = [
-  "Uptown Funk — Bruno Mars",
-  "Don't Stop 'Til You Get Enough — Michael Jackson",
-  "Espresso — Sabrina Carpenter",
-  "Crazy in Love — Beyoncé",
-  "Mr Brightside — The Killers",
-  "Temperature — Sean Paul",
-  "September — Earth, Wind & Fire",
-  "Tití Me Preguntó — Bad Bunny",
-  "Levitating — Dua Lipa",
-  "Superstition — Stevie Wonder",
-];
 void REPERTOIRE_CATEGORIES;
 
 const structuredData = {
@@ -166,9 +154,9 @@ export default function Home() {
           <h1 className="font-display mt-6 text-[2.25rem] leading-[0.9] md:text-[5rem] md:leading-[0.9] uppercase">
             We don&apos;t
             <br />
-            play weddings.
+            play weddings
             <br />
-            <span className="text-savage-yellow">We perform them.</span>
+            <span className="text-savage-yellow">we perform them</span>
           </h1>
 
           <div className="mt-10 flex flex-wrap gap-4">
@@ -210,7 +198,7 @@ export default function Home() {
               <br />
               that feels
               <br />
-              <span className="text-savage-yellow">like a festival.</span>
+              <span className="text-savage-yellow">like a festival</span>
             </h2>
             <p className="mt-8 text-lg md:text-xl text-savage-white/90 leading-[1.35] max-w-xl font-medium">
               Three hours, one continuous set. DJ and live band locked
@@ -250,9 +238,9 @@ export default function Home() {
               Watch us live
             </p>
             <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
-              Real weddings.
+              Real weddings
               <br />
-              <span className="text-savage-yellow">Unedited.</span>
+              <span className="text-savage-yellow">live on film</span>
             </h2>
           </div>
         </div>
@@ -296,9 +284,9 @@ export default function Home() {
           Repertoire
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
-          Your songs.
+          Your songs
           <br />
-          <span className="text-savage-yellow">Your call.</span>
+          <span className="text-savage-yellow">your call</span>
         </h2>
         <p className="mt-6 text-lg md:text-xl text-savage-cream/85 leading-relaxed max-w-2xl">
           Hundreds of tracks from disco, funk, Latin pop, hip hop and classic
@@ -317,18 +305,7 @@ export default function Home() {
           ))}
         </ul>
 
-        <div className="mt-12 grid gap-x-10 gap-y-3 md:grid-cols-2 max-w-4xl">
-          {REPERTOIRE_SAMPLE.map((song) => (
-            <p
-              key={song}
-              className="border-b border-savage-cream/10 pb-3 text-savage-cream/90"
-            >
-              {song}
-            </p>
-          ))}
-        </div>
-
-        <div className="mt-12 flex flex-wrap items-center gap-4">
+        <div className="mt-10 flex flex-wrap items-center gap-4">
           <Link
             href="/repertoire"
             className="inline-flex items-center gap-2 rounded-full bg-savage-yellow px-6 py-3 text-sm font-semibold text-savage-ink hover:brightness-110 transition"
@@ -350,9 +327,9 @@ export default function Home() {
           Couples say
         </p>
         <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
-          Real nights.
+          Real nights
           <br />
-          <span className="text-savage-yellow">Real words.</span>
+          <span className="text-savage-yellow">real words</span>
         </h2>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -430,7 +407,7 @@ export default function Home() {
             <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
               Notes for couples
               <br />
-              <span className="text-savage-yellow">planning a wedding.</span>
+              <span className="text-savage-yellow">planning a wedding</span>
             </h2>
           </div>
           <Link
@@ -486,9 +463,9 @@ export default function Home() {
             Let&apos;s see if the date&apos;s free
           </p>
           <h2 className="font-display mt-6 text-[2rem] md:text-[5rem] leading-[0.9] uppercase">
-            Your night,
+            Your night
             <br />
-            <span className="text-savage-yellow">performed live.</span>
+            <span className="text-savage-yellow">performed live</span>
           </h2>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
