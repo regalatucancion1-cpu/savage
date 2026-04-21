@@ -203,10 +203,10 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "Real 2026 wedding DJ pricing in Spain from a working vendor. Barcelona, Ibiza, Mallorca, Madrid and Valencia broken down. What's included, what's not, and what the floor is.",
-    heroImage: "/venues/img_3600.jpg",
+    heroImage: "/blog/dj-booth-1.jpg",
     heroAlt:
       "Wedding DJ booth at a destination wedding in Spain with the band setting up behind",
-    midImage: "/venues/img_6370.jpg",
+    midImage: "/blog/dj-booth-2.jpg",
     midImageAlt:
       "Dancefloor packed with guests during a wedding DJ set in Barcelona",
     body: [
@@ -229,10 +229,10 @@ export const POSTS: Post[] = [
     readingTime: "4 min",
     seoDescription:
       "A vendor's guide to wedding music curfews in Mallorca and Ibiza. Noise restrictions, private villas, legal limits and how to plan a destination wedding that doesn't end at midnight.",
-    heroImage: "/venues/img_3598.jpg",
+    heroImage: "/blog/villa-night-1.jpg",
     heroAlt:
       "Balearic Islands villa wedding at night with a DJ and live band performing before the curfew",
-    midImage: "/venues/img_3595.jpg",
+    midImage: "/blog/villa-night-2.jpg",
     midImageAlt:
       "Late night wedding dancefloor at a private villa in Mallorca during the final dance hour",
     body: [
@@ -254,10 +254,10 @@ export const POSTS: Post[] = [
     readingTime: "4 min",
     seoDescription:
       "The real cost difference between a wedding DJ alone and a DJ plus live band for a destination wedding in Spain. When the upgrade pays off, and when it doesn't.",
-    heroImage: "/venues/img_3597.jpg",
+    heroImage: "/blog/band-stage-1.jpg",
     heroAlt:
       "DJ and live band setup at a Spanish destination wedding during peak dancing",
-    midImage: "/venues/party-81.jpg",
+    midImage: "/blog/sax-wedding-1.jpg",
     midImageAlt:
       "Live band sax player performing off stage at a destination wedding DJ set",
     body: [
@@ -279,10 +279,10 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "Why Valencia is the smartest destination wedding location in Spain for international couples. Venues, flights, pricing and music logistics broken down by a working vendor.",
-    heroImage: "/venues/img_6372.jpg",
+    heroImage: "/blog/spain-villa-1.jpg",
     heroAlt:
       "Destination wedding venue in Valencia Spain with a live band performing during cocktail hour",
-    midImage: "/venues/img_7875.jpg",
+    midImage: "/blog/spain-villa-2.jpg",
     midImageAlt:
       "Olive grove wedding dinner table at a Valencia finca with guests arriving at dusk",
     body: [
@@ -305,10 +305,10 @@ export const POSTS: Post[] = [
     readingTime: "4 min",
     seoDescription:
       "The best wedding first dance songs for 2026. What works live, what falls flat, and why the trending TikTok pick almost always loses to the classic you didn't consider.",
-    heroImage: "/venues/sarahcory0824.jpg",
+    heroImage: "/blog/first-dance-1.jpg",
     heroAlt:
       "Couple during their wedding first dance at a destination wedding with live band performing",
-    midImage: "/venues/sarahcory1144.jpg",
+    midImage: "/blog/first-dance-2.jpg",
     midImageAlt:
       "First dance moment at a destination wedding in Spain with sax player joining live",
     body: [
@@ -331,10 +331,10 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "A practical guide to outdoor wedding sound systems in Spain. Speaker specs, power requirements, dB limits and the questions that separate a real vendor from a cheap one.",
-    heroImage: "/venues/img_3595.jpg",
+    heroImage: "/blog/sound-system-1.jpg",
     heroAlt:
       "Outdoor wedding sound system setup with 15 inch tops and 18 inch subs at a Spanish venue",
-    midImage: "/venues/img_6370.jpg",
+    midImage: "/blog/sound-system-2.jpg",
     midImageAlt:
       "Dancefloor and sound system view at a destination wedding in Spain during the peak dance hour",
     body: [
@@ -357,10 +357,10 @@ export const POSTS: Post[] = [
     readingTime: "4 min",
     seoDescription:
       "How to find an English-speaking wedding DJ in Spain who can MC a destination wedding for international guests. What to ask, what to listen for, and the red flags.",
-    heroImage: "/venues/img_3600.jpg",
+    heroImage: "/blog/dj-mic-1.jpg",
     heroAlt:
       "English-speaking wedding DJ at a destination wedding in Spain mixing for an international crowd",
-    midImage: "/venues/img_0858.jpg",
+    midImage: "/blog/dj-mic-2.jpg",
     midImageAlt:
       "DJ on the mic MCing a destination wedding in Spain for English-speaking guests",
     body: [
@@ -383,10 +383,10 @@ export const POSTS: Post[] = [
     readingTime: "5 min",
     seoDescription:
       "How to budget wedding entertainment in Spain. What to spend on, what to cut, and the real percentages couples should allocate across DJ, band, sound and sax.",
-    heroImage: "/venues/img_3598.jpg",
+    heroImage: "/blog/dancefloor-1.jpg",
     heroAlt:
       "Wedding entertainment setup at a destination wedding in Spain with DJ and live band ready",
-    midImage: "/venues/party-81.jpg",
+    midImage: "/blog/dancefloor-2.jpg",
     midImageAlt:
       "Peak dancing moment at a wedding in Spain showing live band and DJ entertainment",
     body: [
@@ -409,10 +409,10 @@ export const POSTS: Post[] = [
     readingTime: "6 min",
     seoDescription:
       "An honest vendor's guide to Costa Brava destination weddings. Venues, music curfews, sound logistics and the mistakes couples make when planning a Girona-region wedding.",
-    heroImage: "/venues/img_0858.jpg",
+    heroImage: "/blog/costa-brava-1.jpg",
     heroAlt:
       "Costa Brava destination wedding at a Girona region masia with outdoor dinner tables and live band",
-    midImage: "/venues/sarahcory0955.jpg",
+    midImage: "/blog/costa-brava-2.jpg",
     midImageAlt:
       "Costa Brava wedding venue at golden hour with guests seated for dinner before dancing",
     body: [
