@@ -29,7 +29,7 @@ type SubmitPayload = {
   plan: PlanState;
 };
 
-const TO_EMAIL = "elevndjs@gmail.com";
+const TO_EMAIL = "infosavageparty@gmail.com";
 const FROM_EMAIL = process.env.RESEND_FROM ?? "Savage Web <onboarding@resend.dev>";
 
 function section(title: string, body: string) {

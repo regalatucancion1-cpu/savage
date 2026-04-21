@@ -79,7 +79,7 @@ const structuredData = {
         addressCountry: "ES",
       },
       telephone: ["+34681955024", "+34634038685"],
-      email: "elevndjs@gmail.com",
+      email: "infosavageparty@gmail.com",
     },
   ],
 };
@@ -475,7 +475,7 @@ export default function Home() {
               Build your show →
             </Link>
             <a
-              href="mailto:elevndjs@gmail.com?subject=Savage%20Party%20booking%20inquiry"
+              href="mailto:infosavageparty@gmail.com?subject=Savage%20Party%20booking%20inquiry"
               className="rounded-full border border-savage-cream/40 px-7 py-4 text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Write us directly
@@ -505,10 +505,10 @@ export default function Home() {
             <ul className="mt-4 space-y-2 text-savage-white/85">
               <li>
                 <a
-                  href="mailto:elevndjs@gmail.com"
+                  href="mailto:infosavageparty@gmail.com"
                   className="hover:text-savage-yellow"
                 >
-                  elevndjs@gmail.com
+                  infosavageparty@gmail.com
                 </a>
               </li>
               <li>

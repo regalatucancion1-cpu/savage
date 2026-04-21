@@ -14,7 +14,7 @@ type LeadPayload = {
   source?: string;
 };
 
-const TO_EMAIL = "elevndjs@gmail.com";
+const TO_EMAIL = "infosavageparty@gmail.com";
 const FROM_EMAIL = process.env.RESEND_FROM ?? "Savage Web <onboarding@resend.dev>";
 
 export async function POST(req: NextRequest) {
