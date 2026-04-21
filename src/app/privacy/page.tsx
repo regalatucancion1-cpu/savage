@@ -47,8 +47,8 @@ export default function PrivacyPage() {
               Savage Party is a musical project based in Barcelona, Spain,
               offering DJ and live band services for destination weddings and
               private events. The data controller for this website is Christian
-              Pujol, operating as an individual freelancer (autónomo) under
-              Spanish law.
+              Pujol Muñoz (NIF 47574769M), operating as an individual
+              freelancer (autónomo) under Spanish law.
             </p>
             <p className="mt-3">
               You can reach us at{" "}

@@ -45,15 +45,13 @@ export default function LegalPage() {
           <Block title="Site owner">
             <p>
               This website (savageparty.es) is owned and operated by Christian
-              Pujol, self-employed (autónomo) under Spanish law, trading as
-              Savage Party.
+              Pujol Muñoz, self-employed (autónomo) under Spanish law, trading
+              as Savage Party.
             </p>
             <ul className="mt-3 list-none space-y-1 text-sm">
+              <li>Holder: Christian Pujol Muñoz</li>
+              <li>NIF: 47574769M</li>
               <li>Based in Barcelona, Spain.</li>
-              <li>
-                Tax ID (NIF): available on request for any client with a
-                legitimate purpose.
-              </li>
               <li>
                 Email:{" "}
                 <a
