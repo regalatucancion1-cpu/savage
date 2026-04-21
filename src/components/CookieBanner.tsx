@@ -24,6 +24,9 @@ export default function CookieBanner() {
       localStorage.setItem(STORAGE_KEY, value);
       localStorage.setItem(`${STORAGE_KEY}-at`, new Date().toISOString());
     } catch {}
+    try {
+      window.dispatchEvent(new Event("sp-consent-change"));
+    } catch {}
     setVisible(false);
   }
 

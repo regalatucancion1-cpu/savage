@@ -84,13 +84,35 @@ export default function CookiesPage() {
                     <td className="py-3 pr-4">Essential</td>
                     <td className="py-3">Session</td>
                   </tr>
+                  <tr>
+                    <td className="py-3 pr-4 font-mono text-xs">
+                      Vercel Web Analytics
+                    </td>
+                    <td className="py-3 pr-4">
+                      Anonymous page-view counts so we know which content
+                      works. No personal profile, no cross-site tracking.
+                    </td>
+                    <td className="py-3 pr-4">Analytics · opt-in</td>
+                    <td className="py-3">Session</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 pr-4 font-mono text-xs">
+                      Vercel Speed Insights
+                    </td>
+                    <td className="py-3 pr-4">
+                      Measures loading performance from real devices to help
+                      us keep the site fast.
+                    </td>
+                    <td className="py-3 pr-4">Analytics · opt-in</td>
+                    <td className="py-3">Session</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <p className="mt-4 text-sm text-savage-white/75">
-              We do not currently run analytics, advertising or social
-              tracking cookies. If that changes, we will update this page and
-              ask for your consent before loading them.
+              Analytics and performance tools only load if you press Accept on
+              the cookie banner. They do not use advertising cookies and do not
+              track you across other sites.
             </p>
           </Block>
 
