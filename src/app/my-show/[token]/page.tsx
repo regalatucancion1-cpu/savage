@@ -21,7 +21,7 @@ export default async function MyShowPage({
 
   return (
     <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
-      <header className="flex items-center justify-between border-b border-savage-white/10 px-6 py-5 md:px-14">
+      <header className="flex items-center justify-between border-b border-savage-white/10 px-5 sm:px-6 py-4 sm:py-5 md:px-14">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logo-savage.png"
@@ -31,8 +31,8 @@ export default async function MyShowPage({
             priority
           />
         </Link>
-        <span className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
-          My show · private link
+        <span className="hidden sm:inline text-[10px] uppercase tracking-[0.3em] text-savage-white/50">
+          Your show · private link
         </span>
       </header>
 

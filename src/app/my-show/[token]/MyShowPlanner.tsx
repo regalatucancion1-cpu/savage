@@ -203,14 +203,75 @@ export default function MyShowPlanner({ token }: { token: string }) {
     setStatus("sending");
     setErrorMsg(null);
     try {
-      const res = await fetch("/api/my-show/submit", {
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+      if (!accessKey) throw new Error("Form not configured");
+
+      const formatList = (items: string[]) =>
+        !items || items.length === 0 ? "(none)" : items.map((i) => `• ${i}`).join("\n");
+
+      const message = [
+        `━━━ BASICS ━━━`,
+        `Names: ${plan.names}`,
+        `Event date: ${plan.eventDate}`,
+        `Venue: ${plan.venue}`,
+        `Phone: ${plan.phone || "(not provided)"}`,
+        ``,
+        `━━━ MUSICAL TASTE ━━━`,
+        `Genres:\n${formatList(plan.genres)}`,
+        ``,
+        `Favorite artists:\n${plan.favoriteArtists || "(empty)"}`,
+        ``,
+        `Decades:\n${formatList(plan.decades)}`,
+        ``,
+        `━━━ BAND SONGS PICKED ━━━`,
+        formatList(plan.bandSongs),
+        ``,
+        `━━━ WISHLIST ━━━`,
+        `${plan.wishlistSongs || "(empty)"}`,
+        ``,
+        `Drop everything song: ${plan.dropEverythingSong || "(empty)"}`,
+        ``,
+        `━━━ CROWD ━━━`,
+        `Vibe: ${plan.crowd || "(empty)"}`,
+        `Guest weight (0 their taste ↔ 10 ours): ${plan.guestWeight}`,
+        ``,
+        `━━━ MUST PLAY + REFERENCES ━━━`,
+        `Must play:\n${plan.mustPlay || "(empty)"}`,
+        ``,
+        `Reference:\n${plan.reference || "(empty)"}`,
+        ``,
+        `Special moments:\n${plan.specialMoments || "(empty)"}`,
+        ``,
+        `━━━ DJ SET + EXTRAS ━━━`,
+        `Do NOT play:\n${plan.doNotPlay || "(empty)"}`,
+        ``,
+        `Anything else:\n${plan.anythingElse || "(empty)"}`,
+        ``,
+        `Involvement: ${plan.involvement || "(empty)"}`,
+        ``,
+        `━━━ TOKEN ━━━`,
+        token,
+      ].join("\n");
+
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, plan }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: `My Show · ${plan.names} · ${plan.eventDate}`,
+          from_name: "Savage Party planner",
+          name: plan.names,
+          email: "no-reply@savageparty.es",
+          phone: plan.phone || "—",
+          message,
+        }),
       });
       const data = await res.json();
-      if (!res.ok || data.ok === false) {
-        throw new Error(data?.error ?? "Submit failed");
+      if (!res.ok || data.success === false) {
+        throw new Error(data?.message ?? "Submit failed");
       }
       setStatus("sent");
       localStorage.removeItem(`my-show-${token}`);
@@ -313,20 +374,23 @@ export default function MyShowPlanner({ token }: { token: string }) {
 
 function Progress({ step }: { step: number }) {
   return (
-    <div className="px-6 pt-6 md:px-14">
-      <div className="flex gap-1">
+    <div className="px-5 sm:px-6 pt-5 sm:pt-6 md:px-14">
+      <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-savage-white/50">
+        <span>Your setlist · {String(step).padStart(2, "0")} of {TOTAL_STEPS}</span>
+        <span className="text-savage-yellow">
+          {Math.round((step / TOTAL_STEPS) * 100)}%
+        </span>
+      </div>
+      <div className="mt-3 flex gap-1">
         {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
           <div
             key={i}
-            className={`h-1 flex-1 rounded-full ${
+            className={`h-1 flex-1 rounded-full transition-all duration-500 ${
               i + 1 <= step ? "bg-savage-yellow" : "bg-savage-white/10"
             }`}
           />
         ))}
       </div>
-      <p className="mt-3 text-xs uppercase tracking-[0.3em] text-savage-white/50">
-        {step} / {TOTAL_STEPS}
-      </p>
     </div>
   );
 }
@@ -336,26 +400,34 @@ function Shell({
   title,
   subtitle,
   children,
+  heroTitle,
 }: {
   overline: string;
-  title: string;
+  title: React.ReactNode;
   subtitle?: string;
   children: React.ReactNode;
+  heroTitle?: boolean;
 }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
         {overline}
       </p>
-      <h1 className="mt-4 text-3xl md:text-4xl leading-tight font-medium text-savage-white max-w-3xl">
-        {title}
-      </h1>
+      {heroTitle ? (
+        <h1 className="font-display uppercase mt-3 sm:mt-4 text-[2rem] sm:text-[2.75rem] md:text-[4.25rem] leading-[0.9] text-savage-white max-w-4xl">
+          {title}
+        </h1>
+      ) : (
+        <h1 className="font-display uppercase mt-3 sm:mt-4 text-[1.75rem] sm:text-[2.25rem] md:text-[3rem] leading-[0.95] text-savage-white max-w-3xl">
+          {title}
+        </h1>
+      )}
       {subtitle && (
-        <p className="mt-5 text-base md:text-lg text-savage-white/75 leading-relaxed max-w-2xl">
+        <p className="font-editorial italic mt-4 sm:mt-5 text-base sm:text-lg md:text-xl text-savage-cream/90 leading-relaxed max-w-2xl">
           {subtitle}
         </p>
       )}
-      <div className="mt-10">{children}</div>
+      <div className="mt-8 sm:mt-10">{children}</div>
     </div>
   );
 }
@@ -545,54 +617,143 @@ function RadioGroup({
 function Step1({ onNext }: { onNext: () => void }) {
   return (
     <Shell
-      overline="01 · Welcome"
-      title="Let's plan your party soundtrack."
-      subtitle="Hey. We're so excited to be part of your night. This isn't just a form, it's the starting point of something epic. Takes about 10 minutes: pick your favourite songs, tell us your vibe, and we'll handle the rest."
+      overline="Welcome · The crew"
+      heroTitle
+      title={
+        <>
+          You&apos;re in.
+          <br />
+          <span className="text-savage-yellow">Welcome to the band.</span>
+        </>
+      }
+      subtitle="This is where you step into the lineup. Everything you write here lands straight in our rehearsal room, no forms team, no middle man. From here on, your taste is ours too."
     >
-      <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
-          Heads up before we start
+      <div className="grid gap-4 sm:gap-5 md:grid-cols-3">
+        <ManifestoCard
+          n="01"
+          title="It's your night"
+          body="Every song, every moment. The dancefloor answers to you."
+        />
+        <ManifestoCard
+          n="02"
+          title="We are your accomplices"
+          body="We read the room so you don't have to. You give us the direction, we make it happen."
+          featured
+        />
+        <ManifestoCard
+          n="03"
+          title="Nothing leaves the band"
+          body="This link is private. Only Christian and the crew read your answers."
+        />
+      </div>
+
+      <div className="mt-8 sm:mt-10 rounded-3xl border border-savage-yellow/40 bg-gradient-to-br from-savage-yellow/10 to-transparent p-6 sm:p-7">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+          Before we start
         </p>
-        <ul className="mt-4 space-y-3 text-savage-white/85 leading-relaxed">
-          <li>· Your progress saves automatically on this device.</li>
-          <li>· No wrong answers. If you&apos;re not sure, skip it.</li>
-          <li>· The more honest your answers, the better your night.</li>
+        <ul className="mt-4 space-y-2.5 text-savage-white/85 leading-relaxed text-sm sm:text-base">
+          <li>· Takes about 10 minutes. Your progress saves automatically.</li>
+          <li>· There are no wrong answers. If you hesitate, skip it.</li>
+          <li>· The more honest you are, the more the night feels like you.</li>
         </ul>
       </div>
-      <Nav onNext={onNext} nextLabel="Let's go →" />
+      <Nav onNext={onNext} nextLabel="Step into rehearsal →" />
     </Shell>
+  );
+}
+
+function ManifestoCard({
+  n,
+  title,
+  body,
+  featured,
+}: {
+  n: string;
+  title: string;
+  body: string;
+  featured?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-3xl border p-5 sm:p-6 ${
+        featured
+          ? "border-savage-yellow bg-savage-yellow/10"
+          : "border-savage-white/10 bg-savage-black/60"
+      }`}
+    >
+      <p
+        className={`font-display text-2xl sm:text-3xl ${
+          featured ? "text-savage-yellow" : "text-savage-white/40"
+        }`}
+      >
+        {n}
+      </p>
+      <p
+        className={`font-display uppercase mt-3 sm:mt-4 text-lg sm:text-xl ${
+          featured ? "text-savage-yellow" : "text-savage-white"
+        }`}
+      >
+        {title}
+      </p>
+      <p className="mt-2 text-sm text-savage-white/70 leading-relaxed">
+        {body}
+      </p>
+    </div>
   );
 }
 
 function Step2({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   return (
     <Shell
-      overline="02 · Welcome to the Savage team"
-      title="You're in. Here's what we need."
-      subtitle="We're a DJ plus a live band. Sax, guitar and drums step off the stage and play in the middle of your crowd. 100% interactive, 100% live, 100% yours."
+      overline="How we work · Together"
+      heroTitle
+      title={
+        <>
+          Two sides.
+          <br />
+          <span className="text-savage-yellow">One band.</span>
+        </>
+      }
+      subtitle="A wedding with us isn&rsquo;t a vendor job. You bring the people, the room and the story. We bring the band, the DJ and the know-how. The show we build together is the thing none of us could pull off alone."
     >
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
-            What we bring
+      <div className="grid gap-5 md:grid-cols-2">
+        <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6 sm:p-7">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+            Our side
           </p>
-          <p className="mt-3 text-savage-white/85 leading-relaxed">
-            DJ plus three live musicians. Sax, guitar and drums that leave the
-            stage mid-show and play right inside your crowd.
+          <p className="font-display uppercase mt-3 text-xl sm:text-2xl">
+            One DJ. Three musicians. No filler.
+          </p>
+          <p className="mt-3 text-sm sm:text-base text-savage-white/80 leading-relaxed">
+            Sax, guitar and drums that leave the stage mid-show and play right
+            inside your crowd. Three hours locked with the DJ, no dead air,
+            no awkward transitions.
           </p>
         </div>
-        <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
-            What we need from you
+        <div className="rounded-3xl border border-savage-yellow/40 bg-gradient-to-br from-savage-yellow/10 to-transparent p-6 sm:p-7">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+            Your side
           </p>
-          <p className="mt-3 text-savage-white/85 leading-relaxed">
-            Your taste, your crowd, your must-plays and your don&apos;t-plays.
-            Bring energy. There are no wrong answers, just the ones that make
-            the night yours.
+          <p className="font-display uppercase mt-3 text-xl sm:text-2xl">
+            Your taste. Your must-plays. Your story.
+          </p>
+          <p className="mt-3 text-sm sm:text-base text-savage-white/90 leading-relaxed">
+            The next 10 minutes shape your setlist. Everything you mark is a
+            note we take to rehearsal. Everything you veto, we drop.
           </p>
         </div>
       </div>
-      <Nav onBack={onBack} onNext={onNext} />
+
+      <p className="mt-8 font-editorial italic text-base sm:text-lg text-savage-cream/80 max-w-2xl">
+        &ldquo;Our favourite nights are the ones where we&rsquo;re playing for
+        friends. By the time we meet on the dancefloor, we want that to be
+        you.&rdquo;
+        <span className="block mt-2 text-xs not-italic uppercase tracking-[0.3em] text-savage-yellow">
+          — Christian, Savage Party
+        </span>
+      </p>
+
+      <Nav onBack={onBack} onNext={onNext} nextLabel="Start the setlist →" />
     </Shell>
   );
 }
@@ -615,9 +776,9 @@ function Step3({
     plan.phone.trim();
   return (
     <Shell
-      overline="03 · First the basics"
-      title="The boring but essential part."
-      subtitle="We confirm these against the contract. No surprises."
+      overline="Step 01 · The basics"
+      title="Who we&rsquo;re playing for."
+      subtitle="We confirm these against the contract. No surprises, just the facts the crew needs on the night."
     >
       <div className="grid gap-5">
         <Input
@@ -671,9 +832,9 @@ function Step4({
     plan.genres.length > 0 && plan.decades.length > 0 && plan.favoriteArtists.trim();
   return (
     <Shell
-      overline="04 · Your musical taste"
+      overline="Step 02 · Your world"
       title="What does your playlist look like?"
-      subtitle="Pick what you actually listen to, not what you think a wedding should sound like."
+      subtitle="Pick what you actually listen to, not what you think a wedding should sound like. This is what tells us where the night lives."
     >
       <div className="space-y-10">
         <div>
@@ -730,9 +891,9 @@ function Step5({
 }) {
   return (
     <Shell
-      overline="05 · Songs for the band · part 1"
+      overline="Step 03 · The setlist · I"
       title="Which of these would you love live?"
-      subtitle="Tick what you love. Don't stress about choosing everything, we read the room and keep the party going."
+      subtitle="Tick what you love. Don&rsquo;t stress about choosing everything, we read the room and keep the party going."
     >
       <div className="space-y-10">
         <CheckboxGroup
@@ -766,9 +927,9 @@ function Step6({
 }) {
   return (
     <Shell
-      overline="06 · Songs for the band · part 2"
-      title="More of the arsenal."
-      subtitle="Pick the ones that pull you onto the dancefloor."
+      overline="Step 04 · The setlist · II"
+      title="More of what we can fire live."
+      subtitle="Pick the ones that pull you onto the dancefloor. These are the bullets we load before the night starts."
     >
       <div className="space-y-10">
         <CheckboxGroup
@@ -814,9 +975,9 @@ function Step7({
 }) {
   return (
     <Shell
-      overline="07 · Wishlist"
-      title="A song we don't have, but you love?"
-      subtitle="If there's something you're dying to hear live that isn't in our list, drop it here. No promises, we'll try. Max 5 suggestions."
+      overline="Step 05 · The wishlist"
+      title="A song we don&rsquo;t have, but you love?"
+      subtitle="If there&rsquo;s something you&rsquo;re dying to hear live that isn&rsquo;t in our list, drop it here. No promises, we&rsquo;ll try. Max 5 suggestions."
     >
       <Textarea
         label="Songs not in our setlist"
@@ -844,9 +1005,9 @@ function Step8({
   const canNext = plan.crowd.length > 0;
   return (
     <Shell
-      overline="08 · Your crowd"
-      title="Who's going to be dancing?"
-      subtitle="Helps us balance what to play for you versus what to play for everyone."
+      overline="Step 06 · The crowd"
+      title="Who&rsquo;s going to be dancing?"
+      subtitle="Helps us balance what to play for you versus what to play for everyone. No floor stays empty on our watch."
     >
       <div className="space-y-10">
         <Textarea
@@ -910,9 +1071,9 @@ function Step9({
   const canNext = plan.specialMoments.trim().length > 0;
   return (
     <Shell
-      overline="09 · Must play + reference"
-      title="The non-negotiables and the deep cuts."
-      subtitle="Be selective. 10-20 songs max on must-play. This is the short list of what you can't imagine NOT hearing."
+      overline="Step 07 · Must-plays"
+      title="What you can&rsquo;t imagine not hearing."
+      subtitle="Be selective. 10-20 songs max. This is the short list we tattoo onto the setlist, the songs the night cannot end without."
     >
       <div className="space-y-8">
         <Textarea
@@ -946,25 +1107,27 @@ function Step9({
 function Step10({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   return (
     <Shell
-      overline="10 · The DJ set"
-      title="About the DJ coverage."
-      subtitle="Two live sets plus DJ before, between and after. The transitions are seamless. You won't feel the band leaving the stage, because the DJ is already there."
+      overline="Step 08 · How the DJ closes"
+      title="How the DJ carries you home."
+      subtitle="Two live sets plus DJ before, between and after. The transitions are invisible. You won&rsquo;t feel the band leaving the stage, because the DJ is already there."
     >
-      <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6 space-y-4 text-savage-white/85 leading-relaxed">
+      <div className="rounded-3xl border border-savage-white/10 bg-savage-black/60 p-6 sm:p-7 space-y-4 text-savage-white/85 leading-relaxed text-sm sm:text-base">
         <p>
-          When the band takes their 5-minute break mid-show, the DJ bridges it
+          When the band takes its 5-minute break mid-show, the DJ bridges it
           without breaking the energy. Same tone, same BPM range, same room.
+          You stay on the floor.
         </p>
         <p>
           At 01:30 (or later if you extend) the DJ closes the night solo.
-          That&apos;s when we take deeper requests from the room. The 1 or 2
-          extra hours can be booked in the contract.
+          That&rsquo;s where we take deeper requests from the room and let the
+          end feel earned. The 1 or 2 extra hours are booked in the contract.
         </p>
-        <p className="text-savage-yellow">
-          We want to know everything. Even the weird stuff.
+        <p className="font-editorial italic text-savage-yellow">
+          Tell us the weird stuff on the next page. The songs you love that no
+          one else in the room will know. That&rsquo;s where the magic lives.
         </p>
       </div>
-      <Nav onBack={onBack} onNext={onNext} nextLabel="Last step →" />
+      <Nav onBack={onBack} onNext={onNext} nextLabel="Final chapter →" />
     </Shell>
   );
 }
@@ -988,21 +1151,28 @@ function Step11({
     plan.doNotPlay.trim() && plan.anythingElse.trim() && plan.involvement.length > 0;
   return (
     <Shell
-      overline="11 · Final details"
-      title="Almost there."
-      subtitle="This last page is where you tell us what you really don't want and how involved you want to be."
+      overline="Step 09 · Last round"
+      heroTitle
+      title={
+        <>
+          One last pass
+          <br />
+          <span className="text-savage-yellow">and we&rsquo;re in.</span>
+        </>
+      }
+      subtitle="Tell us what you really don&rsquo;t want to hear, anything else we should know, and how involved you want to be. Then send it our way."
     >
       <div className="space-y-8">
         <Textarea
           label="Songs or artists you DON'T want to hear"
           value={plan.doNotPlay}
           onChange={(v) => update("doNotPlay", v)}
-          placeholder="Be honest. We won't judge."
+          placeholder="Be honest. Every veto saves a moment."
           required
           rows={4}
         />
         <Textarea
-          label="Anything else you'd like to tell us"
+          label="Anything else we should know"
           value={plan.anythingElse}
           onChange={(v) => update("anythingElse", v)}
           placeholder="Family drama on the dancefloor? Aunt's favourite song? The surprise you're planning?"
@@ -1010,8 +1180,8 @@ function Step11({
           rows={4}
         />
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/60 mb-3">
-            How involved do you want to be in music selection? *
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60 mb-3">
+            How involved do you want to be? *
           </p>
           <RadioGroup
             options={INVOLVEMENT_OPTIONS}
@@ -1021,19 +1191,30 @@ function Step11({
         </div>
       </div>
 
-      <div className="mt-12 flex items-center justify-between gap-4">
+      <div className="mt-10 sm:mt-12 rounded-3xl border border-savage-yellow/40 bg-gradient-to-br from-savage-yellow/10 to-transparent p-6 sm:p-7">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+          Before you hit send
+        </p>
+        <p className="font-editorial italic mt-3 text-base sm:text-lg text-savage-cream/90 leading-relaxed">
+          From here it goes straight to the band. If the music of your wedding
+          was making you nervous, it doesn&rsquo;t have to anymore. We&rsquo;ve
+          got it from here.
+        </p>
+      </div>
+
+      <div className="mt-10 sm:mt-12 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <button
           onClick={onBack}
-          className="text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow"
+          className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow"
         >
           ← Back
         </button>
         <button
           onClick={onSubmit}
           disabled={!canSubmit || status === "sending"}
-          className="rounded-full bg-savage-yellow px-8 py-4 font-semibold text-savage-ink transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-full bg-savage-yellow px-7 sm:px-9 py-4 sm:py-5 text-base sm:text-lg font-semibold text-savage-ink transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 uppercase tracking-[0.2em]"
         >
-          {status === "sending" ? "Sending to the band…" : "Submit to the band →"}
+          {status === "sending" ? "Sending to the band…" : "Send it to the band →"}
         </button>
       </div>
 
@@ -1049,21 +1230,45 @@ function Step11({
 
 function SentScreen() {
   return (
-    <div className="flex flex-1 items-center justify-center px-6 py-16 md:py-32">
+    <div className="flex flex-1 items-center justify-center px-6 py-20 sm:py-24 md:py-32">
       <div className="max-w-2xl text-center">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
-          Received
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
+          Got it
         </p>
-        <h1 className="font-display uppercase mt-6 text-[2.5rem] md:text-[5rem] leading-[0.9]">
-          We&apos;re on it.
+        <h1 className="font-display uppercase mt-5 sm:mt-6 text-[2.25rem] sm:text-[3rem] md:text-[5rem] leading-[0.9]">
+          You&rsquo;re officially
+          <br />
+          <span className="text-savage-yellow">part of the band.</span>
         </h1>
-        <p className="font-editorial italic mt-8 text-xl md:text-2xl text-savage-cream">
-          Your plan is with the band. We&apos;ll sit with it, then come back to
-          you within 48h with a first draft of your night.
+        <p className="font-editorial italic mt-6 sm:mt-8 text-lg sm:text-xl md:text-2xl text-savage-cream leading-[1.35]">
+          We&rsquo;ve got your setlist on the board. From here on we&rsquo;re
+          building your night together, song by song.
         </p>
-        <p className="mt-10 text-savage-white/60">
-          Welcome to the crew.
-          <br />— Christian, Savage Party
+        <div className="mt-8 sm:mt-10 rounded-3xl border border-savage-yellow/40 bg-savage-yellow/5 p-5 sm:p-6 text-left">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+            What happens next
+          </p>
+          <ul className="mt-3 space-y-2 text-sm sm:text-base text-savage-white/85">
+            <li>
+              <span className="text-savage-yellow">01 ·</span> Within 48h we
+              come back to you with the first draft of your show.
+            </li>
+            <li>
+              <span className="text-savage-yellow">02 ·</span> We tweak it
+              together until it feels like yours, as many rounds as you need.
+            </li>
+            <li>
+              <span className="text-savage-yellow">03 ·</span> On the night,
+              we play the wedding the three of us built.
+            </li>
+          </ul>
+        </div>
+        <p className="mt-8 sm:mt-10 text-sm sm:text-base text-savage-white/60">
+          See you at soundcheck.
+          <br />
+          <span className="font-editorial italic text-savage-cream">
+            Christian, on behalf of the band.
+          </span>
         </p>
       </div>
     </div>

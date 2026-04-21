@@ -798,23 +798,32 @@ function LeadCapture({
     setErrorMsg(null);
 
     try {
-      const res = await fetch("/api/lead", {
+      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+      if (!accessKey) throw new Error("Form not configured");
+
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
-          names,
+          access_key: accessKey,
+          subject: `New lead · ${names} · ${date}`,
+          from_name: "Savage Party web",
           email,
-          phone,
-          date,
-          venue,
-          vibe,
-          extendHours,
-          source: "build-your-show",
+          name: names,
+          phone: phone || "—",
+          "Wedding date": date,
+          "Venue": venue,
+          "Crowd vibe": vibe,
+          "Extend hours": `+${extendHours}h (total ${3 + extendHours}h)`,
+          "Source": "build-your-show",
         }),
       });
       const data = await res.json();
-      if (!res.ok || data.ok === false) {
-        throw new Error(data?.error ?? "Send failed");
+      if (!res.ok || data.success === false) {
+        throw new Error(data?.message ?? "Send failed");
       }
       setStatus("sent");
     } catch (err) {
@@ -839,8 +848,8 @@ function LeadCapture({
           We&apos;ll reply within 24h.
         </p>
         <p className="font-editorial italic mt-3 text-sm sm:text-base text-savage-cream">
-          We just sent you a confirmation email. Check your inbox, if nothing
-          lands in a minute check the spam folder once.
+          Your request is with the band. We&apos;ll come back to you within
+          24h with availability and next steps.
         </p>
         <button
           onClick={onReset}
