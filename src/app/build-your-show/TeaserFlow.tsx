@@ -798,8 +798,11 @@ function LeadCapture({
     setErrorMsg(null);
 
     try {
-      const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+      const accessKey = (process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "").trim();
       if (!accessKey) throw new Error("Form not configured");
+      if (typeof window !== "undefined") {
+        console.log("[lead] key length:", accessKey.length, "first 8:", accessKey.slice(0, 8));
+      }
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
