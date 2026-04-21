@@ -112,13 +112,13 @@ export default async function BlogPostPage({
         </p>
 
         {post.heroImage && (
-          <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-3xl border border-savage-white/10">
+          <div className="relative mt-10 aspect-[3/2] overflow-hidden rounded-3xl border border-savage-white/10">
             <Image
               src={post.heroImage}
               alt={post.heroAlt ?? post.title}
               fill
               sizes="(min-width: 1024px) 800px, 90vw"
-              className="object-cover"
+              className="object-cover object-top"
               priority
             />
           </div>
@@ -131,13 +131,13 @@ export default async function BlogPostPage({
               <div key={i} className="space-y-6">
                 <p>{para}</p>
                 {post.midImage && i === insertImageAfter - 1 && (
-                  <figure className="relative my-4 aspect-[16/9] overflow-hidden rounded-3xl border border-savage-white/10">
+                  <figure className="relative my-4 aspect-[3/2] overflow-hidden rounded-3xl border border-savage-white/10">
                     <Image
                       src={post.midImage}
                       alt={post.midImageAlt ?? post.title}
                       fill
                       sizes="(min-width: 1024px) 800px, 90vw"
-                      className="object-cover"
+                      className="object-cover object-top"
                     />
                   </figure>
                 )}

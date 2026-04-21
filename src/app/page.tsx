@@ -25,8 +25,8 @@ const BLOG_TEASERS = POSTS.slice(0, 3).map((p) => ({
   category: p.category,
   title: p.title,
   excerpt: p.excerpt,
-  heroImage: p.heroImage,
-  heroAlt: p.heroAlt,
+  teaserImage: p.midImage ?? p.heroImage,
+  teaserAlt: p.midImageAlt ?? p.heroAlt,
 }));
 
 const REPERTOIRE_TAGS = [
@@ -426,13 +426,13 @@ export default function Home() {
               className="group flex flex-col rounded-3xl border border-savage-white/10 bg-savage-ink/30 overflow-hidden transition hover:border-savage-yellow/60"
             >
               <div className="relative aspect-[16/10] border-b border-savage-white/5 bg-savage-ink overflow-hidden">
-                {p.heroImage ? (
+                {p.teaserImage ? (
                   <Image
-                    src={p.heroImage}
-                    alt={p.heroAlt ?? p.title}
+                    src={p.teaserImage}
+                    alt={p.teaserAlt ?? p.title}
                     fill
                     sizes="(min-width: 768px) 33vw, 90vw"
-                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-savage-white/20">
