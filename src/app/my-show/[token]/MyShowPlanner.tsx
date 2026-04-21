@@ -50,7 +50,8 @@ const FUNKY_CLASSICS = [
 ];
 
 const FEELGOOD = [
-  "Dance — Cardi B ft Bruno Mars",
+  "Finesse — Bruno Mars ft Cardi B",
+  "Man I Need — Olivia Dean",
   "Water — Tyla",
   "About Damn Time — Lizzo (Remix)",
   "Let's Get It Started — Black Eyed Peas",
