@@ -892,7 +892,7 @@ function LeadCapture({
         Reserve your date
       </p>
       <p className="font-editorial italic mt-2 text-sm sm:text-base text-savage-cream/90">
-        Drop your email and we&apos;ll send availability plus a 15-min call slot.
+        Drop your email and we&apos;ll send availability.
       </p>
 
       <label className="mt-4 sm:mt-5 block">
