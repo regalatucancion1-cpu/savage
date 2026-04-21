@@ -804,6 +804,50 @@ function LeadCapture({
         console.log("[lead] key length:", accessKey.length, "first 8:", accessKey.slice(0, 8));
       }
 
+      const vibeLabels: Record<Vibe, string> = {
+        international: "International mix (pop, disco, house)",
+        latin: "Latin heavy (reggaetón, Bad Bunny, Rosalía)",
+        oldschool: "Old school (Motown, funk, rock classics)",
+        fullsend: "Full send (techno, Ibiza, late night)",
+      };
+      const totalHours = 3 + extendHours;
+      const lengthLabel =
+        extendHours === 0
+          ? "3h (base set)"
+          : `${totalHours}h (3h base + ${extendHours}h DJ extension)`;
+      const prettyDate = (() => {
+        if (!date) return "(not set)";
+        const d = new Date(date);
+        if (isNaN(d.getTime())) return date;
+        return d.toLocaleDateString("en-GB", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      })();
+
+      const message = [
+        "New inquiry from the build-your-show flow on savageparty.es.",
+        "",
+        "━━━ COUPLE ━━━",
+        `Names:    ${names}`,
+        `Email:    ${email}`,
+        `Phone:    ${phone || "(not provided)"}`,
+        "",
+        "━━━ WEDDING ━━━",
+        `Date:     ${prettyDate}`,
+        `Venue:    ${venue}`,
+        "",
+        "━━━ SHOW ━━━",
+        `Vibe:     ${vibeLabels[vibe]}`,
+        `Length:   ${lengthLabel}`,
+        "",
+        "━━━ NEXT STEPS ━━━",
+        "Reply within 24h with availability and a price bracket.",
+        "Source: savageparty.es/build-your-show",
+      ].join("\n");
+
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -812,16 +856,13 @@ function LeadCapture({
         },
         body: JSON.stringify({
           access_key: accessKey,
-          subject: `New lead · ${names} · ${date}`,
-          from_name: "Savage Party web",
-          email,
+          subject: `New lead · ${names} · ${prettyDate} · ${venue}`,
+          from_name: "Savage Party · savageparty.es",
+          replyto: email,
           name: names,
-          phone: phone || "—",
-          "Wedding date": date,
-          "Venue": venue,
-          "Crowd vibe": vibe,
-          "Extend hours": `+${extendHours}h (total ${3 + extendHours}h)`,
-          "Source": "build-your-show",
+          email,
+          phone: phone || "(not provided)",
+          message,
         }),
       });
       const data = await res.json();
