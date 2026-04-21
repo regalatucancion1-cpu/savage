@@ -79,7 +79,7 @@ const structuredData = {
         addressCountry: "ES",
       },
       telephone: ["+34681955024", "+34634038685"],
-      email: "contact@savageparty.es",
+      email: "infosavageparty@gmail.com",
     },
   ],
 };
@@ -94,7 +94,7 @@ export default function Home() {
       <AudioPlayer src="/dj-mix.mp3" label="Savage · DJ Mix" />
 
       {/* HERO */}
-      <section className="relative flex min-h-[88vh] sm:min-h-[82vh] md:min-h-[85vh] flex-col overflow-hidden bg-savage-black">
+      <section className="relative flex min-h-[72vh] sm:min-h-[80vh] md:min-h-[85vh] flex-col overflow-hidden bg-savage-black">
         <div className="absolute inset-0">
           <video
             src="/hero.mp4"
@@ -147,7 +147,7 @@ export default function Home() {
           </nav>
         </div>
 
-        <div className="relative mt-auto px-6 pb-8 pt-20 sm:px-10 sm:pb-10 sm:pt-24 md:px-14 md:pb-12 md:pt-32 max-w-5xl">
+        <div className="relative mt-auto px-6 pb-8 pt-10 sm:px-10 sm:pb-10 sm:pt-20 md:px-14 md:pb-12 md:pt-32 max-w-5xl">
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
             DJ + Live band · destination weddings
           </p>
@@ -356,7 +356,7 @@ export default function Home() {
           <Testimonial
             quote="They read the room better than the photographer did. Every single moment landed."
             name="Guille &amp; Tatiana"
-            venue="Espai Can Palles"
+            venue="Espai Can Page"
           />
           <Testimonial
             quote="Three hours, zero drops. The DJ and the band locked together like they'd played a thousand weddings."
@@ -385,7 +385,7 @@ export default function Home() {
                 <li>Villa Almanita</li>
                 <li>Castell de L&apos;Empordà</li>
                 <li>Masia Cabellut</li>
-                <li>Espai Can Palles</li>
+                <li>Espai Can Page</li>
                 <li>La Paloma</li>
                 <li>Hotel Casa Fuster</li>
                 <li>Mas Torroella</li>
@@ -475,7 +475,7 @@ export default function Home() {
               Build your show →
             </Link>
             <a
-              href="mailto:contact@savageparty.es?subject=Savage%20Party%20booking%20inquiry"
+              href="mailto:infosavageparty@gmail.com?subject=Savage%20Party%20booking%20inquiry"
               className="rounded-full border border-savage-cream/40 px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Write us directly
@@ -505,10 +505,10 @@ export default function Home() {
             <ul className="mt-4 space-y-2 text-savage-white/85">
               <li>
                 <a
-                  href="mailto:contact@savageparty.es"
+                  href="mailto:infosavageparty@gmail.com"
                   className="hover:text-savage-yellow"
                 >
-                  contact@savageparty.es
+                  infosavageparty@gmail.com
                 </a>
               </li>
               <li>
@@ -566,8 +566,19 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-6 border-t border-savage-white/10 text-xs uppercase tracking-[0.3em] text-savage-white/50">
-          © {new Date().getFullYear()} Savage Party · Barcelona
+        <div className="mt-12 pt-6 border-t border-savage-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs uppercase tracking-[0.3em] text-savage-white/50">
+          <span>© {new Date().getFullYear()} Savage Party · Barcelona</span>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link href="/legal" className="hover:text-savage-yellow">
+              Legal notice
+            </Link>
+            <Link href="/privacy" className="hover:text-savage-yellow">
+              Privacy
+            </Link>
+            <Link href="/cookies" className="hover:text-savage-yellow">
+              Cookies
+            </Link>
+          </div>
         </div>
       </footer>
     </main>
