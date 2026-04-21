@@ -432,7 +432,7 @@ export default function Home() {
                     alt={p.teaserAlt ?? p.title}
                     fill
                     sizes="(min-width: 768px) 33vw, 90vw"
-                    className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+                    className="object-cover object-[center_30%] transition duration-500 group-hover:scale-[1.03]"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-savage-white/20">

@@ -118,7 +118,7 @@ export default async function BlogPostPage({
               alt={post.heroAlt ?? post.title}
               fill
               sizes="(min-width: 1024px) 800px, 90vw"
-              className="object-cover object-top"
+              className="object-cover object-[center_30%]"
               priority
             />
           </div>
@@ -137,7 +137,7 @@ export default async function BlogPostPage({
                       alt={post.midImageAlt ?? post.title}
                       fill
                       sizes="(min-width: 1024px) 800px, 90vw"
-                      className="object-cover object-top"
+                      className="object-cover object-[center_30%]"
                     />
                   </figure>
                 )}
