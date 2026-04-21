@@ -8,11 +8,39 @@ export const metadata: Metadata = {
   description:
     "Browse the Savage Party wedding repertoire. Hundreds of tracks across disco, funk, Latin pop, hip hop, R&B and rock classics. You pick the songs, we build the night.",
   alternates: { canonical: "/repertoire" },
+  openGraph: {
+    title: "Wedding repertoire · Savage Party",
+    description:
+      "Hundreds of tracks across disco, funk, Latin pop, hip hop, R&B and rock classics.",
+    url: "/repertoire",
+    type: "website",
+    images: [{ url: "/sp1.jpg", width: 1200, height: 630, alt: "Savage Party wedding repertoire" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Wedding repertoire · Savage Party",
+    description: "The full Savage Party song library for weddings.",
+    images: ["/sp1.jpg"],
+  },
+};
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  name: "Savage Party",
+  url: `${SITE_URL}/repertoire`,
+  genre: ["Disco", "Funk", "Latin pop", "Hip hop", "R&B", "Rock classics", "House"],
 };
 
 export default function RepertoirePage() {
   return (
     <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="flex items-center justify-between border-b border-savage-white/10 px-6 py-5 md:px-14">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -31,16 +59,16 @@ export default function RepertoirePage() {
         </Link>
       </header>
 
-      <section className="px-6 py-16 md:px-14 md:py-24">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <section className="px-6 py-14 sm:py-18 md:px-14 md:py-22">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
           Wedding repertoire · 2027
         </p>
-        <h1 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+        <h1 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.75rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
           The library.
           <br />
           <span className="text-savage-yellow">Your call.</span>
         </h1>
-        <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
+        <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
           Everything we play at weddings, grouped by style so it&apos;s easy to
           browse. The show is not split into fixed blocks, you pick the songs
           you love and flag what you don&apos;t. We read the floor and handle
@@ -48,8 +76,8 @@ export default function RepertoirePage() {
         </p>
       </section>
 
-      <section className="px-6 pb-24 md:px-14 md:pb-32">
-        <div className="grid gap-6 md:grid-cols-2">
+      <section className="px-6 pb-16 sm:pb-20 md:px-14 md:pb-24">
+        <div className="grid gap-5 sm:gap-6 md:grid-cols-2">
           {REPERTOIRE_CATEGORIES.map((cat) => (
             <article
               key={cat.id}
@@ -74,10 +102,10 @@ export default function RepertoirePage() {
           your suggestions, and the night never drops between your picks.
         </p>
 
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <Link
             href="/build-your-show"
-            className="inline-flex rounded-full bg-savage-yellow px-7 py-4 font-semibold text-savage-ink hover:brightness-110 transition"
+            className="inline-flex rounded-full bg-savage-yellow px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base font-semibold text-savage-ink hover:brightness-110 transition"
           >
             Build your show →
           </Link>

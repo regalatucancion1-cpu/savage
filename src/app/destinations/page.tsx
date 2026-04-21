@@ -7,6 +7,43 @@ export const metadata: Metadata = {
   description:
     "Savage Party plays weddings across Barcelona, Valencia, Madrid and on request across Spain, the Balearic Islands, France, Italy and Portugal.",
   alternates: { canonical: "/destinations" },
+  openGraph: {
+    title: "Destinations · Savage Party",
+    description:
+      "Weddings across Barcelona, Valencia, Madrid, Ibiza, Mallorca, France, Italy and Portugal.",
+    url: "/destinations",
+    type: "website",
+    images: [{ url: "/sp1.jpg", width: 1200, height: 630, alt: "Savage Party destination wedding" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Destinations · Savage Party",
+    description: "Where we play weddings in Spain and beyond.",
+    images: ["/sp1.jpg"],
+  },
+};
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  name: "Savage Party",
+  url: `${SITE_URL}/destinations`,
+  areaServed: [
+    "Barcelona",
+    "Valencia",
+    "Madrid",
+    "Costa Brava",
+    "Sitges",
+    "Marbella",
+    "Ibiza",
+    "Mallorca",
+    "Menorca",
+    "France",
+    "Italy",
+    "Portugal",
+  ],
 };
 
 const MAIN_CITIES = ["Barcelona", "Valencia", "Madrid"];
@@ -26,6 +63,10 @@ const ON_REQUEST = [
 export default function DestinationsPage() {
   return (
     <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="flex items-center justify-between border-b border-savage-white/10 px-6 py-5 md:px-14">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -44,32 +85,32 @@ export default function DestinationsPage() {
         </Link>
       </header>
 
-      <section className="px-6 py-16 md:px-14 md:py-24">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <section className="px-6 py-14 sm:py-18 md:px-14 md:py-22">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
           Where we play
         </p>
-        <h1 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+        <h1 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.75rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
           Barcelona, Valencia,
           <br />
           <span className="text-savage-yellow">Madrid and beyond.</span>
         </h1>
-        <p className="mt-6 text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
+        <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-savage-white/80 leading-relaxed max-w-2xl">
           Based in Barcelona. Pricing applies to weddings within 50 km of
           Barcelona. For venues further away, travel and logistics are priced
           transparently once we know the exact location.
         </p>
       </section>
 
-      <section className="px-6 pb-20 md:px-14 md:pb-28 space-y-12">
+      <section className="px-6 pb-16 sm:pb-20 md:px-14 md:pb-24 space-y-10 sm:space-y-12">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
             Main cities
           </p>
-          <ul className="mt-4 grid gap-4 md:grid-cols-3">
+          <ul className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-3">
             {MAIN_CITIES.map((city) => (
               <li
                 key={city}
-                className="rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-6 py-8 text-2xl font-medium"
+                className="rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-5 sm:px-6 py-6 sm:py-8 text-xl sm:text-2xl font-medium"
               >
                 {city}
               </li>
@@ -78,10 +119,10 @@ export default function DestinationsPage() {
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/50">
             Also on request
           </p>
-          <ul className="mt-4 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
+          <ul className="mt-4 grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {ON_REQUEST.map((city) => (
               <li
                 key={city}

@@ -147,11 +147,11 @@ export default function Home() {
           </nav>
         </div>
 
-        <div className="relative mt-auto p-8 md:p-14 max-w-5xl">
-          <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+        <div className="relative mt-auto p-6 sm:p-10 md:p-14 max-w-5xl">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
             DJ + Live band · destination weddings
           </p>
-          <h1 className="font-display mt-6 text-[2.25rem] leading-[0.9] md:text-[5rem] md:leading-[0.9] uppercase">
+          <h1 className="font-display mt-5 sm:mt-6 text-[2rem] sm:text-[3rem] md:text-[5rem] leading-[0.9] uppercase">
             We don&apos;t
             <br />
             play weddings
@@ -159,26 +159,26 @@ export default function Home() {
             <span className="text-savage-yellow">we perform them</span>
           </h1>
 
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-wrap gap-3 sm:gap-4">
             <Link
               href="/build-your-show"
-              className="rounded-full bg-savage-yellow px-7 py-4 font-semibold text-savage-ink hover:brightness-110 transition"
+              className="rounded-full bg-savage-yellow px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base font-semibold text-savage-ink hover:brightness-110 transition"
             >
               Build your show →
             </Link>
             <Link
               href="#live"
-              className="rounded-full border border-savage-white/40 px-7 py-4 text-savage-white hover:border-savage-yellow hover:text-savage-yellow transition"
+              className="rounded-full border border-savage-white/40 px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base text-savage-white hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Watch us live
             </Link>
           </div>
         </div>
 
-        <div className="relative border-t border-savage-white/10 bg-savage-black/60 px-6 py-4 md:px-14 backdrop-blur-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-[0.3em] text-savage-white/70">
+        <div className="relative border-t border-savage-white/10 bg-savage-black/60 px-6 py-3 sm:py-4 md:px-14 backdrop-blur-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 text-[10px] sm:text-xs uppercase tracking-[0.25em] sm:tracking-[0.3em] text-savage-white/70">
             <span>Based in Barcelona</span>
-            <span className="hidden md:inline">
+            <span className="hidden sm:inline">
               Barcelona · Valencia · Madrid
             </span>
             <span className="text-savage-yellow">Reply in 24h</span>
@@ -187,20 +187,20 @@ export default function Home() {
       </section>
 
       {/* LEAVE THE STAGE */}
-      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20 items-center max-w-6xl">
+      <section className="relative border-t border-savage-white/10 px-6 py-16 sm:py-20 md:px-14 md:py-24">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20 items-center max-w-6xl">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
               Leave the stage
             </p>
-            <h2 className="font-display mt-6 text-[2.25rem] md:text-[4.75rem] leading-[0.85] uppercase">
+            <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.75rem] md:text-[4.75rem] leading-[0.88] uppercase">
               The wedding
               <br />
               that feels
               <br />
               <span className="text-savage-yellow">like a festival</span>
             </h2>
-            <p className="mt-8 text-lg md:text-xl text-savage-white/90 leading-[1.35] max-w-xl font-medium">
+            <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-savage-white/90 leading-[1.4] max-w-xl font-medium">
               Three hours, one continuous set. DJ and live band locked
               together. Sax walks between your tables, drums roll through the
               crowd, guitar plays from the middle of the floor. The energy
@@ -209,13 +209,13 @@ export default function Home() {
             </p>
             <Link
               href="/what-we-do"
-              className="mt-10 inline-flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
+              className="mt-7 sm:mt-8 inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
             >
               How the night works →
             </Link>
           </div>
 
-          <div className="relative aspect-[2/3] max-w-sm w-full mx-auto overflow-hidden rounded-2xl bg-savage-ink/40">
+          <div className="relative aspect-[2/3] max-w-xs sm:max-w-sm w-full mx-auto overflow-hidden rounded-2xl bg-savage-ink/40">
             <Image
               src="/sp1-vintage.jpg"
               alt="Savage Party live band Spain, sax player in the crowd at a destination wedding"
@@ -230,14 +230,14 @@ export default function Home() {
       {/* VIDEOS — live + top moments */}
       <section
         id="live"
-        className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32"
+        className="relative border-t border-savage-white/10 px-6 py-16 sm:py-20 md:px-14 md:py-24"
       >
         <div className="flex flex-wrap items-end justify-between gap-6 max-w-5xl">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
               Watch us live
             </p>
-            <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
+            <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.5rem] md:text-[4rem] leading-[0.9] uppercase">
               Real weddings
               <br />
               <span className="text-savage-yellow">live on film</span>
@@ -245,11 +245,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-14">
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+        <div className="mt-10 sm:mt-12">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/50">
             Highlights
           </p>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <div className="mt-4 sm:mt-5 grid gap-4 sm:gap-5 md:grid-cols-2">
             {HORIZONTAL_VIDEOS.map((v) => (
               <LiteYouTube
                 key={v.id}
@@ -261,11 +261,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-14">
-          <p className="text-xs uppercase tracking-[0.3em] text-savage-white/50">
+        <div className="mt-10 sm:mt-12">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/50">
             Top moments · shorts
           </p>
-          <div className="mt-5 grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+          <div className="mt-4 sm:mt-5 grid gap-4 sm:gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
             {VERTICAL_VIDEOS.map((v) => (
               <LiteYouTube
                 key={v.id}
@@ -279,42 +279,42 @@ export default function Home() {
       </section>
 
       {/* REPERTOIRE — library/menu, not blocks */}
-      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-24 md:px-14 md:py-32">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-16 sm:py-20 md:px-14 md:py-24">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
           Repertoire
         </p>
-        <h2 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+        <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.75rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
           Your songs
           <br />
           <span className="text-savage-yellow">your call</span>
         </h2>
-        <p className="mt-6 text-lg md:text-xl text-savage-cream/85 leading-relaxed max-w-2xl">
+        <p className="mt-5 sm:mt-6 text-base sm:text-lg md:text-xl text-savage-cream/85 leading-relaxed max-w-2xl">
           Hundreds of tracks from disco, funk, Latin pop, hip hop and classic
           rock. You mark what you love in the planner. We build the wedding
           night around it.
         </p>
 
-        <ul className="mt-10 flex flex-wrap gap-2 max-w-3xl">
+        <ul className="mt-7 sm:mt-8 flex flex-wrap gap-2 max-w-3xl">
           {REPERTOIRE_TAGS.map((tag) => (
             <li
               key={tag}
-              className="rounded-full border border-savage-cream/20 px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-savage-cream/80"
+              className="rounded-full border border-savage-cream/20 px-3 sm:px-4 py-1.5 text-[10px] sm:text-xs uppercase tracking-[0.2em] text-savage-cream/80"
             >
               {tag}
             </li>
           ))}
         </ul>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center gap-4">
           <Link
             href="/repertoire"
-            className="inline-flex items-center gap-2 rounded-full bg-savage-yellow px-6 py-3 text-sm font-semibold text-savage-ink hover:brightness-110 transition"
+            className="inline-flex items-center gap-2 rounded-full bg-savage-yellow px-5 sm:px-6 py-3 text-sm font-semibold text-savage-ink hover:brightness-110 transition"
           >
             Browse the full library →
           </Link>
           <Link
             href="/build-your-show"
-            className="text-xs uppercase tracking-[0.3em] text-savage-cream/70 hover:text-savage-yellow"
+            className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-cream/70 hover:text-savage-yellow"
           >
             Build your setlist
           </Link>
@@ -322,17 +322,17 @@ export default function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <section className="relative border-t border-savage-white/10 px-6 py-16 sm:py-20 md:px-14 md:py-24">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
           Couples say
         </p>
-        <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
+        <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.5rem] md:text-[4rem] leading-[0.9] uppercase max-w-4xl">
           Real nights
           <br />
           <span className="text-savage-yellow">real words</span>
         </h2>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 sm:mt-10 grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Testimonial
             quote="The moment the sax came off the stage and walked up to our table, my grandmother started dancing. Best thirty seconds of the whole wedding."
             name="Sarah &amp; Cory"
@@ -367,11 +367,11 @@ export default function Home() {
       </section>
 
       {/* FEATURED STRIP · marquee */}
-      <section className="relative border-t border-savage-white/10 bg-savage-ink/40 py-14">
-        <p className="px-6 md:px-14 text-xs uppercase tracking-[0.3em] text-savage-white/60">
+      <section className="relative border-t border-savage-white/10 bg-savage-ink/40 py-10 sm:py-12">
+        <p className="px-6 md:px-14 text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
           Played at
         </p>
-        <div className="marquee mt-6">
+        <div className="marquee mt-5 sm:mt-6">
           <div className="marquee-track">
             {[...Array(2)].map((_, loop) => (
               <ul
@@ -398,13 +398,13 @@ export default function Home() {
       </section>
 
       {/* BLOG */}
-      <section className="relative border-t border-savage-white/10 px-6 py-24 md:px-14 md:py-32">
-        <div className="flex flex-wrap items-end justify-between gap-6 max-w-5xl">
+      <section className="relative border-t border-savage-white/10 px-6 py-16 sm:py-20 md:px-14 md:py-24">
+        <div className="flex flex-wrap items-end justify-between gap-5 max-w-5xl">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+            <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
               From the road
             </p>
-            <h2 className="font-display mt-6 text-[2rem] md:text-[4rem] leading-[0.9] uppercase">
+            <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.5rem] md:text-[4rem] leading-[0.9] uppercase">
               Notes for couples
               <br />
               <span className="text-savage-yellow">planning a wedding</span>
@@ -412,13 +412,13 @@ export default function Home() {
           </div>
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.3em] text-savage-yellow hover:underline"
           >
             Read the blog →
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 sm:mt-10 grid gap-5 sm:gap-6 md:grid-cols-3">
           {BLOG_TEASERS.map((p) => (
             <Link
               key={p.slug}
@@ -457,26 +457,26 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-24 md:px-14 md:py-32">
+      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-16 sm:py-20 md:px-14 md:py-24">
         <div className="max-w-4xl">
-          <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
             Let&apos;s see if the date&apos;s free
           </p>
-          <h2 className="font-display mt-6 text-[2rem] md:text-[5rem] leading-[0.9] uppercase">
+          <h2 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[3rem] md:text-[5rem] leading-[0.9] uppercase">
             Your night
             <br />
             <span className="text-savage-yellow">performed live</span>
           </h2>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-wrap gap-3 sm:gap-4">
             <Link
               href="/build-your-show"
-              className="rounded-full bg-savage-yellow px-7 py-4 font-semibold text-savage-ink hover:brightness-110 transition"
+              className="rounded-full bg-savage-yellow px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base font-semibold text-savage-ink hover:brightness-110 transition"
             >
               Build your show →
             </Link>
             <a
               href="mailto:infosavageparty@gmail.com?subject=Savage%20Party%20booking%20inquiry"
-              className="rounded-full border border-savage-cream/40 px-7 py-4 text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
+              className="rounded-full border border-savage-cream/40 px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Write us directly
             </a>
@@ -485,7 +485,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-savage-white/10 px-6 py-14 md:px-14 md:py-20">
+      <footer className="border-t border-savage-white/10 px-6 py-12 sm:py-14 md:px-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div>
             <Image

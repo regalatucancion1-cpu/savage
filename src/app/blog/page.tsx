@@ -14,6 +14,21 @@ export const metadata: Metadata = {
       "Notes for couples planning a destination wedding in Spain. Music, timelines, venues and honest vendor advice.",
     url: "/blog",
     type: "website",
+    images: [
+      {
+        url: "/sp1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Savage Party live at a destination wedding",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Savage Party · Blog",
+    description:
+      "Notes for couples planning a destination wedding in Spain.",
+    images: ["/sp1.jpg"],
   },
 };
 
@@ -38,24 +53,24 @@ export default function BlogIndex() {
         </Link>
       </header>
 
-      <section className="px-6 py-20 md:px-14 md:py-28">
-        <p className="text-xs uppercase tracking-[0.4em] text-savage-yellow">
+      <section className="px-6 py-14 sm:py-18 md:px-14 md:py-22">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
           The blog
         </p>
-        <h1 className="font-display mt-6 text-[2rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
+        <h1 className="font-display mt-4 sm:mt-5 text-[2rem] sm:text-[2.75rem] md:text-[4.5rem] leading-[0.9] uppercase max-w-4xl">
           Notes for couples
           <br />
           <span className="text-savage-yellow">planning a destination wedding.</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-savage-white/75 leading-relaxed">
+        <p className="mt-5 sm:mt-6 max-w-2xl text-base sm:text-lg text-savage-white/75 leading-relaxed">
           Short, honest writing from a vendor on the ground. Music, timelines,
           venues and the small decisions that decide whether your dancefloor
           fills or empties.
         </p>
       </section>
 
-      <section className="px-6 pb-24 md:px-14 md:pb-32">
-        <ul className="grid gap-8 md:grid-cols-2">
+      <section className="px-6 pb-16 sm:pb-20 md:px-14 md:pb-24">
+        <ul className="grid gap-6 sm:gap-8 md:grid-cols-2">
           {POSTS.map((post) => (
             <li key={post.slug}>
               <Link
@@ -77,21 +92,21 @@ export default function BlogIndex() {
                     </div>
                   )}
                 </div>
-                <div className="p-8">
-                  <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-savage-yellow">
+                <div className="p-6 sm:p-7">
+                  <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs uppercase tracking-[0.25em] sm:tracking-[0.3em] text-savage-yellow">
                     <span>{post.category}</span>
                     <span className="text-savage-white/40">·</span>
                     <span className="text-savage-white/60">
                       {post.readingTime}
                     </span>
                   </div>
-                  <h2 className="font-display uppercase text-2xl md:text-3xl mt-4 leading-tight group-hover:text-savage-yellow transition">
+                  <h2 className="font-display uppercase text-xl sm:text-2xl md:text-3xl mt-3 sm:mt-4 leading-tight group-hover:text-savage-yellow transition">
                     {post.title}
                   </h2>
-                  <p className="mt-4 text-savage-white/75 leading-relaxed">
+                  <p className="mt-3 sm:mt-4 text-sm sm:text-base text-savage-white/75 leading-relaxed">
                     {post.excerpt}
                   </p>
-                  <p className="mt-6 text-xs uppercase tracking-[0.3em] text-savage-white/50">
+                  <p className="mt-5 sm:mt-6 text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/50">
                     {new Date(post.date).toLocaleDateString("en-GB", {
                       day: "numeric",
                       month: "long",

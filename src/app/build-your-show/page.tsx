@@ -1,11 +1,35 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import TeaserFlow from "./TeaserFlow";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Build Your Show · Savage Party",
   description:
     "Sketch your night in 60 seconds. See the shape of your savage wedding: timing, vibe, sample tracks.",
+  alternates: { canonical: "/build-your-show" },
+  openGraph: {
+    title: "Build Your Show · Savage Party",
+    description:
+      "Sketch your wedding night in 60 seconds. DJ + live band, timing, vibe, sample tracks.",
+    url: "/build-your-show",
+    type: "website",
+    images: [
+      {
+        url: "/sp1.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Savage Party teaser show builder",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Build Your Show · Savage Party",
+    description:
+      "Sketch your wedding night in 60 seconds. DJ + live band teaser.",
+    images: ["/sp1.jpg"],
+  },
 };
 
 export default function BuildYourShowPage() {
