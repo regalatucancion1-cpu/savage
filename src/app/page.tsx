@@ -94,7 +94,7 @@ export default function Home() {
       <AudioPlayer src="/dj-mix.mp3" label="Savage · DJ Mix" />
 
       {/* HERO */}
-      <section className="relative flex min-h-screen flex-col overflow-hidden bg-savage-black">
+      <section className="relative flex min-h-[88vh] sm:min-h-[82vh] md:min-h-[85vh] flex-col overflow-hidden bg-savage-black">
         <div className="absolute inset-0">
           <video
             src="/hero.mp4"
@@ -147,7 +147,7 @@ export default function Home() {
           </nav>
         </div>
 
-        <div className="relative mt-auto p-6 sm:p-10 md:p-14 max-w-5xl">
+        <div className="relative mt-auto px-6 pb-8 pt-20 sm:px-10 sm:pb-10 sm:pt-24 md:px-14 md:pb-12 md:pt-32 max-w-5xl">
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
             DJ + Live band · destination weddings
           </p>
