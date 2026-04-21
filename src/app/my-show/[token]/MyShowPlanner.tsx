@@ -207,50 +207,103 @@ export default function MyShowPlanner({ token }: { token: string }) {
       if (!accessKey) throw new Error("Form not configured");
 
       const formatList = (items: string[]) =>
-        !items || items.length === 0 ? "(none)" : items.map((i) => `• ${i}`).join("\n");
+        !items || items.length === 0
+          ? "  (none)"
+          : items.map((i, idx) => `  ${String(idx + 1).padStart(2, "0")}. ${i}`).join("\n");
+      const block = (s: string) =>
+        !s || !s.trim() ? "  (empty)" : s.split("\n").map((l) => `  ${l}`).join("\n");
+
+      const prettyDate = (() => {
+        if (!plan.eventDate) return "(not set)";
+        const d = new Date(plan.eventDate);
+        if (isNaN(d.getTime())) return plan.eventDate;
+        return d.toLocaleDateString("en-GB", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      })();
 
       const message = [
-        `━━━ BASICS ━━━`,
-        `Names: ${plan.names}`,
-        `Event date: ${plan.eventDate}`,
-        `Venue: ${plan.venue}`,
-        `Phone: ${plan.phone || "(not provided)"}`,
+        `SAVAGE PARTY · MY SHOW SUBMISSION`,
+        `==================================`,
         ``,
-        `━━━ MUSICAL TASTE ━━━`,
-        `Genres:\n${formatList(plan.genres)}`,
+        `QUICK SUMMARY`,
+        `  Couple:    ${plan.names}`,
+        `  Date:      ${prettyDate}`,
+        `  Venue:     ${plan.venue}`,
+        `  Phone:     ${plan.phone || "(not provided)"}`,
+        `  Genres:    ${plan.genres.length ? plan.genres.join(", ") : "(none)"}`,
+        `  Decades:   ${plan.decades.length ? plan.decades.join(", ") : "(none)"}`,
+        `  Band songs picked: ${plan.bandSongs.length}`,
+        `  Guest weight (0 their taste, 10 ours): ${plan.guestWeight}`,
+        `  Involvement: ${plan.involvement || "(empty)"}`,
         ``,
-        `Favorite artists:\n${plan.favoriteArtists || "(empty)"}`,
         ``,
-        `Decades:\n${formatList(plan.decades)}`,
+        `01 · BASICS`,
+        `-----------`,
+        `  Names:     ${plan.names}`,
+        `  Date:      ${prettyDate}`,
+        `  Venue:     ${plan.venue}`,
+        `  Phone:     ${plan.phone || "(not provided)"}`,
         ``,
-        `━━━ BAND SONGS PICKED ━━━`,
+        `02 · MUSICAL TASTE`,
+        `------------------`,
+        `  Genres:`,
+        formatList(plan.genres),
+        ``,
+        `  Favorite artists / bands:`,
+        block(plan.favoriteArtists),
+        ``,
+        `  Decades:`,
+        formatList(plan.decades),
+        ``,
+        `03 · BAND SONGS PICKED (${plan.bandSongs.length})`,
+        `-----------------------`,
         formatList(plan.bandSongs),
         ``,
-        `━━━ WISHLIST ━━━`,
-        `${plan.wishlistSongs || "(empty)"}`,
+        `04 · WISHLIST`,
+        `-------------`,
+        `  Extra song wishes:`,
+        block(plan.wishlistSongs),
         ``,
-        `Drop everything song: ${plan.dropEverythingSong || "(empty)"}`,
+        `  Drop-everything song:`,
+        block(plan.dropEverythingSong),
         ``,
-        `━━━ CROWD ━━━`,
-        `Vibe: ${plan.crowd || "(empty)"}`,
-        `Guest weight (0 their taste ↔ 10 ours): ${plan.guestWeight}`,
+        `05 · CROWD`,
+        `----------`,
+        `  Vibe:`,
+        block(plan.crowd),
+        `  Guest weight (0 their taste, 10 ours): ${plan.guestWeight}`,
         ``,
-        `━━━ MUST PLAY + REFERENCES ━━━`,
-        `Must play:\n${plan.mustPlay || "(empty)"}`,
+        `06 · MUST PLAY`,
+        `--------------`,
+        block(plan.mustPlay),
         ``,
-        `Reference:\n${plan.reference || "(empty)"}`,
+        `07 · REFERENCE NIGHT / ARTIST`,
+        `-----------------------------`,
+        block(plan.reference),
         ``,
-        `Special moments:\n${plan.specialMoments || "(empty)"}`,
+        `08 · SPECIAL MOMENTS`,
+        `--------------------`,
+        block(plan.specialMoments),
         ``,
-        `━━━ DJ SET + EXTRAS ━━━`,
-        `Do NOT play:\n${plan.doNotPlay || "(empty)"}`,
+        `09 · DO NOT PLAY`,
+        `----------------`,
+        block(plan.doNotPlay),
         ``,
-        `Anything else:\n${plan.anythingElse || "(empty)"}`,
+        `10 · ANYTHING ELSE`,
+        `------------------`,
+        block(plan.anythingElse),
         ``,
-        `Involvement: ${plan.involvement || "(empty)"}`,
+        `11 · INVOLVEMENT LEVEL`,
+        `----------------------`,
+        `  ${plan.involvement || "(empty)"}`,
         ``,
-        `━━━ TOKEN ━━━`,
-        token,
+        `==================================`,
+        `  Token:  ${token}`,
+        `  Source: savageparty.es/my-show/${token}`,
       ].join("\n");
 
       const res = await fetch("https://api.web3forms.com/submit", {
@@ -261,11 +314,11 @@ export default function MyShowPlanner({ token }: { token: string }) {
         },
         body: JSON.stringify({
           access_key: accessKey,
-          subject: `My Show · ${plan.names} · ${plan.eventDate}`,
-          from_name: "Savage Party planner",
+          subject: `My Show · ${plan.names} · ${prettyDate} · ${plan.venue}`,
+          from_name: "Savage Party · planner",
           name: plan.names,
           email: "no-reply@savageparty.es",
-          phone: plan.phone || "—",
+          phone: plan.phone || "(not provided)",
           message,
         }),
       });
@@ -1118,16 +1171,16 @@ function Step10({ onNext, onBack }: { onNext: () => void; onBack: () => void }) 
           You stay on the floor.
         </p>
         <p>
-          At 01:30 (or later if you extend) the DJ closes the night solo.
-          That&rsquo;s where we take deeper requests from the room and let the
-          end feel earned. The 1 or 2 extra hours are booked in the contract.
+          Once the band wraps, the DJ closes the night solo. That&rsquo;s where
+          we take deeper requests from the room and let the end feel earned.
+          Any extra hours are the ones you book on top in the contract.
         </p>
         <p className="font-editorial italic text-savage-yellow">
           Tell us the weird stuff on the next page. The songs you love that no
           one else in the room will know. That&rsquo;s where the magic lives.
         </p>
       </div>
-      <Nav onBack={onBack} onNext={onNext} nextLabel="Final chapter →" />
+      <Nav onBack={onBack} onNext={onNext} nextLabel="Last step →" />
     </Shell>
   );
 }
