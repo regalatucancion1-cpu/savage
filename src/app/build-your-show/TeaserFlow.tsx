@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   AnimatePresence,
   motion,
@@ -782,23 +781,14 @@ function LeadCapture({
   extendHours: 0 | 1 | 2;
   onReset: () => void;
 }) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState(3);
 
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  useEffect(() => {
-    if (status !== "sent") return;
-    if (countdown <= 0) return;
-    const id = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(id);
-  }, [status, countdown]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -826,18 +816,7 @@ function LeadCapture({
       if (!res.ok || data.ok === false) {
         throw new Error(data?.error ?? "Send failed");
       }
-
-      const token = crypto.randomUUID().split("-")[0];
-      try {
-        sessionStorage.setItem(
-          `savage_lead_${token}`,
-          JSON.stringify({ names, email, phone, date, venue, vibe, extendHours }),
-        );
-      } catch {}
-
       setStatus("sent");
-      setCountdown(3);
-      setTimeout(() => router.push(`/my-show/${token}`), 3200);
     } catch (err) {
       console.error(err);
       setStatus("error");
@@ -854,31 +833,21 @@ function LeadCapture({
         className="rounded-3xl border border-savage-yellow bg-savage-yellow/5 p-6"
       >
         <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
-          You&apos;re in the system
+          Request received
         </p>
         <p className="font-display uppercase text-xl sm:text-2xl md:text-3xl mt-3 leading-[1.05]">
           We&apos;ll reply within 24h.
         </p>
         <p className="font-editorial italic mt-3 text-sm sm:text-base text-savage-cream">
-          Taking you to your show planner in {countdown > 0 ? countdown : 0}…
+          We just sent you a confirmation email. Check your inbox, if nothing
+          lands in a minute check the spam folder once.
         </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <button
-            onClick={() => {
-              const token = crypto.randomUUID().split("-")[0];
-              router.push(`/my-show/${token}`);
-            }}
-            className="rounded-full bg-savage-yellow px-5 py-2.5 text-sm font-semibold text-savage-ink hover:brightness-110 transition"
-          >
-            Go now →
-          </button>
-          <button
-            onClick={onReset}
-            className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow"
-          >
-            ← Start over
-          </button>
-        </div>
+        <button
+          onClick={onReset}
+          className="mt-5 text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow"
+        >
+          ← Start over
+        </button>
       </motion.div>
     );
   }
