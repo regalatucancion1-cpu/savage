@@ -644,6 +644,11 @@ export default function Home() {
                   Blog
                 </Link>
               </li>
+              <li>
+                <Link href="/faq" className="hover:text-savage-yellow">
+                  FAQ
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
