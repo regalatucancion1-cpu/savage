@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
 
 export const metadata: Metadata = {
-  title: "Wedding setlist · Savage Party repertoire 2027",
+  title: "Wedding setlist · Savage Party repertoire",
   description:
     "Browse the Savage Party wedding repertoire. Hundreds of tracks across disco, funk, Latin pop, hip hop, R&B and rock classics. You pick the songs, we build the night.",
   alternates: { canonical: "/repertoire" },

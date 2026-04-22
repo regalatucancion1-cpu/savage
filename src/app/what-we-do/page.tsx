@@ -5,12 +5,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "What we do · DJ plus live band for destination weddings",
   description:
-    "How Savage Party works: one DJ, three live musicians, three hours after dinner, no filler. Sax, guitar and drums leave the stage mid-show and play in the middle of your crowd.",
+    "How Savage Party works: one DJ, three live musicians, two hours of DJ + live band plus one extra hour of DJ, no filler. Sax, guitar and drums leave the stage mid-show and play in the middle of your crowd.",
   alternates: { canonical: "/what-we-do" },
   openGraph: {
     title: "What we do · Savage Party",
     description:
-      "DJ + three live musicians. Three hours, one continuous night. Sax, guitar and drums leave the stage.",
+      "DJ + three live musicians. Two hours of DJ + band plus one of DJ, one continuous night. Sax, guitar and drums leave the stage.",
     url: "/what-we-do",
     type: "website",
     images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Savage Party live at a destination wedding" }],
@@ -36,7 +36,7 @@ const jsonLd = {
   },
   areaServed: ["Spain", "Barcelona", "Ibiza", "Mallorca", "Costa Brava", "Madrid", "Valencia"],
   description:
-    "One DJ, three live musicians, three hours after dinner. Sax, guitar and drums leave the stage and play in the crowd.",
+    "One DJ, three live musicians. Two hours of DJ + live band plus one extra hour of DJ, after dinner. Sax, guitar and drums leave the stage and play in the crowd.",
   url: `${SITE_URL}/what-we-do`,
 };
 
