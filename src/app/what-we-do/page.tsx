@@ -13,13 +13,13 @@ export const metadata: Metadata = {
       "DJ + three live musicians. Three hours, one continuous night. Sax, guitar and drums leave the stage.",
     url: "/what-we-do",
     type: "website",
-    images: [{ url: "/sp1.jpg", width: 1200, height: 630, alt: "Savage Party live at a destination wedding" }],
+    images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Savage Party live at a destination wedding" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "What we do · Savage Party",
     description: "DJ + live band for destination weddings.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
 };
 

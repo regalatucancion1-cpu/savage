@@ -60,7 +60,7 @@ export const metadata: Metadata = {
       "We don't play weddings. We perform them. DJ plus sax, guitar and drums, off the stage, in the middle of your crowd.",
     images: [
       {
-        url: "/sp1.jpg",
+        url: "/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Savage Party live",
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     title: "Savage Party · DJ + Live Band for Destination Weddings",
     description:
       "We don't play weddings. We perform them. DJ plus sax, guitar and drums, off the stage, in the middle of your crowd.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
   robots: {
     index: true,

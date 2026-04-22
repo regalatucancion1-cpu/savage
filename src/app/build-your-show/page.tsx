@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/sp1.jpg",
+        url: "/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Savage Party teaser show builder",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Build Your Show · Savage Party",
     description:
       "Sketch your wedding night in 60 seconds. DJ + live band teaser.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
 };
 

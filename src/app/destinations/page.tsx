@@ -13,13 +13,13 @@ export const metadata: Metadata = {
       "Weddings across Barcelona, Valencia, Madrid, Ibiza, Mallorca, France, Italy and Portugal.",
     url: "/destinations",
     type: "website",
-    images: [{ url: "/sp1.jpg", width: 1200, height: 630, alt: "Savage Party destination wedding" }],
+    images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Savage Party destination wedding" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Destinations · Savage Party",
     description: "Where we play weddings in Spain and beyond.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
 };
 

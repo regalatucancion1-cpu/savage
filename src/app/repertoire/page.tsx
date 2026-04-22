@@ -14,13 +14,13 @@ export const metadata: Metadata = {
       "Hundreds of tracks across disco, funk, Latin pop, hip hop, R&B and rock classics.",
     url: "/repertoire",
     type: "website",
-    images: [{ url: "/sp1.jpg", width: 1200, height: 630, alt: "Savage Party wedding repertoire" }],
+    images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Savage Party wedding repertoire" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Wedding repertoire · Savage Party",
     description: "The full Savage Party song library for weddings.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
 };
 

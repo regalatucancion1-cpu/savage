@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/sp1.jpg",
+        url: "/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Savage Party live at a destination wedding",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Savage Party · Blog",
     description:
       "Notes for couples planning a destination wedding in Spain.",
-    images: ["/sp1.jpg"],
+    images: ["/og-default.jpg"],
   },
 };
 
