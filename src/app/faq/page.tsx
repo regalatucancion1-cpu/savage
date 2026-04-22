@@ -44,7 +44,7 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: "How long is the show?",
-        a: "Three hours of continuous DJ + live band after dinner, typically from around 23:00 to 02:00. You can extend the DJ for one or two extra hours to close the night Ibiza-style.",
+        a: "Two hours of DJ + live band after dinner, plus 1 extra hour of DJ included right after, typically from around 23:00 to 02:00. You can extend the DJ for one or two more hours to close the night Ibiza-style.",
       },
       {
         q: "Do the musicians really leave the stage?",

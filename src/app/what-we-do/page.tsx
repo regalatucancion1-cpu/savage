@@ -114,9 +114,9 @@ export default function WhatWeDoPage() {
             featured
           />
           <TimelineCard
-            time="01:30"
+            time="01:00"
             title="DJ · Late night"
-            body="The DJ takes over, non-stop closer. Extend by 1 or 2 extra hours for a true Ibiza close."
+            body="Band steps off. The DJ takes over for the included extra hour, non-stop closer. Extend by 1 or 2 more hours for a true Ibiza close."
           />
         </div>
       </section>
