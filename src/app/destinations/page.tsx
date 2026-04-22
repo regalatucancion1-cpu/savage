@@ -5,12 +5,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Destinations · wedding DJ and live band across Spain",
   description:
-    "Savage Party plays weddings across Barcelona, Valencia, Madrid and on request across Spain, the Balearic Islands, France, Italy and Portugal.",
+    "Savage Party plays weddings across Barcelona, Valencia, Madrid and all across Spain, including the Balearic Islands. Destination weddings abroad on request.",
   alternates: { canonical: "/destinations" },
   openGraph: {
     title: "Destinations · Savage Party",
     description:
-      "Weddings across Barcelona, Valencia, Madrid, Ibiza, Mallorca, France, Italy and Portugal.",
+      "Weddings across Barcelona, Valencia, Madrid, Ibiza, Mallorca and all across Spain. Abroad on request.",
     url: "/destinations",
     type: "website",
     images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Savage Party destination wedding" }],
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Destinations · Savage Party",
-    description: "Where we play weddings in Spain and beyond.",
+    description: "Where we play weddings across Spain.",
     images: ["/og-default.jpg"],
   },
 };
@@ -31,6 +31,7 @@ const jsonLd = {
   name: "Savage Party",
   url: `${SITE_URL}/destinations`,
   areaServed: [
+    "Spain",
     "Barcelona",
     "Valencia",
     "Madrid",
@@ -40,9 +41,6 @@ const jsonLd = {
     "Ibiza",
     "Mallorca",
     "Menorca",
-    "France",
-    "Italy",
-    "Portugal",
   ],
 };
 

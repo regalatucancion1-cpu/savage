@@ -34,7 +34,7 @@ const jsonLd = {
     name: "Savage Party",
     url: SITE_URL,
   },
-  areaServed: ["Spain", "Ibiza", "Mallorca", "France", "Italy", "Portugal"],
+  areaServed: ["Spain", "Barcelona", "Ibiza", "Mallorca", "Costa Brava", "Madrid", "Valencia"],
   description:
     "One DJ, three live musicians, three hours after dinner. Sax, guitar and drums leave the stage and play in the crowd.",
   url: `${SITE_URL}/what-we-do`,
