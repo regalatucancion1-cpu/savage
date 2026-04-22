@@ -65,6 +65,11 @@ const structuredData = {
         { "@type": "Place", name: "Mallorca" },
         { "@type": "Place", name: "Costa Brava" },
       ],
+      sameAs: [
+        "https://www.instagram.com/lasavageparty/",
+        "https://www.youtube.com/@savageparty2686",
+        "https://www.tiktok.com/@savageparty.es",
+      ],
     },
     {
       "@type": "LocalBusiness",
@@ -80,6 +85,11 @@ const structuredData = {
       },
       telephone: ["+34681955024", "+34634038685"],
       email: "infosavageparty@gmail.com",
+      sameAs: [
+        "https://www.instagram.com/lasavageparty/",
+        "https://www.youtube.com/@savageparty2686",
+        "https://www.tiktok.com/@savageparty.es",
+      ],
     },
   ],
 };
@@ -497,6 +507,62 @@ export default function Home() {
             <p className="mt-4 text-sm text-savage-white/60 leading-relaxed max-w-xs">
               DJ + live band for destination weddings. Based in Barcelona.
             </p>
+            <div className="mt-5 flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/lasavageparty/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Savage Party on Instagram"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-savage-white/20 text-savage-white/85 hover:border-savage-yellow hover:text-savage-yellow transition"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-[18px] w-[18px]"
+                  aria-hidden
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a
+                href="https://www.youtube.com/@savageparty2686"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Savage Party on YouTube"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-savage-white/20 text-savage-white/85 hover:border-savage-yellow hover:text-savage-yellow transition"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-[18px] w-[18px]"
+                  aria-hidden
+                >
+                  <path d="M23 12s0-3.5-.45-5.18a2.8 2.8 0 0 0-1.97-1.98C18.9 4.4 12 4.4 12 4.4s-6.9 0-8.58.44A2.8 2.8 0 0 0 1.45 6.82C1 8.5 1 12 1 12s0 3.5.45 5.18a2.8 2.8 0 0 0 1.97 1.98c1.68.44 8.58.44 8.58.44s6.9 0 8.58-.44a2.8 2.8 0 0 0 1.97-1.98C23 15.5 23 12 23 12Zm-13.2 3.2V8.8L15.6 12l-5.8 3.2Z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.tiktok.com/@savageparty.es"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Savage Party on TikTok"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-savage-white/20 text-savage-white/85 hover:border-savage-yellow hover:text-savage-yellow transition"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-[18px] w-[18px]"
+                  aria-hidden
+                >
+                  <path d="M19.6 7.6a6.4 6.4 0 0 1-3.7-1.2 6.4 6.4 0 0 1-1.6-1.8V15a5.4 5.4 0 1 1-5.4-5.4c.3 0 .6 0 .9.1v2.9a2.5 2.5 0 1 0 1.7 2.4V2h2.8c.1 1 .5 1.9 1.1 2.7a5.6 5.6 0 0 0 4.2 2.1v2.8Z" />
+                </svg>
+              </a>
+            </div>
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-savage-yellow">
