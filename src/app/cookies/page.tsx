@@ -177,10 +177,10 @@ export default function CookiesPage() {
             <p>
               For any question about cookies or your privacy, email{" "}
               <a
-                href="mailto:infosavageparty@gmail.com"
+                href="mailto:contact@savageparty.es"
                 className="text-savage-yellow hover:underline"
               >
-                infosavageparty@gmail.com
+                contact@savageparty.es
               </a>
               .
             </p>

@@ -84,7 +84,7 @@ const structuredData = {
         addressCountry: "ES",
       },
       telephone: ["+34681955024", "+34634038685"],
-      email: "infosavageparty@gmail.com",
+      email: "contact@savageparty.es",
       sameAs: [
         "https://www.instagram.com/lasavageparty/",
         "https://www.youtube.com/@savageparty2686",
@@ -467,8 +467,23 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-16 sm:py-20 md:px-14 md:py-24">
-        <div className="max-w-4xl">
+      <section className="relative border-t border-savage-white/10 bg-savage-ink text-savage-cream px-6 py-16 sm:py-20 md:px-14 md:py-24 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <video
+            src="/cta.mp4"
+            poster="/cta-poster.jpg"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-savage-ink via-savage-ink/80 to-savage-ink/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-savage-ink/90 via-transparent to-savage-ink/70" />
+        </div>
+        <div className="relative max-w-4xl">
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] text-savage-yellow">
             Let&apos;s see if the date&apos;s free
           </p>
@@ -485,7 +500,7 @@ export default function Home() {
               Build your show →
             </Link>
             <a
-              href="mailto:infosavageparty@gmail.com?subject=Savage%20Party%20booking%20inquiry"
+              href="mailto:contact@savageparty.es?subject=Savage%20Party%20booking%20inquiry"
               className="rounded-full border border-savage-cream/40 px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base text-savage-cream hover:border-savage-yellow hover:text-savage-yellow transition"
             >
               Write us directly
@@ -571,10 +586,10 @@ export default function Home() {
             <ul className="mt-4 space-y-2 text-savage-white/85">
               <li>
                 <a
-                  href="mailto:infosavageparty@gmail.com"
+                  href="mailto:contact@savageparty.es"
                   className="hover:text-savage-yellow"
                 >
-                  infosavageparty@gmail.com
+                  contact@savageparty.es
                 </a>
               </li>
               <li>

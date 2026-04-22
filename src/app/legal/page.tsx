@@ -55,10 +55,10 @@ export default function LegalPage() {
               <li>
                 Email:{" "}
                 <a
-                  href="mailto:infosavageparty@gmail.com"
+                  href="mailto:contact@savageparty.es"
                   className="text-savage-yellow hover:underline"
                 >
-                  infosavageparty@gmail.com
+                  contact@savageparty.es
                 </a>
               </li>
               <li>
@@ -135,10 +135,10 @@ export default function LegalPage() {
             <p>
               Write to{" "}
               <a
-                href="mailto:infosavageparty@gmail.com"
+                href="mailto:contact@savageparty.es"
                 className="text-savage-yellow hover:underline"
               >
-                infosavageparty@gmail.com
+                contact@savageparty.es
               </a>{" "}
               for any legal, data protection or copyright question.
             </p>

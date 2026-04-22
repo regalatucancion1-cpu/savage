@@ -53,10 +53,10 @@ export default function PrivacyPage() {
             <p className="mt-3">
               You can reach us at{" "}
               <a
-                href="mailto:infosavageparty@gmail.com"
+                href="mailto:contact@savageparty.es"
                 className="text-savage-yellow hover:underline"
               >
-                infosavageparty@gmail.com
+                contact@savageparty.es
               </a>{" "}
               for any question related to your data.
             </p>
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <strong>Direct emails:</strong> anything you send us via
-                infosavageparty@gmail.com.
+                contact@savageparty.es.
               </li>
               <li>
                 <strong>Technical data:</strong> basic logs (IP, browser,
@@ -193,10 +193,10 @@ export default function PrivacyPage() {
             <p className="mt-3">
               To exercise any of these rights, email{" "}
               <a
-                href="mailto:infosavageparty@gmail.com"
+                href="mailto:contact@savageparty.es"
                 className="text-savage-yellow hover:underline"
               >
-                infosavageparty@gmail.com
+                contact@savageparty.es
               </a>{" "}
               with the subject &quot;GDPR request&quot;. We will reply within
               30 days.

@@ -44,7 +44,7 @@ export default function Error({
           Back home
         </Link>
         <a
-          href="mailto:infosavageparty@gmail.com?subject=Website%20error"
+          href="mailto:contact@savageparty.es?subject=Website%20error"
           className="rounded-full border border-savage-white/20 px-6 sm:px-7 py-3 sm:py-4 text-sm sm:text-base text-savage-white/80 hover:text-savage-yellow transition"
         >
           Report it
