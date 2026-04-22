@@ -145,6 +145,9 @@ export default function Home() {
             <Link href="/repertoire" className="hover:text-savage-yellow">
               Repertoire
             </Link>
+            <Link href="/faq" className="hover:text-savage-yellow">
+              FAQ
+            </Link>
             <Link href="/blog" className="hover:text-savage-yellow">
               Blog
             </Link>

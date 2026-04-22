@@ -128,7 +128,7 @@ const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         q: "How much does Savage Party cost?",
-        a: "It depends on the venue, the date, travel and the line-up you pick. As a ballpark, a three-hour DJ + live band show in Catalonia starts in the low four digits, and weddings in Ibiza, Mallorca or outside Spain add travel and accommodation. You get a firm quote within 24h of submitting the form.",
+        a: "It depends on the venue, the date, travel and the line-up you pick. Every couple gets a custom quote, not a package price. Fill the short form at /build-your-show and you get a firm quote within 24h with everything broken down.",
       },
       {
         q: "What is included in the quote?",
