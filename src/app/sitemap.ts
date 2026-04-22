@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { POSTS } from "@/content/posts";
+import { CITY_LANDINGS } from "@/content/cityLandings";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://savageparty.es";
 
@@ -10,6 +11,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(p.date),
     changeFrequency: "yearly",
     priority: 0.7,
+  }));
+  const cities: MetadataRoute.Sitemap = CITY_LANDINGS.map((c) => ({
+    url: `${SITE_URL}/destinations/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.85,
   }));
   return [
     {
@@ -72,6 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.2,
     },
+    ...cities,
     ...posts,
   ];
 }

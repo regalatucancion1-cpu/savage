@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { CITY_LANDINGS } from "@/content/cityLandings";
 
 export const metadata: Metadata = {
   title: "Destinations · wedding DJ and live band across Spain",
@@ -43,8 +44,6 @@ const jsonLd = {
     "Menorca",
   ],
 };
-
-const MAIN_CITIES = ["Barcelona", "Valencia", "Madrid"];
 
 const ON_REQUEST = [
   "Costa Brava",
@@ -102,15 +101,22 @@ export default function DestinationsPage() {
       <section className="px-6 pb-16 sm:pb-20 md:px-14 md:pb-24 space-y-10 sm:space-y-12">
         <div>
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
-            Main cities
+            Main destinations
           </p>
           <ul className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-3">
-            {MAIN_CITIES.map((city) => (
-              <li
-                key={city}
-                className="rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-5 sm:px-6 py-6 sm:py-8 text-xl sm:text-2xl font-medium"
-              >
-                {city}
+            {CITY_LANDINGS.map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/destinations/${c.slug}`}
+                  className="group block rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 px-5 sm:px-6 py-6 sm:py-8 transition hover:border-savage-yellow hover:bg-savage-yellow/10"
+                >
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow/80">
+                    {c.region}
+                  </p>
+                  <p className="mt-2 text-xl sm:text-2xl font-medium group-hover:text-savage-yellow transition">
+                    {c.city} →
+                  </p>
+                </Link>
               </li>
             ))}
           </ul>
