@@ -52,7 +52,7 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: "Do you play during dinner or ceremony?",
-        a: "Our core product starts after dinner. For the ceremony and dinner we can recommend a smaller acoustic line-up or a dedicated ceremony act, or we can coordinate with a vendor you already love.",
+        a: "Our core show is the after-dinner fiesta. We sometimes cover the aperitivo or cocktail hour with a smaller line-up, but the heart of what we do is the post-dinner party.",
       },
       {
         q: "How customisable is the setlist?",
@@ -66,15 +66,15 @@ const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         q: "How far in advance should we book?",
-        a: "For peak season (May to October) in Spain, 9 to 14 months ahead is the norm. Popular weekends (late June, early September) go first. If your date is inside 6 months, write to us anyway, we keep a couple of slots for late bookings.",
+        a: "Most couples book us 9 to 12 months ahead. If your date is closer than that, write to us anyway, we sometimes have late slots open.",
       },
       {
         q: "How do I reserve a date?",
-        a: "Fill the short form at /build-your-show, we reply within 24h with availability and a quote. A signed contract plus a deposit locks the date, everything after that lives in your private show planner.",
+        a: "Fill the short form at /build-your-show, we reply within 24h with availability and a custom quote. A signed contract locks the date, everything after that lives in your private show planner.",
       },
       {
         q: "What happens if we need to change the date?",
-        a: "We try to move you to a new date at no extra cost if we are available. If we are not, the deposit can be applied to a friend or family referral, or refunded according to the contract terms.",
+        a: "We do our best to relocate you to a new date. The exact terms are laid out in your contract.",
       },
       {
         q: "Do you sign a contract?",
@@ -88,19 +88,19 @@ const FAQ_GROUPS: FAQGroup[] = [
     items: [
       {
         q: "Where do you play?",
-        a: "We are based in Barcelona and play across Spain, the Balearic Islands, the south of France, Italy and Portugal. Barcelona, Costa Brava, Sitges, Valencia, Madrid, Marbella, Ibiza, Mallorca and Menorca are our most common destinations.",
+        a: "We are based in Barcelona and play across Spain. Costa Brava, Sitges, Valencia, Madrid, Marbella, Ibiza, Mallorca and Menorca are our most common destinations. We have not played outside Spain yet but we are open to destination weddings abroad.",
       },
       {
         q: "Do you need a stage and sound system?",
-        a: "We bring a full professional sound and light rig designed for up to 200 guests. For larger crowds we scale the rig up. If your venue has an existing system, we can often plug into it, we handle the technical call with the venue.",
+        a: "Usually the venue's sound company provides the rig. If the venue does not have one, we can bring our own professional sound and light equipment, scaled to the guest count and space.",
       },
       {
         q: "What power and space do you need?",
-        a: "We need a minimum 5m by 4m area near the dancefloor and one 16A power line. We share a tech rider with venue-specific requirements once the date is confirmed.",
+        a: "One 16A power line and a speaker system powerful enough for the venue. We share the full venue-specific requirements once the date is confirmed.",
       },
       {
         q: "Can you play outdoors?",
-        a: "Yes. For outdoor shows we bring weather covers for the gear and confirm a plan-B location with the venue during load-in. Local noise curfews are the main thing to check together.",
+        a: "Yes. Local noise curfews are the main thing to check with the venue.",
       },
     ],
   },
@@ -118,7 +118,7 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: "Do you play in English and Spanish?",
-        a: "Yes, and Catalan, French, Italian and Portuguese appear too. Destination weddings in Spain usually mix languages and the setlist follows the crowd.",
+        a: "Yes. Our repertoire is built around English and Spanish. Destination weddings in Spain usually mix both and the setlist follows the crowd.",
       },
     ],
   },
@@ -132,11 +132,7 @@ const FAQ_GROUPS: FAQGroup[] = [
       },
       {
         q: "What is included in the quote?",
-        a: "The artists, sound, lights, one on-site soundcheck, the full show and access to the private show planner. Travel and accommodation are quoted separately so you can see exactly where the money goes.",
-      },
-      {
-        q: "Do you issue invoices?",
-        a: "Yes, we operate as autónomo under Spanish law and issue a compliant invoice after the event. Bank transfer or Bizum are the accepted payment methods.",
+        a: "Every wedding is different, which is why we don't publish packages. Each quote is personalized to your venue, guest count, line-up and logistics, and broken down line by line so you see exactly what's included.",
       },
     ],
   },
