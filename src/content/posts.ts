@@ -426,6 +426,50 @@ export const POSTS: Post[] = [
       "If you're choosing between the Costa Brava, the Empordà and the Penedès for a Catalan destination wedding, our honest call: Empordà offers better weather consistency in September, Penedès is cheaper and underrated for food, Costa Brava has the aesthetic ceiling and the highest vendor quality. Pick by priority.",
     ],
   },
+  {
+    slug: "wedding-music-madrid-destination",
+    title: "Wedding music in Madrid: what works when guests are international",
+    excerpt:
+      "Madrid destination weddings have one specific challenge: mixed Spanish and international guest lists, high music expectations, and venues spread between the city centre and the Sierra.",
+    category: "Destinations",
+    date: "2026-04-15",
+    readingTime: "6 min",
+    seoDescription:
+      "How to plan the music for a Madrid destination wedding. Venue tiers in the Sierra and the city centre, mixed-language guest lists, local sound logistics, and what actually fills the floor.",
+    body: [
+      "Madrid destination weddings are different from coastal Spain weddings in one specific way: the guest list. Most Madrid couples we play for are Spanish families, with partners or extended friend groups coming in from the UK, the US, France or Latin America. That mix shapes everything about the music.",
+      "Venue tiers that matter. Tier one country estates in the Sierra de Guadarrama and the Valle del Tiétar, 45 to 75 minutes out of the city. These are the estates where the night runs itself, music curfews push to 02:00 or 03:00, and the setup space is generous enough to bring a proper rig. Tier two palacios and palaces in the city centre, beautiful but tighter on sound and usually cut at 00:00 for residential reasons. Tier three hybrid hotel venues on the M-40 ring, flexible but less visually distinctive.",
+      "What the mixed guest list means for the setlist. The old Spanish wedding default of 80 percent local hits plus 20 percent international does not work for this crowd. The ratio that works is closer to 50-50, with a clear global disco and funk anchor in the middle so both halves of the room connect. Latin pop is the universal language at these weddings, followed by 90s and 2000s global pop, then classics from Motown to Michael Jackson.",
+      "Local sound, travel crew. Most Madrid wedding venues work with one or two established sound companies who install the rig as part of the venue package. If you're bringing a DJ or a DJ plus live band from outside Madrid, the cleanest deal is to plug into the local rig rather than truck sound in. We travel with DJ gear and instruments, we rent nothing we can't carry. The quote reflects that.",
+      "Travel logistics from Barcelona are a 2.5-hour AVE ride or a one-hour flight. For a late show we usually sleep in Madrid, the accommodation is part of the quote, it's never a surprise.",
+      "The timeline that works. Cocktail hour at sunset, dinner 21:30, speeches by 23:00, cake and first dance at 23:30, DJ plus live band block from 23:30 to 01:30, extra DJ hour until 02:30, late close to 03:00 at the venues that allow it. If you can push the ceremony to 19:00 or 19:30 you buy an extra hour of light for photos and the timeline gets much kinder on the peak dancing.",
+      "Best months for a Madrid destination wedding: late April through June, and mid-September through October. July and August are brutally hot in the Sierra and the city, and most country estates close their outdoor season. Winter weddings work but narrow your venue list.",
+      "If you're planning a Madrid wedding and the guest list is genuinely international, the number one thing to get right is the peak dancing block. Everything else the guests will forgive. A weak music peak on an otherwise beautiful Madrid wedding is the thing they remember wrong.",
+    ],
+  },
+  {
+    slug: "how-to-choose-wedding-dj-spain",
+    title: "How to choose a wedding DJ in Spain: the 7 questions that matter",
+    excerpt:
+      "Most couples hire the first DJ that replies. Here's the shortlist of questions that actually separate a serious wedding DJ from someone who'll leave your floor empty at midnight.",
+    category: "Planning",
+    date: "2026-04-05",
+    readingTime: "5 min",
+    seoDescription:
+      "A vendor's guide to choosing a wedding DJ in Spain. The seven questions couples should ask, the red flags that matter, and the mistakes that cost the peak dancing block.",
+    body: [
+      "We've played alongside dozens of wedding DJs across Spain. The gap between a serious wedding DJ and someone who just owns gear is enormous, and it's not visible from the website. Here are the seven questions that separate the two.",
+      "Question one: how many weddings did you play last year? A full-time wedding DJ in Spain plays 30 to 70 weddings a season. Someone playing 8 a year is not a wedding DJ, they're a hobbyist with a good camera. Ask for the number and ask to see a timeline of dates.",
+      "Question two: can I hear 10 minutes of a recent wedding? Not a teaser, not a highlight reel, 10 continuous minutes of a real set. Anyone who plays weddings for real has this and will send it. Anyone who doesn't, doesn't have it because their real sets don't hold up.",
+      "Question three: what happens if my must-play isn't in your library? A serious DJ answers 'I buy it'. A weak DJ answers 'we'll find something similar'. The answer tells you whether your input matters on the night.",
+      "Question four: do you MC or just play music? For an international guest list the DJ needs to handle first dance introductions, cake cut calls, and bilingual announcements. Not every DJ does this. Ask specifically.",
+      "Question five: what sound system do you arrive with? If the answer is vague, be nervous. A DJ for a 150-guest wedding should be comfortable naming the tops, the subs, the wattage and the brand. 'We bring everything needed' is not an answer.",
+      "Question six: what does your contract say about overrun? If your wedding runs 30 minutes late and the DJ block compresses, what happens? A real vendor has a clause. A weak one improvises on the night and you get a 15-minute peak instead of a 90-minute one.",
+      "Question seven: who's actually playing on the night? This is the one that catches couples out. Some agencies sell the top DJ in the photos and send a junior on the day. Ask for the name of the person playing your wedding, in writing, in the contract.",
+      "Red flags to avoid. Three-line email replies, no website, no contract, price quoted without hearing your venue details, pressure to pay cash, discounts for 'booking this week', refusal to share a recent real recording. Any one of those is a no.",
+      "The mistake most couples make. They pick the cheapest DJ who seemed nice on a 20-minute call. The cheapest option almost never costs less in the end, because the floor collapses at midnight and you end the wedding early. For the one Saturday of your life, budget the peak dancing block properly and pick the vendor who answers the seven questions without hesitating.",
+    ],
+  },
 ];
 
 export function getPostBySlug(slug: string): Post | undefined {
