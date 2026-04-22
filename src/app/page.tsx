@@ -108,7 +108,7 @@ export default function Home() {
         <div className="absolute inset-0">
           <video
             src="/hero.mp4"
-            poster="/sp1.jpg"
+            poster="/hero-poster.jpg"
             autoPlay
             loop
             muted
