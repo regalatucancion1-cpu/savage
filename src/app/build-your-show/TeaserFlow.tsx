@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -58,47 +58,80 @@ const vibes: {
   },
 ];
 
+const audioByVibe: Record<Vibe, { src: string; type: string; track: string }> = {
+  international: {
+    src: "/audio/vibe-international.mp3",
+    type: "audio/mpeg",
+    track: "Dancing Queen · DJ mix",
+  },
+  latin: {
+    src: "/audio/vibe-latin.m4a",
+    type: "audio/mp4",
+    track: "DTMF · DJ mix",
+  },
+  oldschool: {
+    src: "/audio/vibe-oldschool.mp3",
+    type: "audio/mpeg",
+    track: "Never Too Much · DJ mix",
+  },
+  fullsend: {
+    src: "/audio/vibe-fullsend.mp3",
+    type: "audio/mpeg",
+    track: "Man I Need · DJ mix",
+  },
+};
+
 const tracksByVibe: Record<Vibe, { title: string; artist: string }[]> = {
   international: [
     { title: "Don't Stop Me Now", artist: "Queen" },
     { title: "Dance the Night", artist: "Dua Lipa" },
-    { title: "September", artist: "Earth, Wind & Fire" },
-    { title: "One More Time", artist: "Daft Punk" },
-    { title: "Freed From Desire", artist: "Gala" },
-    { title: "Mr. Brightside", artist: "The Killers" },
+    { title: "Uptown Funk", artist: "Bruno Mars" },
+    { title: "I Gotta Feeling", artist: "Black Eyed Peas" },
+    { title: "Moves Like Jagger", artist: "Maroon 5" },
+    { title: "Mr Brightside", artist: "The Killers" },
   ],
   latin: [
-    { title: "Titi Me Preguntó", artist: "Bad Bunny" },
+    { title: "Tití Me Preguntó", artist: "Bad Bunny" },
     { title: "Pepas", artist: "Farruko" },
-    { title: "Despechá", artist: "Rosalía" },
-    { title: "Gasolina", artist: "Daddy Yankee" },
-    { title: "La Bachata", artist: "Manuel Turizo" },
-    { title: "TQG", artist: "Karol G, Shakira" },
+    { title: "Hips Don't Lie", artist: "Shakira" },
+    { title: "Temperature", artist: "Sean Paul" },
+    { title: "Water", artist: "TYLA" },
+    { title: "Get Busy", artist: "Sean Paul" },
   ],
   oldschool: [
     { title: "Superstition", artist: "Stevie Wonder" },
-    { title: "Ain't No Mountain High Enough", artist: "Marvin Gaye" },
+    { title: "Never Too Much", artist: "Luther Vandross" },
     { title: "Dancing Queen", artist: "ABBA" },
     { title: "I Wanna Dance With Somebody", artist: "Whitney Houston" },
-    { title: "Sweet Caroline", artist: "Neil Diamond" },
-    { title: "Livin' on a Prayer", artist: "Bon Jovi" },
+    { title: "Stayin' Alive", artist: "Bee Gees" },
+    { title: "September", artist: "Earth, Wind & Fire" },
   ],
   fullsend: [
-    { title: "Music Sounds Better With You", artist: "Stardust" },
-    { title: "One Kiss", artist: "Calvin Harris, Dua Lipa" },
-    { title: "Losing It", artist: "Fisher" },
-    { title: "Body", artist: "Loud Luxury" },
-    { title: "In My Mind", artist: "Dynoro" },
-    { title: "Insomnia", artist: "Faithless" },
+    { title: "Freed From Desire", artist: "Gala" },
+    { title: "Don't Stop the Party", artist: "Pitbull" },
+    { title: "Fireball", artist: "Pitbull" },
+    { title: "Get Low", artist: "Lil Jon" },
+    { title: "Hotel Room Service", artist: "Pitbull" },
+    { title: "One Dance", artist: "Drake" },
   ],
 };
 
-const timeline = [
-  { time: "23:00", title: "DJ + Band · Set 1", note: "The warm-up. Groove heavy, floor filling." },
-  { time: "00:00", title: "DJ + Band · Set 2", note: "Peak. Sax, guitar and drums leave the stage, into the crowd." },
-  { time: "01:30", title: "DJ · Late night", note: "Closer flow, non-stop to the end." },
-  { time: "02:30", title: "Shutdown", note: "" },
+const timeline: { offsetMin: number; title: string; note: string }[] = [
+  { offsetMin: 0, title: "DJ + Band · Set 1", note: "The warm-up. Groove heavy, floor filling." },
+  { offsetMin: 60, title: "DJ + Band · Set 2", note: "Peak. Sax, guitar and drums leave the stage, into the crowd." },
+  { offsetMin: 150, title: "DJ · Late night", note: "Closer flow, non-stop to the end." },
+  { offsetMin: 210, title: "Shutdown", note: "" },
 ];
+
+const startTimeOptions = ["20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
+
+function addMinutes(time: string, minutes: number): string {
+  const [h, m] = time.split(":").map(Number);
+  const total = (h * 60 + m + minutes + 24 * 60) % (24 * 60);
+  const newH = Math.floor(total / 60);
+  const newM = total % 60;
+  return `${String(newH).padStart(2, "0")}:${String(newM).padStart(2, "0")}`;
+}
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -109,6 +142,7 @@ export default function TeaserFlow() {
   const [venue, setVenue] = useState("");
   const [vibe, setVibe] = useState<Vibe | null>(null);
   const [extendHours, setExtendHours] = useState<0 | 1 | 2>(0);
+  const [startTime, setStartTime] = useState<string>("23:00");
 
   const canNext1 = names.trim().length > 1 && date.length > 0;
   const canNext2 = venue.trim().length > 1;
@@ -137,6 +171,7 @@ export default function TeaserFlow() {
         vibe={vibe}
         extendHours={extendHours}
         onExtend={setExtendHours}
+        startTime={startTime}
         onReset={() => {
           setStep(1);
           setNames("");
@@ -144,6 +179,7 @@ export default function TeaserFlow() {
           setVenue("");
           setVibe(null);
           setExtendHours(0);
+          setStartTime("23:00");
         }}
       />
     );
@@ -159,6 +195,7 @@ export default function TeaserFlow() {
             step={step}
             names={names}
             date={date}
+            startTime={startTime}
             venue={venue}
             vibe={vibe}
             canNext1={canNext1}
@@ -166,6 +203,7 @@ export default function TeaserFlow() {
             canNext3={canNext3}
             setNames={setNames}
             setDate={setDate}
+            setStartTime={setStartTime}
             setVenue={setVenue}
             setVibe={setVibe}
             setStep={setStep}
@@ -187,6 +225,7 @@ function StepArea({
   step,
   names,
   date,
+  startTime,
   venue,
   vibe,
   canNext1,
@@ -194,6 +233,7 @@ function StepArea({
   canNext3,
   setNames,
   setDate,
+  setStartTime,
   setVenue,
   setVibe,
   setStep,
@@ -201,6 +241,7 @@ function StepArea({
   step: Step;
   names: string;
   date: string;
+  startTime: string;
   venue: string;
   vibe: Vibe | null;
   canNext1: boolean;
@@ -208,6 +249,7 @@ function StepArea({
   canNext3: boolean;
   setNames: (v: string) => void;
   setDate: (v: string) => void;
+  setStartTime: (v: string) => void;
   setVenue: (v: string) => void;
   setVibe: (v: Vibe) => void;
   setStep: (s: Step) => void;
@@ -258,6 +300,30 @@ function StepArea({
                 placeholder=""
                 className="mt-5"
               />
+              <div className="mt-5">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+                  Party start
+                </span>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {startTimeOptions.map((opt) => {
+                    const active = opt === startTime;
+                    return (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setStartTime(opt)}
+                        className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
+                          active
+                            ? "border-savage-yellow bg-savage-yellow text-savage-ink"
+                            : "border-savage-white/25 text-savage-white/80 hover:border-savage-yellow/60 hover:text-savage-yellow"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <NavRow
                 primaryLabel="Next →"
                 primaryDisabled={!canNext1}
@@ -588,6 +654,7 @@ function Result({
   vibe,
   extendHours,
   onExtend,
+  startTime,
   onReset,
 }: {
   names: string;
@@ -596,12 +663,41 @@ function Result({
   vibe: Vibe;
   extendHours: 0 | 1 | 2;
   onExtend: (v: 0 | 1 | 2) => void;
+  startTime: string;
   onReset: () => void;
 }) {
   const tracks = tracksByVibe[vibe];
+  const audio = audioByVibe[vibe];
   const prettyDate = formatDate(date);
   const totalHours = 3 + extendHours;
-  const shutdown = extendHours === 0 ? "02:30" : extendHours === 1 ? "03:30" : "04:30";
+  const shutdownOffset = 210 + extendHours * 60;
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    el.volume = 0.7;
+    const tryPlay = el.play();
+    if (tryPlay && typeof tryPlay.then === "function") {
+      tryPlay.then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
+    return () => {
+      el.pause();
+    };
+  }, [vibe]);
+
+  function toggle() {
+    const el = audioRef.current;
+    if (!el) return;
+    if (el.paused) {
+      el.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    } else {
+      el.pause();
+      setPlaying(false);
+    }
+  }
 
   return (
     <motion.div
@@ -620,6 +716,34 @@ function Result({
         A teaser, not a contract. The full setlist gets built with you after
         you book. We don&apos;t freestyle weddings.
       </p>
+
+      <audio ref={audioRef} src={audio.src} preload="auto" loop />
+
+      <button
+        type="button"
+        onClick={toggle}
+        className="mt-6 inline-flex items-center gap-3 rounded-full border border-savage-yellow/60 bg-savage-yellow/10 px-4 py-2.5 text-savage-white transition hover:bg-savage-yellow/20"
+        aria-label={playing ? "Pause mix" : "Play mix"}
+      >
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-savage-yellow text-savage-ink">
+          {playing ? (
+            <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor" aria-hidden>
+              <rect x="6" y="5" width="4" height="14" rx="1" />
+              <rect x="14" y="5" width="4" height="14" rx="1" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor" aria-hidden>
+              <path d="M7 5v14l12-7z" />
+            </svg>
+          )}
+        </span>
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-yellow">
+          {playing ? "Playing" : "Tap to play"}
+        </span>
+        <span className="font-editorial italic text-sm sm:text-base text-savage-cream">
+          {audio.track}
+        </span>
+      </button>
 
       <div className="mt-10 sm:mt-12 grid gap-6 sm:gap-8 lg:grid-cols-[1.4fr_1fr]">
         <motion.div
@@ -643,7 +767,8 @@ function Result({
 
           <div className="mt-8 sm:mt-10 divide-y divide-savage-white/15 border-y border-savage-white/15">
             {timeline.map((t) => {
-              const time = t.title === "Shutdown" ? shutdown : t.time;
+              const offset = t.title === "Shutdown" ? shutdownOffset : t.offsetMin;
+              const time = addMinutes(startTime, offset);
               return (
                 <div
                   key={t.title}
@@ -727,6 +852,7 @@ function Result({
             venue={venue}
             vibe={vibe}
             extendHours={extendHours}
+            startTime={startTime}
             onReset={onReset}
           />
         </motion.div>
@@ -772,6 +898,7 @@ function LeadCapture({
   venue,
   vibe,
   extendHours,
+  startTime,
   onReset,
 }: {
   names: string;
@@ -779,10 +906,12 @@ function LeadCapture({
   venue: string;
   vibe: Vibe;
   extendHours: 0 | 1 | 2;
+  startTime: string;
   onReset: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
@@ -815,6 +944,8 @@ function LeadCapture({
         extendHours === 0
           ? "3h (base set)"
           : `${totalHours}h (3h base + ${extendHours}h DJ extension)`;
+      const endTime = addMinutes(startTime, 210 + extendHours * 60);
+      const scheduleLabel = `${startTime} → ${endTime}`;
       const prettyDate = (() => {
         if (!date) return "(not set)";
         const d = new Date(date);
@@ -842,6 +973,10 @@ function LeadCapture({
         "━━━ SHOW ━━━",
         `Vibe:     ${vibeLabels[vibe]}`,
         `Length:   ${lengthLabel}`,
+        `Schedule: ${scheduleLabel}`,
+        "",
+        "━━━ EVENT DESCRIPTION ━━━",
+        description.trim() ? description.trim() : "(not provided)",
         "",
         "━━━ NEXT STEPS ━━━",
         "Reply within 24h with availability and a price bracket.",
@@ -862,6 +997,8 @@ function LeadCapture({
           name: names,
           email,
           phone: phone || "(not provided)",
+          description: description.trim() || "(not provided)",
+          schedule: scheduleLabel,
           message,
         }),
       });
@@ -937,6 +1074,19 @@ function LeadCapture({
           onChange={(e) => setPhone(e.target.value)}
           placeholder="Phone / WhatsApp (optional)"
           className="w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
+        />
+      </label>
+
+      <label className="mt-3 block">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+          Describe your event
+        </span>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows={4}
+          placeholder="Describe here your event"
+          className="mt-2 w-full resize-y rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
         />
       </label>
 
