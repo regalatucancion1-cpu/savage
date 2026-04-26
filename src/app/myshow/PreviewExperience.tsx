@@ -174,7 +174,7 @@ export default function PreviewExperience() {
         body: JSON.stringify({
           access_key: accessKey,
           subject,
-          from_name: "Savage Party · my-show preview",
+          from_name: "Savage Party · myshow",
           name: plan.names || "(no name)",
           email: "no-reply@savageparty.es",
           phone: plan.phone || "(not provided)",
@@ -1354,7 +1354,7 @@ function buildEmailBody(plan: Plan): string {
     block(plan.notes),
     ``,
     `==================================`,
-    `  Source: savageparty.es/my-show-preview`,
+    `  Source: savageparty.es/myshow`,
   ].join("\n");
 }
 

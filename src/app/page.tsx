@@ -660,7 +660,7 @@ export default function Home() {
         </div>
         <div className="mt-12 pt-6 border-t border-savage-white/10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs uppercase tracking-[0.3em] text-savage-white/50">
           <span>
-            <Link href="/my-show-preview" className="cursor-text" aria-hidden>©</Link>{" "}
+            <Link href="/myshow" className="cursor-text" aria-hidden>©</Link>{" "}
             {new Date().getFullYear()} Savage Party · Barcelona
           </span>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
