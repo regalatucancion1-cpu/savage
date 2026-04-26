@@ -422,14 +422,14 @@ function StepHeader({ part, title, hint, accent }: { part: string; title: string
   const accentColor = accent === "yellow" ? "text-savage-yellow" : accent === "cream" ? "text-savage-cream" : accent === "red" ? "text-savage-red" : "text-savage-white";
   return (
     <div>
-      <p className={`text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold ${accentColor}`}>
+      <p className={`text-[10px] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] font-bold ${accentColor}`}>
         {part}
       </p>
-      <h1 className="font-display uppercase mt-3 sm:mt-4 text-[1.5rem] sm:text-[2.25rem] md:text-[3.25rem] leading-[1] sm:leading-[0.95] text-savage-white max-w-3xl break-words">
+      <h1 className="font-display uppercase mt-3 md:mt-4 text-[1.5rem] md:text-[2.25rem] lg:text-[3.25rem] leading-[1] md:leading-[0.95] text-savage-white max-w-3xl break-words">
         {title}
       </h1>
       {hint && (
-        <p className="font-editorial italic mt-4 text-base sm:text-lg text-savage-cream/80 max-w-xl leading-relaxed">
+        <p className="font-editorial italic mt-3 md:mt-4 text-sm md:text-lg text-savage-cream/80 max-w-xl leading-relaxed">
           {hint}
         </p>
       )}
@@ -528,7 +528,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="text"
               value={plan.names}
               onChange={(e) => update("names", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="e.g. Sarah & James"
             />
           </Field>
@@ -537,7 +537,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="date"
               value={plan.eventDate}
               onChange={(e) => update("eventDate", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
             />
           </Field>
           <Field label="Reception party time *" hint="When the live show kicks off. We use this to build your real night timeline.">
@@ -572,7 +572,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="text"
               value={plan.venue}
               onChange={(e) => update("venue", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="e.g. Castell de Caramany"
             />
           </Field>
@@ -581,7 +581,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="tel"
               value={plan.phone}
               onChange={(e) => update("phone", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="+34 …"
             />
           </Field>
@@ -590,7 +590,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="email"
               value={plan.email}
               onChange={(e) => update("email", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="you@example.com"
             />
           </Field>
@@ -615,7 +615,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="text"
               value={plan.guests}
               onChange={(e) => update("guests", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="120"
             />
           </Field>
@@ -624,7 +624,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="text"
               value={plan.ages}
               onChange={(e) => update("ages", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="Mostly 25-55, lots of older family…"
             />
           </Field>
@@ -653,7 +653,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
             rows={9}
             value={plan.liveMustPlay}
             onChange={(e) => update("liveMustPlay", e.target.value)}
-            className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-base text-savage-white outline-none focus:border-savage-yellow resize-none leading-relaxed"
+            className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 md:px-5 md:py-4 text-base text-savage-white outline-none focus:border-savage-yellow resize-none leading-relaxed"
             placeholder="Don't Stop Believin' — Journey&#10;Use Somebody — Kings of Leon&#10;…"
           />
         </Field>
@@ -676,7 +676,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
                   type="text"
                   value={plan.firstDanceSong}
                   onChange={(e) => update("firstDanceSong", e.target.value)}
-                  className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-white outline-none focus:border-savage-yellow"
+                  className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
                   placeholder="Can't Help Falling in Love — Elvis"
                 />
               </Field>
@@ -688,7 +688,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
                   type="url"
                   value={plan.firstDanceLink}
                   onChange={(e) => update("firstDanceLink", e.target.value)}
-                  className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-base text-savage-white outline-none focus:border-savage-yellow"
+                  className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 md:px-5 md:py-4 text-base text-savage-white outline-none focus:border-savage-yellow"
                   placeholder="https://open.spotify.com/track/…"
                 />
               </Field>
@@ -712,7 +712,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="url"
               value={plan.djReferenceUrl}
               onChange={(e) => update("djReferenceUrl", e.target.value)}
-              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-cream outline-none focus:border-savage-cream"
+              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-cream outline-none focus:border-savage-cream"
               placeholder="https://open.spotify.com/playlist/…"
             />
           </Field>
@@ -770,7 +770,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               type="text"
               value={plan.lastSong}
               onChange={(e) => update("lastSong", e.target.value)}
-              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base sm:px-5 sm:py-4 sm:text-lg text-savage-cream outline-none focus:border-savage-cream"
+              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-cream outline-none focus:border-savage-cream"
               placeholder="Closing Time — Semisonic"
             />
           </Field>
@@ -783,7 +783,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
             rows={6}
             value={plan.vetos}
             onChange={(e) => update("vetos", e.target.value)}
-            className="w-full bg-savage-ink/40 border border-savage-red/30 rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-base text-savage-white outline-none focus:border-savage-red resize-none leading-relaxed"
+            className="w-full bg-savage-ink/40 border border-savage-red/30 rounded-xl px-4 py-3 md:px-5 md:py-4 text-base text-savage-white outline-none focus:border-savage-red resize-none leading-relaxed"
             placeholder="Macarena&#10;Despacito"
           />
         </Field>
@@ -795,7 +795,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
             rows={6}
             value={plan.notes}
             onChange={(e) => update("notes", e.target.value)}
-            className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-base text-savage-white outline-none focus:border-savage-yellow resize-none leading-relaxed"
+            className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 md:px-5 md:py-4 text-base text-savage-white outline-none focus:border-savage-yellow resize-none leading-relaxed"
             placeholder="Surprises, family drama, dedications…"
           />
         </Field>
