@@ -145,6 +145,8 @@ export default function PreviewExperience() {
   const [showSummary, setShowSummary] = useState(false);
   const [showPanelMobile, setShowPanelMobile] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const step = STEPS[stepIdx];
   const totalSteps = STEPS.length;
@@ -155,10 +157,43 @@ export default function PreviewExperience() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [stepIdx]);
 
-  function handleSubmit() {
-    setShowPoster(false);
-    setShowSummary(false);
-    setSubmitted(true);
+  async function handleSubmit() {
+    if (sending) return;
+    setSubmitError(null);
+    setSending(true);
+    try {
+      const accessKey = (process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "").trim();
+      if (!accessKey) throw new Error("Form not configured (missing access key)");
+
+      const message = buildEmailBody(plan);
+      const subject = `My Show · ${plan.names || "(no name)"} · ${plan.eventDate ? formatDate(plan.eventDate) : "(no date)"} · ${plan.venue || "(no venue)"}`;
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject,
+          from_name: "Savage Party · my-show preview",
+          name: plan.names || "(no name)",
+          email: "no-reply@savageparty.es",
+          phone: plan.phone || "(not provided)",
+          message,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.success === false) {
+        throw new Error(data?.message ?? "Submit failed");
+      }
+      setShowPoster(false);
+      setShowSummary(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setSubmitError(err instanceof Error ? err.message : "Submit failed");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (submitted) {
@@ -207,9 +242,15 @@ export default function PreviewExperience() {
                   isLast={isLast}
                   onBack={() => setStepIdx(stepIdx - 1)}
                   onNext={() => isLast ? handleSubmit() : setStepIdx(stepIdx + 1)}
-                  nextLabel={isLast ? "Send it to the band →" : "Next →"}
+                  nextLabel={isLast ? (sending ? "Sending to the band…" : "Send it to the band →") : "Next →"}
                   accent={isLast ? "red" : partAccent(step.part)}
+                  disabled={sending}
                 />
+                {isLast && submitError && (
+                  <p className="mt-4 text-sm text-savage-red">
+                    Something went wrong: {submitError}. Try again in a moment.
+                  </p>
+                )}
               </>
             )}
           </div>
@@ -250,7 +291,7 @@ export default function PreviewExperience() {
           <PosterModal onClose={() => setShowPoster(false)} plan={plan} />
         )}
         {showSummary && (
-          <SummaryModal onClose={() => setShowSummary(false)} plan={plan} onSubmit={handleSubmit} />
+          <SummaryModal onClose={() => setShowSummary(false)} plan={plan} onSubmit={handleSubmit} sending={sending} />
         )}
       </AnimatePresence>
     </main>
@@ -351,13 +392,14 @@ function StepHeader({ part, title, hint, accent }: { part: string; title: string
   );
 }
 
-function Nav({ isFirst, onBack, onNext, nextLabel, accent }: {
+function Nav({ isFirst, onBack, onNext, nextLabel, accent, disabled }: {
   isFirst: boolean;
   isLast: boolean;
   onBack: () => void;
   onNext: () => void;
   nextLabel: string;
   accent: "yellow" | "cream" | "red" | "white";
+  disabled?: boolean;
 }) {
   const btnClass =
     accent === "red" ? "bg-savage-red text-savage-cream" :
@@ -374,7 +416,8 @@ function Nav({ isFirst, onBack, onNext, nextLabel, accent }: {
       )}
       <button
         onClick={onNext}
-        className={`rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.2em] hover:brightness-110 transition ${btnClass}`}
+        disabled={disabled}
+        className={`rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.2em] transition ${btnClass} ${disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
       >
         {isFirst ? "Let's go →" : nextLabel}
       </button>
@@ -709,8 +752,8 @@ function WelcomeStep({ names }: { names: string }) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow font-bold mb-3">How this works</p>
         <ul className="space-y-2 text-savage-white/80 text-sm sm:text-base leading-relaxed">
           <li>· Two parts. <span className="text-savage-yellow font-bold">LIVE BAND</span> first, <span className="text-savage-cream font-bold">DJ SET</span> after.</li>
-          <li>· Around 10 minutes. Your progress saves automatically.</li>
-          <li>· Nothing is sent until you hit the final button. You can come back anytime.</li>
+          <li>· Around 10 minutes in one go. Don&rsquo;t close the tab, nothing saves until you hit send.</li>
+          <li>· Once you submit it&rsquo;s with the band. We&rsquo;ll write to you only if something needs clarifying.</li>
         </ul>
       </div>
     </div>
@@ -1196,6 +1239,125 @@ function splitLines(s: string): string[] {
   return s.split("\n").map((x) => x.trim()).filter(Boolean);
 }
 
+function buildEmailBody(plan: Plan): string {
+  const fmtList = (items: string[]) =>
+    items.length === 0
+      ? "  (none)"
+      : items.map((v, i) => `  ${String(i + 1).padStart(2, "0")}. ${v}`).join("\n");
+  const block = (s: string) =>
+    !s.trim() ? "  (empty)" : s.split("\n").map((l) => `  ${l}`).join("\n");
+  const dressLabel =
+    plan.dressCode === "savage" ? "Savage style (elegant + funky)" :
+    plan.dressCode === "suits" ? "Full suits, gala" : "(empty)";
+  const requestsLabel =
+    plan.djRequests === "yes" ? "Open mic" :
+    plan.djRequests === "filtered" ? "Filtered by couple" :
+    plan.djRequests === "no" ? "Closed" : "(empty)";
+  const firstDanceLabel =
+    plan.firstDance === "dj" ? `DJ plays it · ${plan.firstDanceSong || "(no title)"}` :
+    plan.firstDance === "none" ? "Already done at dinner" : "(empty)";
+  const liveMust = splitLines(plan.liveMustPlay);
+  const bangers = splitLines(plan.djMustBangers);
+  const sing = splitLines(plan.djMustSingalongs);
+  const closing = splitLines(plan.djMustClosing);
+  const vetos = splitLines(plan.vetos);
+  const date = plan.eventDate ? formatDate(plan.eventDate) : "(no date)";
+
+  return [
+    `SAVAGE PARTY · MY SHOW SUBMISSION`,
+    `==================================`,
+    ``,
+    `QUICK SUMMARY`,
+    `  Couple:        ${plan.names || "(no name)"}`,
+    `  Date:          ${date}`,
+    `  Party start:   ${plan.partyStart || "(empty)"}`,
+    `  Venue:         ${plan.venue || "(empty)"}`,
+    `  Phone:         ${plan.phone || "(empty)"}`,
+    `  Headcount:     ${plan.guests || "(empty)"}`,
+    `  Ages:          ${plan.ages || "(empty)"}`,
+    `  Dress code:    ${dressLabel}`,
+    `  Live picks:    ${plan.liveSet.length}`,
+    `  Live wishlist: ${liveMust.length}`,
+    `  DJ vibes:      ${plan.djVibes.length}`,
+    `  DJ must total: ${bangers.length + sing.length + closing.length}`,
+    ``,
+    ``,
+    `01 · BASICS`,
+    `-----------`,
+    `  Names:       ${plan.names || "(empty)"}`,
+    `  Date:        ${date}`,
+    `  Party start: ${plan.partyStart || "(empty)"}`,
+    `  Venue:       ${plan.venue || "(empty)"}`,
+    `  Phone:       ${plan.phone || "(empty)"}`,
+    ``,
+    `02 · CROWD`,
+    `----------`,
+    `  Headcount: ${plan.guests || "(empty)"}`,
+    `  Ages:      ${plan.ages || "(empty)"}`,
+    `  Vibes:`,
+    fmtList(plan.crowdVibes),
+    ``,
+    `03 · DRESS CODE`,
+    `---------------`,
+    `  ${dressLabel}`,
+    ``,
+    `04 · LIVE · GENRES`,
+    `------------------`,
+    fmtList(plan.liveGenres),
+    ``,
+    `05 · LIVE · PICKS FROM REPERTOIRE (${plan.liveSet.length})`,
+    `----------------------------------`,
+    fmtList(plan.liveSet),
+    ``,
+    `06 · LIVE · WISHLIST not in repertoire (${liveMust.length})`,
+    `----------------------------------------`,
+    fmtList(liveMust),
+    ``,
+    `07 · OPENING DANCE`,
+    `------------------`,
+    `  ${firstDanceLabel}`,
+    plan.firstDanceLink ? `  Reference link: ${plan.firstDanceLink}` : `  Reference link: (none)`,
+    ``,
+    `08 · DJ · VIBES (${plan.djVibes.length})`,
+    `----------------`,
+    fmtList(plan.djVibes),
+    ``,
+    `09 · DJ · REFERENCE PLAYLIST`,
+    `----------------------------`,
+    `  ${plan.djReferenceUrl || "(empty)"}`,
+    ``,
+    `10 · DJ · MUST-PLAYS`,
+    `--------------------`,
+    `  Peak bangers (${bangers.length}):`,
+    fmtList(bangers),
+    ``,
+    `  Singalongs (${sing.length}):`,
+    fmtList(sing),
+    ``,
+    `  Closing vibes (${closing.length}):`,
+    fmtList(closing),
+    ``,
+    `11 · DJ · GUEST REQUESTS`,
+    `------------------------`,
+    `  ${requestsLabel}`,
+    ``,
+    `12 · LAST SONG OF THE NIGHT`,
+    `---------------------------`,
+    `  ${plan.lastSong || "(empty)"}`,
+    ``,
+    `13 · BANNED (${vetos.length})`,
+    `-----------`,
+    fmtList(vetos),
+    ``,
+    `14 · NOTES`,
+    `----------`,
+    block(plan.notes),
+    ``,
+    `==================================`,
+    `  Source: savageparty.es/my-show-preview`,
+  ].join("\n");
+}
+
 // ============== POSTER MODAL ==============
 
 function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
@@ -1294,7 +1456,7 @@ function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
   );
 }
 
-function SummaryModal({ onClose, plan, onSubmit }: { onClose: () => void; plan: Plan; onSubmit: () => void }) {
+function SummaryModal({ onClose, plan, onSubmit, sending }: { onClose: () => void; plan: Plan; onSubmit: () => void; sending: boolean }) {
   const liveWishlist = splitLines(plan.liveMustPlay);
   const dressLabel = plan.dressCode === "savage" ? "Savage style (elegant + funky)" : plan.dressCode === "suits" ? "Full suits, gala" : "—";
   const requestsLabel = plan.djRequests === "yes" ? "Open mic" : plan.djRequests === "filtered" ? "Filtered by couple" : "Closed";
@@ -1400,9 +1562,10 @@ function SummaryModal({ onClose, plan, onSubmit }: { onClose: () => void; plan: 
         <div className="mt-6 flex flex-wrap gap-3 justify-center">
           <button
             onClick={onSubmit}
-            className="rounded-full bg-savage-red text-savage-cream px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] hover:brightness-110 transition"
+            disabled={sending}
+            className={`rounded-full bg-savage-red text-savage-cream px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${sending ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
           >
-            Send it to the band
+            {sending ? "Sending…" : "Send it to the band"}
           </button>
           <button className="rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] hover:brightness-110 transition">
             Download PDF
