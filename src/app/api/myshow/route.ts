@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   }
 
   const resend = new Resend(apiKey);
-  const TO_EMAIL = process.env.MYSHOW_TO_EMAIL || "chrislogz0@gmail.com";
+  const TO_EMAIL = process.env.MYSHOW_TO_EMAIL || "infosavageparty@gmail.com";
   const FROM_EMAIL = process.env.MYSHOW_FROM_EMAIL || "Savage Party <onboarding@resend.dev>";
 
   let body: {
