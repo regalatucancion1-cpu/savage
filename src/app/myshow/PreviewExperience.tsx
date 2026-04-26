@@ -199,7 +199,7 @@ export default function PreviewExperience() {
       if (!accessKey) throw new Error("Form not configured (missing access key)");
 
       const message = buildEmailBody(plan);
-      const subject = `My Show · ${plan.names || "(no name)"} · ${plan.eventDate ? formatDate(plan.eventDate) : "(no date)"} · ${plan.venue || "(no venue)"}`;
+      const subject = `New show submission from ${plan.names || "(no name)"} for ${plan.eventDate ? formatDate(plan.eventDate) : "an upcoming wedding"}`;
 
       const blob = await generatePdfBlob();
       const file = new File([blob], pdfFilename(), { type: "application/pdf" });
@@ -207,7 +207,7 @@ export default function PreviewExperience() {
       const formData = new FormData();
       formData.append("access_key", accessKey);
       formData.append("subject", subject);
-      formData.append("from_name", "Savage Party · myshow");
+      formData.append("from_name", "Savage Party");
       formData.append("name", plan.names || "(no name)");
       formData.append("email", plan.email || "no-reply@savageparty.es");
       formData.append("phone", plan.phone || "(not provided)");
@@ -1317,135 +1317,94 @@ function splitLines(s: string): string[] {
 }
 
 function buildEmailBody(plan: Plan): string {
+  const dash = "—";
   const fmtList = (items: string[]) =>
-    items.length === 0
-      ? "  (none)"
-      : items.map((v, i) => `  ${String(i + 1).padStart(2, "0")}. ${v}`).join("\n");
-  const block = (s: string) =>
-    !s.trim() ? "  (empty)" : s.split("\n").map((l) => `  ${l}`).join("\n");
+    items.length === 0 ? `  ${dash}` : items.map((v) => `  - ${v}`).join("\n");
   const dressLabel =
-    plan.dressCode === "savage" ? "Savage style (elegant + funky)" :
-    plan.dressCode === "suits" ? "Full suits, gala" : "(empty)";
+    plan.dressCode === "savage" ? "Savage style (elegant and funky)" :
+    plan.dressCode === "suits" ? "Full suits, gala" : dash;
   const requestsLabel =
     plan.djRequests === "yes" ? "Open mic" :
     plan.djRequests === "filtered" ? "Filtered by couple" :
-    plan.djRequests === "no" ? "Closed" : "(empty)";
+    plan.djRequests === "no" ? "Closed" : dash;
   const firstDanceLabel =
-    plan.firstDance === "dj" ? `DJ plays it · ${plan.firstDanceSong || "(no title)"}` :
-    plan.firstDance === "none" ? "Already done at dinner" : "(empty)";
+    plan.firstDance === "dj" ? `DJ plays it (${plan.firstDanceSong || "no title"})` :
+    plan.firstDance === "none" ? "Already done at dinner" : dash;
   const liveMust = splitLines(plan.liveMustPlay);
   const bangers = splitLines(plan.djMustBangers);
   const sing = splitLines(plan.djMustSingalongs);
   const closing = splitLines(plan.djMustClosing);
   const vetos = splitLines(plan.vetos);
-  const date = plan.eventDate ? formatDate(plan.eventDate) : "(no date)";
-  const liveEnd = addMinutes(plan.partyStart, 120) || "(empty)";
-  const djEnd = addMinutes(plan.partyStart, 180) || "(empty)";
-  const closeTime = addMinutes(plan.partyStart, 180 + plan.djExtraHours * 60) || "(empty)";
-  const extraLabel = plan.djExtraHours === 0 ? "Just included (1h DJ)" : `+${plan.djExtraHours}h on top of included`;
+  const date = plan.eventDate ? formatDate(plan.eventDate) : dash;
+  const liveEnd = addMinutes(plan.partyStart, 120) || dash;
+  const djEnd = addMinutes(plan.partyStart, 180) || dash;
+  const closeTime = addMinutes(plan.partyStart, 180 + plan.djExtraHours * 60) || dash;
+  const extraLabel = plan.djExtraHours === 0 ? "Just the included hour of DJ" : `+${plan.djExtraHours}h on top of the included hour`;
 
   return [
-    `SAVAGE PARTY · MY SHOW SUBMISSION`,
-    `==================================`,
+    `Hi,`,
     ``,
-    `QUICK SUMMARY`,
-    `  Couple:        ${plan.names || "(no name)"}`,
-    `  Date:          ${date}`,
-    `  Party start:   ${plan.partyStart || "(empty)"}`,
-    `  Extra DJ hrs:  ${extraLabel}`,
-    `  Venue:         ${plan.venue || "(empty)"}`,
-    `  Phone:         ${plan.phone || "(empty)"}`,
-    `  Headcount:     ${plan.guests || "(empty)"}`,
-    `  Ages:          ${plan.ages || "(empty)"}`,
-    `  Dress code:    ${dressLabel}`,
-    `  Live picks:    ${plan.liveSet.length}`,
-    `  Live wishlist: ${liveMust.length}`,
-    `  DJ vibes:      ${plan.djVibes.length}`,
-    `  DJ must total: ${bangers.length + sing.length + closing.length}`,
+    `A new show was just submitted via myshow. Full details are also in the attached PDF.`,
     ``,
-    `TIMELINE`,
-    `  Live:  ${plan.partyStart || "(empty)"} → ${liveEnd}`,
-    `  DJ:    ${liveEnd} → ${djEnd}` + (plan.djExtraHours > 0 ? ` (1h included)` : ``),
-    plan.djExtraHours > 0 ? `  +${plan.djExtraHours}h DJ: ${djEnd} → ${closeTime}` : ``,
+    `Couple`,
+    `  Names: ${plan.names || dash}`,
+    `  Date: ${date}`,
+    `  Venue: ${plan.venue || dash}`,
+    `  Phone: ${plan.phone || dash}`,
+    `  Email: ${plan.email || dash}`,
+    `  Party start: ${plan.partyStart || dash}`,
+    `  Extra DJ hours: ${extraLabel}`,
+    ``,
+    `Timeline`,
+    `  Live: ${plan.partyStart || dash} to ${liveEnd}`,
+    `  DJ: ${liveEnd} to ${djEnd}` + (plan.djExtraHours > 0 ? ` (1h included)` : ``),
+    plan.djExtraHours > 0 ? `  Extra DJ: ${djEnd} to ${closeTime}` : ``,
     `  Close: ${closeTime}`,
     ``,
-    ``,
-    `01 · BASICS`,
-    `-----------`,
-    `  Names:         ${plan.names || "(empty)"}`,
-    `  Date:          ${date}`,
-    `  Party start:   ${plan.partyStart || "(empty)"}`,
-    `  Extra DJ hrs:  ${extraLabel}`,
-    `  Venue:         ${plan.venue || "(empty)"}`,
-    `  Phone:         ${plan.phone || "(empty)"}`,
-    `  Email:         ${plan.email || "(empty)"}`,
-    ``,
-    `02 · CROWD`,
-    `----------`,
-    `  Headcount: ${plan.guests || "(empty)"}`,
-    `  Ages:      ${plan.ages || "(empty)"}`,
+    `Crowd`,
+    `  Headcount: ${plan.guests || dash}`,
+    `  Ages: ${plan.ages || dash}`,
     `  Vibes:`,
     fmtList(plan.crowdVibes),
     ``,
-    `03 · DRESS CODE`,
-    `---------------`,
-    `  ${dressLabel}`,
+    `Dress code: ${dressLabel}`,
     ``,
-    `04 · LIVE · GENRES`,
-    `------------------`,
+    `Live show genres:`,
     fmtList(plan.liveGenres),
     ``,
-    `05 · LIVE · PICKS FROM REPERTOIRE (${plan.liveSet.length})`,
-    `----------------------------------`,
+    `Live picks from repertoire (${plan.liveSet.length}):`,
     fmtList(plan.liveSet),
     ``,
-    `06 · LIVE · WISHLIST not in repertoire (${liveMust.length})`,
-    `----------------------------------------`,
+    `Live wishlist not in repertoire (${liveMust.length}):`,
     fmtList(liveMust),
     ``,
-    `07 · OPENING DANCE`,
-    `------------------`,
-    `  ${firstDanceLabel}`,
-    plan.firstDanceLink ? `  Reference link: ${plan.firstDanceLink}` : `  Reference link: (none)`,
+    `Opening dance: ${firstDanceLabel}`,
+    plan.firstDanceLink ? `Reference link: ${plan.firstDanceLink}` : ``,
     ``,
-    `08 · DJ · VIBES (${plan.djVibes.length})`,
-    `----------------`,
+    `DJ set vibes (${plan.djVibes.length}):`,
     fmtList(plan.djVibes),
     ``,
-    `09 · DJ · REFERENCE PLAYLIST`,
-    `----------------------------`,
-    `  ${plan.djReferenceUrl || "(empty)"}`,
+    `DJ reference playlist: ${plan.djReferenceUrl || dash}`,
+    `Guest requests: ${requestsLabel}`,
+    `Last song of the night: ${plan.lastSong || dash}`,
     ``,
-    `10 · DJ · MUST-PLAYS`,
-    `--------------------`,
-    `  Peak bangers (${bangers.length}):`,
+    `DJ peak bangers (${bangers.length}):`,
     fmtList(bangers),
     ``,
-    `  Singalongs (${sing.length}):`,
+    `DJ singalongs (${sing.length}):`,
     fmtList(sing),
     ``,
-    `  Closing vibes (${closing.length}):`,
+    `DJ closing vibes (${closing.length}):`,
     fmtList(closing),
     ``,
-    `11 · DJ · GUEST REQUESTS`,
-    `------------------------`,
-    `  ${requestsLabel}`,
-    ``,
-    `12 · LAST SONG OF THE NIGHT`,
-    `---------------------------`,
-    `  ${plan.lastSong || "(empty)"}`,
-    ``,
-    `13 · BANNED (${vetos.length})`,
-    `-----------`,
+    `Banned (${vetos.length}):`,
     fmtList(vetos),
     ``,
-    `14 · NOTES`,
-    `----------`,
-    block(plan.notes),
+    `Notes:`,
+    plan.notes ? `  ${plan.notes.split("\n").join("\n  ")}` : `  ${dash}`,
     ``,
-    `==================================`,
-    `  Source: savageparty.es/myshow`,
-  ].join("\n");
+    `Source: savageparty.es/myshow`,
+  ].join("\n").replace(/\n{3,}/g, "\n\n");
 }
 
 // ============== POSTER MODAL ==============
