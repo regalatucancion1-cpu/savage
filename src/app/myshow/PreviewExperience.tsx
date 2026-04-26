@@ -61,6 +61,7 @@ type Plan = {
   djExtraHours: number;
   venue: string;
   phone: string;
+  email: string;
   guests: string;
   ages: string;
   crowdVibes: string[];
@@ -89,6 +90,7 @@ const INITIAL: Plan = {
   djExtraHours: 0,
   venue: "",
   phone: "",
+  email: "",
   guests: "",
   ages: "",
   crowdVibes: [],
@@ -178,7 +180,7 @@ export default function PreviewExperience() {
           subject,
           from_name: "Savage Party · myshow",
           name: plan.names || "(no name)",
-          email: "no-reply@savageparty.es",
+          email: plan.email || "no-reply@savageparty.es",
           phone: plan.phone || "(not provided)",
           message,
         }),
@@ -540,6 +542,15 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               onChange={(e) => update("phone", e.target.value)}
               className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-5 py-4 text-lg text-savage-white outline-none focus:border-savage-yellow"
               placeholder="+34 …"
+            />
+          </Field>
+          <Field label="Email *">
+            <input
+              type="email"
+              value={plan.email}
+              onChange={(e) => update("email", e.target.value)}
+              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-5 py-4 text-lg text-savage-white outline-none focus:border-savage-yellow"
+              placeholder="you@example.com"
             />
           </Field>
         </div>
@@ -1334,6 +1345,7 @@ function buildEmailBody(plan: Plan): string {
     `  Extra DJ hrs:  ${extraLabel}`,
     `  Venue:         ${plan.venue || "(empty)"}`,
     `  Phone:         ${plan.phone || "(empty)"}`,
+    `  Email:         ${plan.email || "(empty)"}`,
     ``,
     `02 · CROWD`,
     `----------`,
@@ -1549,6 +1561,7 @@ function SummaryModal({ onClose, plan, onSubmit, sending }: { onClose: () => voi
             <SummaryRow label="Date" value={formatDate(plan.eventDate)} />
             <SummaryRow label="Venue" value={plan.venue || "—"} />
             <SummaryRow label="Phone" value={plan.phone || "—"} />
+            <SummaryRow label="Email" value={plan.email || "—"} mono />
             <SummaryRow label="Party start" value={plan.partyStart || "—"} />
             <SummaryRow label="Extra DJ hours" value={plan.djExtraHours === 0 ? "Just included (1h)" : `+${plan.djExtraHours}h on top of the included hour`} />
             <SummaryRow label="Headcount" value={plan.guests || "—"} />
