@@ -238,7 +238,7 @@ export default function PreviewExperience() {
   }
 
   if (submitted) {
-    return <SuccessScreen names={plan.names} onReset={() => { setSubmitted(false); setStepIdx(0); }} onDownload={handleDownloadPdf} />;
+    return <SuccessScreen names={plan.names} onDownload={handleDownloadPdf} />;
   }
 
   function update<K extends keyof Plan>(k: K, v: Plan[K]) {
@@ -1645,7 +1645,7 @@ function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClos
   );
 }
 
-function SuccessScreen({ names, onReset, onDownload }: { names: string; onReset: () => void; onDownload: () => void | Promise<void> }) {
+function SuccessScreen({ names, onDownload }: { names: string; onDownload: () => void | Promise<void> }) {
   const display = names.trim() || "You two";
   const [downloading, setDownloading] = useState(false);
   async function handleDownloadClick() {
@@ -1666,12 +1666,12 @@ function SuccessScreen({ names, onReset, onDownload }: { names: string; onReset:
 
       <header className="relative z-10 px-5 sm:px-6 md:px-10 py-5 flex items-center justify-between">
         <Image src="/logo-savage.png" alt="Savage Party" width={88} height={88} />
-        <button
-          onClick={onReset}
-          className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow/70 hover:text-savage-cream"
+        <Link
+          href="/"
+          className="rounded-full border-2 border-savage-yellow text-savage-yellow px-5 py-2 text-xs font-bold uppercase tracking-[0.3em] hover:bg-savage-yellow hover:text-savage-ink transition"
         >
-          ← Restart mock
-        </button>
+          ← Home
+        </Link>
       </header>
 
       <section className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 py-12 max-w-3xl mx-auto">
@@ -1743,6 +1743,20 @@ function SuccessScreen({ names, onReset, onDownload }: { names: string; onReset:
         <p className="font-editorial italic text-savage-cream text-base mt-2">
           — Chris, on behalf of the band.
         </p>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-10"
+        >
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-full bg-savage-cream text-savage-ink px-7 py-3.5 text-sm font-bold uppercase tracking-[0.25em] hover:brightness-110 transition"
+          >
+            ← Back to home
+          </Link>
+        </motion.div>
       </section>
 
       <div className="relative z-10 border-t-2 border-savage-yellow/40 px-6 py-4 flex items-center justify-between text-[9px] uppercase tracking-[0.3em] font-bold">
