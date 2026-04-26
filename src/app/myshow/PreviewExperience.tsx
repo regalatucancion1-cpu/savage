@@ -302,12 +302,14 @@ export default function PreviewExperience() {
         </aside>
       </div>
 
-      <button
-        onClick={() => setShowPanelMobile(true)}
-        className="lg:hidden fixed bottom-5 right-5 z-30 rounded-full bg-savage-yellow text-savage-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-savage-yellow/30"
-      >
-        Your show · {plan.liveSet.length}
-      </button>
+      {!step.splash && (
+        <button
+          onClick={() => setShowPanelMobile(true)}
+          className="lg:hidden fixed bottom-5 right-5 z-30 rounded-full bg-savage-yellow text-savage-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-savage-yellow/30"
+        >
+          Your show · {plan.liveSet.length}
+        </button>
+      )}
 
       <AnimatePresence>
         {showPanelMobile && (
@@ -320,7 +322,7 @@ export default function PreviewExperience() {
           >
             <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-savage-black border-b border-savage-white/10">
               <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow">Your show, live</p>
-              <button onClick={() => setShowPanelMobile(false)} className="text-savage-white/60 text-sm">Close ✕</button>
+              <button onClick={() => setShowPanelMobile(false)} className="text-savage-white/60 text-sm py-2 px-3 -mr-2">Close ✕</button>
             </div>
             <SidePanel plan={plan} />
           </motion.div>
@@ -447,18 +449,18 @@ function Nav({ isFirst, onBack, onNext, nextLabel, accent, disabled }: {
     accent === "cream" ? "bg-savage-cream text-savage-ink" :
     "bg-savage-yellow text-savage-ink";
   return (
-    <div className="mt-12 flex items-center justify-between gap-4">
+    <div className="mt-12 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
       {!isFirst ? (
-        <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow">
+        <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/60 hover:text-savage-yellow py-3 px-3 -mx-3 -my-3 self-start sm:self-auto">
           ← Back
         </button>
       ) : (
-        <span />
+        <span className="hidden sm:block" />
       )}
       <button
         onClick={onNext}
         disabled={disabled}
-        className={`rounded-full px-7 py-4 text-sm font-bold uppercase tracking-[0.2em] transition ${btnClass} ${disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
+        className={`rounded-full px-6 sm:px-7 py-4 text-sm font-bold uppercase tracking-[0.2em] transition ${btnClass} ${disabled ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"} w-full sm:w-auto`}
       >
         {isFirst ? "Let's go →" : nextLabel}
       </button>
@@ -487,13 +489,13 @@ function SplashStep({ step, onContinue, onBack }: { step: StepDef; onContinue: (
             ? "Two hours. Four musicians. Sax, guitar and drums roaming the floor. Songs you actually want."
             : "From 23:30 to close. The booth takes over. This is where the night gets long."}
         </p>
-        <div className="mt-12 flex items-center justify-center gap-6">
-          <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/50 hover:text-savage-white">
+        <div className="mt-12 flex flex-col-reverse sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4">
+          <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/50 hover:text-savage-white py-3 px-3 -mx-3 -my-3">
             ← Back
           </button>
           <button
             onClick={onContinue}
-            className={`rounded-full px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] hover:brightness-110 transition ${buttonBg}`}
+            className={`rounded-full px-6 sm:px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] hover:brightness-110 transition w-full sm:w-auto ${buttonBg}`}
           >
             {isLive ? "Start the live show →" : "Step into the booth →"}
           </button>
@@ -905,7 +907,7 @@ function RepertoirePicker({ selected, onToggle }: {
                   <SongCover title={title} accent="yellow" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-savage-white truncate">{title}</p>
-                    <p className="text-[11px] text-savage-white/50 truncate">{artist || ""}</p>
+                    <p className="text-xs text-savage-white/50 truncate">{artist || ""}</p>
                   </div>
                   <span className={`text-xs ${active ? "text-savage-yellow" : "text-savage-white/30"}`}>
                     {active ? "✓" : "+"}
@@ -1020,7 +1022,7 @@ function Chips({ options, selected, onToggle, accent = "yellow", large, allowCus
             placeholder="Type a genre and press enter"
             className={`uppercase tracking-wider rounded-full border-2 bg-savage-black/60 outline-none transition ${sizeClass} ${
               accent === "cream" ? "border-savage-cream text-savage-cream" : "border-savage-yellow text-savage-yellow"
-            } min-w-[200px]`}
+            } w-full sm:w-auto sm:min-w-[200px]`}
           />
         ) : (
           <button
@@ -1245,13 +1247,13 @@ function Timeline({ partyStart, djExtraHours }: { partyStart: string; djExtraHou
       <div className={`grid gap-1 mt-2 ${djExtraHours > 0 ? "grid-cols-4" : "grid-cols-3"}`}>
         {segments.map((s) => (
           <div key={s.label}>
-            <p className="text-[9px] uppercase tracking-wide text-savage-white/70 truncate">{s.label}</p>
-            <p className="text-[9px] text-savage-white/40">{s.start}</p>
+            <p className="text-[10px] uppercase tracking-wide text-savage-white/70 truncate">{s.label}</p>
+            <p className="text-[10px] text-savage-white/40">{s.start}</p>
           </div>
         ))}
         <div>
-          <p className="text-[9px] uppercase tracking-wide text-savage-white/70 truncate">Close</p>
-          <p className="text-[9px] text-savage-white/40">{closeTime}</p>
+          <p className="text-[10px] uppercase tracking-wide text-savage-white/70 truncate">Close</p>
+          <p className="text-[10px] text-savage-white/40">{closeTime}</p>
         </div>
       </div>
     </div>
@@ -1299,7 +1301,7 @@ function PanelSongRow({ index, title, subtitle, accent, muted }: { index: number
       <SongCover title={title} accent={accent} />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-savage-white truncate">{title}</p>
-        {subtitle && <p className="text-[10px] text-savage-white/50 uppercase tracking-wide">{subtitle}</p>}
+        {subtitle && <p className="text-[11px] text-savage-white/50 uppercase tracking-wide truncate">{subtitle}</p>}
       </div>
     </motion.div>
   );
@@ -1427,7 +1429,7 @@ function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
       className="fixed inset-0 z-50 bg-savage-black/95 overflow-y-auto"
     >
       <div className="min-h-screen flex flex-col items-center justify-start p-5 sm:p-10">
-        <button onClick={onClose} className="self-end text-savage-white/60 text-sm mb-4 hover:text-savage-yellow">
+        <button onClick={onClose} className="self-end text-savage-white/60 text-sm mb-4 hover:text-savage-yellow py-2 px-3 -mr-2">
           ← Back
         </button>
 
@@ -1452,36 +1454,36 @@ function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
           <div className="absolute top-0 bottom-0 left-0 w-2.5 bg-savage-yellow" />
           <div className="absolute top-0 bottom-0 right-0 w-2.5 bg-savage-yellow" />
 
-          <div className="absolute inset-0 flex flex-col px-9 sm:px-12 pt-9 pb-8">
+          <div className="absolute inset-0 flex flex-col px-5 sm:px-9 md:px-12 pt-7 sm:pt-9 pb-6 sm:pb-8">
 
-            <div className="flex items-start justify-between">
-              <Image src="/logo-savage.png" alt="Savage Party" width={86} height={86} />
+            <div className="flex items-start justify-between gap-3">
+              <Image src="/logo-savage.png" alt="Savage Party" width={64} height={64} className="sm:w-[86px] sm:h-[86px]" />
               <div className="text-right">
                 <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-savage-yellow">Private show</p>
-                <p className="text-[9px] uppercase tracking-[0.25em] mt-1 text-savage-yellow/60">
+                <p className="text-[9px] uppercase tracking-[0.25em] mt-1 text-savage-yellow/60 break-all">
                   No. {(plan.names.replace(/\s|&/g, "").toUpperCase().slice(0, 6) || "—")}-{(plan.eventDate || "").replace(/-/g, "").slice(2) || "—"}
                 </p>
               </div>
             </div>
 
             <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="block w-10 h-[2px] bg-savage-yellow" />
-                <p className="font-display uppercase text-[11px] sm:text-xs tracking-[0.5em] text-savage-yellow">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <span className="block w-6 sm:w-10 h-[2px] bg-savage-yellow" />
+                <p className="font-display uppercase text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.5em] text-savage-yellow">
                   Headlining
                 </p>
-                <span className="block w-10 h-[2px] bg-savage-yellow" />
+                <span className="block w-6 sm:w-10 h-[2px] bg-savage-yellow" />
               </div>
-              <h1 className="font-display uppercase text-[3.25rem] sm:text-[4.5rem] md:text-[5.5rem] leading-[0.82] text-savage-yellow">
+              <h1 className="font-display uppercase text-[2.25rem] sm:text-[4rem] md:text-[5.5rem] leading-[0.85] sm:leading-[0.82] text-savage-yellow break-words">
                 {name1}
                 <br />
-                <span className="font-display text-[3.75rem] sm:text-[5rem] md:text-[6rem] inline-block leading-none my-1 text-savage-cream">×</span>
+                <span className="font-display text-[2.5rem] sm:text-[4.5rem] md:text-[6rem] inline-block leading-none my-1 text-savage-cream">×</span>
                 <br />
                 {name2}
               </h1>
-              <div className="mt-9 flex flex-col items-center gap-2">
-                <p className="font-display text-[1.625rem] sm:text-[2rem] tracking-tight text-savage-yellow">{dateLine}</p>
-                <p className="text-xs sm:text-sm uppercase tracking-[0.3em] font-bold text-savage-cream">{plan.venue || "Venue"}</p>
+              <div className="mt-6 sm:mt-9 flex flex-col items-center gap-2">
+                <p className="font-display text-[1.25rem] sm:text-[2rem] tracking-tight text-savage-yellow">{dateLine}</p>
+                <p className="text-[11px] sm:text-sm uppercase tracking-[0.25em] sm:tracking-[0.3em] font-bold text-savage-cream break-words">{plan.venue || "Venue"}</p>
                 {plan.partyStart && (
                   <p className="text-[10px] uppercase tracking-[0.4em] text-savage-yellow/60 mt-1">
                     Doors {plan.partyStart}
@@ -1490,7 +1492,7 @@ function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
               </div>
             </div>
 
-            <div className="border-t-2 border-savage-yellow pt-3 flex items-center justify-between text-[9px] uppercase tracking-[0.3em] font-bold text-savage-yellow">
+            <div className="border-t-2 border-savage-yellow pt-3 flex items-center justify-between text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.3em] font-bold text-savage-yellow">
               <span>One night.</span>
               <span className="text-savage-cream">One band.</span>
               <span>Your show.</span>
@@ -1532,7 +1534,7 @@ function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClos
     >
       <div className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8">
         <div className="w-full max-w-3xl flex items-center justify-between mb-4">
-          <button onClick={onClose} className="text-savage-white/60 text-sm hover:text-savage-cream">
+          <button onClick={onClose} className="text-savage-white/60 text-sm hover:text-savage-cream py-2 px-3 -ml-2">
             ← Back
           </button>
           <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/50">Mock · download buttons are placeholders</p>
@@ -1542,11 +1544,11 @@ function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClos
           initial={{ scale: 0.97, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ type: "spring", damping: 24 }}
-          className="w-full max-w-3xl bg-savage-cream text-savage-ink relative overflow-hidden shadow-2xl shadow-savage-black/60"
+          className="w-full max-w-3xl bg-savage-cream text-savage-ink relative overflow-hidden shadow-2xl shadow-savage-black/60 mx-2 sm:mx-0"
         >
           <div className="absolute inset-0 halftone opacity-[0.06] pointer-events-none" />
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-savage-yellow" />
-          <div className="relative p-8 sm:p-12 pt-10">
+          <div className="relative p-5 sm:p-8 md:p-12 pt-8 sm:pt-10">
             <header className="border-b-2 border-savage-ink pb-5 flex items-start justify-between gap-6">
               <Image src="/logo-savage.png" alt="Savage Party" width={72} height={72} />
               <div className="text-right">
@@ -1687,7 +1689,7 @@ function SuccessScreen({ names, onDownload }: { names: string; onDownload: () =>
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="font-display uppercase text-[3rem] sm:text-[4.5rem] md:text-[6rem] leading-[0.85]"
+          className="font-display uppercase text-[2.25rem] sm:text-[4rem] md:text-[5.5rem] leading-[0.9] sm:leading-[0.85] break-words"
         >
           {display}
           <br />
@@ -1795,18 +1797,18 @@ function SummarySection({ title, cream, children }: { title: string; cream?: boo
 
 function SummaryRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-baseline gap-3 py-1">
-      <span className="text-[10px] uppercase tracking-[0.25em] text-savage-ink/55 shrink-0 w-44 sm:w-48">{label}</span>
-      <span className={`text-sm text-savage-ink ${mono ? "font-mono break-all" : ""}`}>{value}</span>
+    <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 py-1">
+      <span className="text-[10px] uppercase tracking-[0.25em] text-savage-ink/55 sm:shrink-0 sm:w-48 mb-0.5 sm:mb-0">{label}</span>
+      <span className={`text-sm text-savage-ink break-words ${mono ? "font-mono break-all" : ""}`}>{value}</span>
     </div>
   );
 }
 
 function SummaryList({ items, striked }: { items: string[]; striked?: boolean }) {
   return (
-    <ul className="ml-44 sm:ml-48 list-none mt-1 mb-3 space-y-0.5">
+    <ul className="sm:ml-48 list-none mt-1 mb-3 space-y-0.5">
       {items.map((it, i) => (
-        <li key={it + i} className={`text-sm ${striked ? "line-through text-savage-ink/60" : "text-savage-ink"}`}>
+        <li key={it + i} className={`text-sm break-words ${striked ? "line-through text-savage-ink/60" : "text-savage-ink"}`}>
           · {it}
         </li>
       ))}
