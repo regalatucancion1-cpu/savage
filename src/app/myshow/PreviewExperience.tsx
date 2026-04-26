@@ -168,6 +168,18 @@ export default function PreviewExperience() {
     return await pdf(<MyShowPdf plan={plan} logoSrc={logoSrc} />).toBlob();
   }
 
+  async function blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        resolve(result.split(",")[1] ?? "");
+      };
+      reader.onerror = () => reject(new Error("Failed to read PDF blob"));
+      reader.readAsDataURL(blob);
+    });
+  }
+
   function pdfFilename(): string {
     const slug = (plan.names || "show").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const dateSlug = (plan.eventDate || "").replace(/-/g, "");
@@ -195,33 +207,25 @@ export default function PreviewExperience() {
     setSubmitError(null);
     setSending(true);
     try {
-      const accessKey = (process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "").trim();
-      if (!accessKey) throw new Error("Form not configured (missing access key)");
-
       const message = buildEmailBody(plan);
       const subject = `New show submission from ${plan.names || "(no name)"} for ${plan.eventDate ? formatDate(plan.eventDate) : "an upcoming wedding"}`;
 
       const blob = await generatePdfBlob();
-      const file = new File([blob], pdfFilename(), { type: "application/pdf" });
+      const pdfBase64 = await blobToBase64(blob);
 
-      const formData = new FormData();
-      formData.append("access_key", accessKey);
-      formData.append("subject", subject);
-      formData.append("from_name", "Savage Party");
-      formData.append("name", plan.names || "(no name)");
-      formData.append("email", plan.email || "no-reply@savageparty.es");
-      formData.append("phone", plan.phone || "(not provided)");
-      formData.append("message", message);
-      formData.append("attachment", file);
-
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/myshow", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject,
+          message,
+          pdfBase64,
+          pdfFilename: pdfFilename(),
+          replyTo: plan.email || undefined,
+        }),
       });
       const data = await res.json();
-      if (!res.ok || data.success === false) {
-        throw new Error(data?.message ?? "Submit failed");
-      }
+      if (!res.ok) throw new Error(data?.error || "Submit failed");
       setShowPoster(false);
       setShowSummary(false);
       setSubmitted(true);
@@ -234,7 +238,7 @@ export default function PreviewExperience() {
   }
 
   if (submitted) {
-    return <SuccessScreen names={plan.names} onReset={() => { setSubmitted(false); setStepIdx(0); }} />;
+    return <SuccessScreen names={plan.names} onReset={() => { setSubmitted(false); setStepIdx(0); }} onDownload={handleDownloadPdf} />;
   }
 
   function update<K extends keyof Plan>(k: K, v: Plan[K]) {
@@ -1641,8 +1645,13 @@ function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClos
   );
 }
 
-function SuccessScreen({ names, onReset }: { names: string; onReset: () => void }) {
+function SuccessScreen({ names, onReset, onDownload }: { names: string; onReset: () => void; onDownload: () => void | Promise<void> }) {
   const display = names.trim() || "You two";
+  const [downloading, setDownloading] = useState(false);
+  async function handleDownloadClick() {
+    setDownloading(true);
+    try { await onDownload(); } finally { setDownloading(false); }
+  }
   return (
     <main className="min-h-screen bg-savage-red text-savage-yellow relative overflow-hidden flex flex-col">
       <div
@@ -1705,10 +1714,28 @@ function SuccessScreen({ names, onReset }: { names: string; onReset: () => void 
           <SuccessStep n="03" text="On the night, the band plays the wedding the three of us built." />
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
+          className="mt-12 flex flex-col items-center gap-4"
+        >
+          <button
+            onClick={handleDownloadClick}
+            disabled={downloading}
+            className={`rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloading ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
+          >
+            {downloading ? "Generating…" : "Download your show PDF"}
+          </button>
+          <p className="text-xs text-savage-yellow/60 max-w-md text-center">
+            Keep a copy of your show summary. The band already has it.
+          </p>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.85 }}
           className="mt-12 text-sm uppercase tracking-[0.3em] text-savage-yellow/70"
         >
           See you at soundcheck.
