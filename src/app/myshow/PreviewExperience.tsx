@@ -252,7 +252,7 @@ export default function PreviewExperience() {
   }
 
   return (
-    <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
+    <main className="min-h-screen bg-savage-black text-savage-white flex flex-col overflow-x-hidden">
       <Header plan={plan} />
 
       {!step.splash && <ProgressBar step={stepIdx + 1} total={totalSteps} part={step.part} />}
@@ -353,11 +353,11 @@ function partAccent(part: StepDef["part"]): "yellow" | "cream" | "red" | "white"
 function Header({ plan }: { plan: Plan }) {
   return (
     <header className="border-b border-savage-white/10 px-5 sm:px-8 md:px-14 py-4">
-      <div className="max-w-3xl mx-auto w-full flex items-center justify-between gap-4">
+      <div className="max-w-3xl mx-auto w-full flex items-center gap-4">
         <Link href="/" className="flex items-center gap-3 shrink-0 -ml-2 sm:-ml-3">
           <Image src="/logo-savage.png" alt="Savage Party" width={88} height={88} className="w-[80px] h-auto sm:w-[96px]" priority />
         </Link>
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3 flex-1 justify-center">
           <div className="flex -space-x-2">
             {BAND_AVATARS.map((a) => (
               <div
@@ -373,7 +373,7 @@ function Header({ plan }: { plan: Plan }) {
             Your channel with the band
           </span>
         </div>
-        <div className="text-right">
+        <div className="ml-auto text-right">
           <p className="text-xs text-savage-yellow font-medium">{plan.names || "Your names"}</p>
           <p className="text-[10px] text-savage-white/50">{plan.eventDate ? formatDate(plan.eventDate) : "—"}</p>
         </div>
