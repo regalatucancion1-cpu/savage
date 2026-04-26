@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
+import { pdf } from "@react-pdf/renderer";
+import MyShowPdf from "./MyShowPdf";
 
 const BAND_AVATARS = [
   { name: "Chris", role: "DJ + producer", initial: "C", color: "bg-savage-yellow text-savage-ink" },
@@ -161,6 +163,33 @@ export default function PreviewExperience() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [stepIdx]);
 
+  async function generatePdfBlob(): Promise<Blob> {
+    const logoSrc = `${window.location.origin}/logo-savage.png`;
+    return await pdf(<MyShowPdf plan={plan} logoSrc={logoSrc} />).toBlob();
+  }
+
+  function pdfFilename(): string {
+    const slug = (plan.names || "show").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const dateSlug = (plan.eventDate || "").replace(/-/g, "");
+    return `myshow-${slug}${dateSlug ? "-" + dateSlug : ""}.pdf`;
+  }
+
+  async function handleDownloadPdf() {
+    try {
+      const blob = await generatePdfBlob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = pdfFilename();
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async function handleSubmit() {
     if (sending) return;
     setSubmitError(null);
@@ -172,18 +201,22 @@ export default function PreviewExperience() {
       const message = buildEmailBody(plan);
       const subject = `My Show · ${plan.names || "(no name)"} · ${plan.eventDate ? formatDate(plan.eventDate) : "(no date)"} · ${plan.venue || "(no venue)"}`;
 
+      const blob = await generatePdfBlob();
+      const file = new File([blob], pdfFilename(), { type: "application/pdf" });
+
+      const formData = new FormData();
+      formData.append("access_key", accessKey);
+      formData.append("subject", subject);
+      formData.append("from_name", "Savage Party · myshow");
+      formData.append("name", plan.names || "(no name)");
+      formData.append("email", plan.email || "no-reply@savageparty.es");
+      formData.append("phone", plan.phone || "(not provided)");
+      formData.append("message", message);
+      formData.append("attachment", file);
+
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: accessKey,
-          subject,
-          from_name: "Savage Party · myshow",
-          name: plan.names || "(no name)",
-          email: plan.email || "no-reply@savageparty.es",
-          phone: plan.phone || "(not provided)",
-          message,
-        }),
+        body: formData,
       });
       const data = await res.json();
       if (!res.ok || data.success === false) {
@@ -295,7 +328,7 @@ export default function PreviewExperience() {
           <PosterModal onClose={() => setShowPoster(false)} plan={plan} />
         )}
         {showSummary && (
-          <SummaryModal onClose={() => setShowSummary(false)} plan={plan} onSubmit={handleSubmit} sending={sending} />
+          <SummaryModal onClose={() => setShowSummary(false)} plan={plan} onSubmit={handleSubmit} sending={sending} onDownload={handleDownloadPdf} />
         )}
       </AnimatePresence>
     </main>
@@ -1513,7 +1546,16 @@ function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
   );
 }
 
-function SummaryModal({ onClose, plan, onSubmit, sending }: { onClose: () => void; plan: Plan; onSubmit: () => void; sending: boolean }) {
+function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClose: () => void; plan: Plan; onSubmit: () => void; sending: boolean; onDownload: () => void | Promise<void> }) {
+  const [downloading, setDownloading] = useState(false);
+  async function handleDownloadClick() {
+    setDownloading(true);
+    try {
+      await onDownload();
+    } finally {
+      setDownloading(false);
+    }
+  }
   const liveWishlist = splitLines(plan.liveMustPlay);
   const dressLabel = plan.dressCode === "savage" ? "Savage style (elegant + funky)" : plan.dressCode === "suits" ? "Full suits, gala" : "—";
   const requestsLabel = plan.djRequests === "yes" ? "Open mic" : plan.djRequests === "filtered" ? "Filtered by couple" : "Closed";
@@ -1626,8 +1668,12 @@ function SummaryModal({ onClose, plan, onSubmit, sending }: { onClose: () => voi
           >
             {sending ? "Sending…" : "Send it to the band"}
           </button>
-          <button className="rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] hover:brightness-110 transition">
-            Download PDF
+          <button
+            onClick={handleDownloadClick}
+            disabled={downloading}
+            className={`rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloading ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
+          >
+            {downloading ? "Generating…" : "Download PDF"}
           </button>
         </div>
         <p className="text-savage-white/50 text-xs mt-3 text-center max-w-md">When you confirm, the show summary lands in the band&rsquo;s inbox. The poster stays here for you to download.</p>
