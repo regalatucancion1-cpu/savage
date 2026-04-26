@@ -58,6 +58,7 @@ type Plan = {
   names: string;
   eventDate: string;
   partyStart: string;
+  djExtraHours: number;
   venue: string;
   phone: string;
   guests: string;
@@ -85,6 +86,7 @@ const INITIAL: Plan = {
   names: "",
   eventDate: "",
   partyStart: "",
+  djExtraHours: 0,
   venue: "",
   phone: "",
   guests: "",
@@ -495,12 +497,32 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
               className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-5 py-4 text-lg text-savage-white outline-none focus:border-savage-yellow"
             />
           </Field>
-          <Field label="Reception party time *" hint="When the music kicks off. We use this to build your real night timeline.">
+          <Field label="Reception party time *" hint="When the live show kicks off. We use this to build your real night timeline.">
             <TimeBubbles
               value={plan.partyStart}
               onChange={(v) => update("partyStart", v)}
               options={PARTY_START_OPTIONS}
             />
+          </Field>
+          <Field label="Extra DJ hours" hint="2h of live show + 1h of DJ are already included. Add extras if you want the night to run longer.">
+            <div className="flex flex-wrap gap-2">
+              {[0, 1, 2, 3, 4].map((h) => {
+                const active = plan.djExtraHours === h;
+                return (
+                  <button
+                    key={h}
+                    onClick={() => update("djExtraHours", h)}
+                    className={`font-display text-sm sm:text-base px-4 py-2.5 rounded-full border-2 transition tracking-wide ${
+                      active
+                        ? "bg-savage-yellow text-savage-ink border-savage-yellow"
+                        : "border-savage-white/15 text-savage-white/80 hover:border-savage-white/40"
+                    }`}
+                  >
+                    {h === 0 ? "Just included" : `+${h}h`}
+                  </button>
+                );
+              })}
+            </div>
           </Field>
           <Field label="Venue *">
             <input
@@ -1056,7 +1078,7 @@ function SidePanel({ plan }: { plan: Plan }) {
         <p className="text-xs text-savage-white/60 mt-1">{formatDate(plan.eventDate)} · {plan.venue || "—"}</p>
       </div>
 
-      <Timeline partyStart={plan.partyStart} />
+      <Timeline partyStart={plan.partyStart} djExtraHours={plan.djExtraHours} />
 
       {plan.liveSet.length > 0 && (
         <PanelBlock title="Live · picks" count={plan.liveSet.length} accent="yellow">
@@ -1146,32 +1168,43 @@ function addMinutes(time: string, minutes: number): string | null {
   return `${String(newHH).padStart(2, "0")}:${String(newMM).padStart(2, "0")}`;
 }
 
-function Timeline({ partyStart }: { partyStart: string }) {
-  const start = partyStart || "—";
-  const live = addMinutes(partyStart, 150) || "—";
-  const dj = addMinutes(partyStart, 270) || "—";
-  const close = addMinutes(partyStart, 600) || "—";
-  const blocks = [
-    { label: "Reception", time: start, color: "bg-savage-white/20" },
-    { label: "Live", time: live, color: "bg-savage-yellow" },
-    { label: "DJ set", time: dj, color: "bg-savage-cream" },
-    { label: "Close", time: close, color: "bg-savage-red" },
+function Timeline({ partyStart, djExtraHours }: { partyStart: string; djExtraHours: number }) {
+  const liveDuration = 120;
+  const djDuration = 60;
+  const extraDuration = djExtraHours * 60;
+
+  const liveStart = partyStart || "—";
+  const djStart = addMinutes(partyStart, liveDuration) || "—";
+  const extraStart = addMinutes(partyStart, liveDuration + djDuration) || "—";
+  const closeTime = addMinutes(partyStart, liveDuration + djDuration + extraDuration) || "—";
+
+  const segments: { label: string; color: string; flex: number; start: string }[] = [
+    { label: "Live", color: "bg-savage-yellow", flex: liveDuration, start: liveStart },
+    { label: "DJ", color: "bg-savage-cream", flex: djDuration, start: djStart },
   ];
+  if (djExtraHours > 0) {
+    segments.push({ label: `+${djExtraHours}h DJ`, color: "bg-savage-red", flex: extraDuration, start: extraStart });
+  }
+
   return (
     <div className="mt-5">
       <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/50 mb-2">Timeline</p>
       <div className="flex h-2 rounded-full overflow-hidden">
-        {blocks.map((b) => (
-          <div key={b.label} className={`flex-1 ${b.color}`} title={`${b.label} · ${b.time}`} />
+        {segments.map((s) => (
+          <div key={s.label} className={s.color} style={{ flex: s.flex }} title={`${s.label} · ${s.start}`} />
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-1 mt-2">
-        {blocks.map((b) => (
-          <div key={b.label}>
-            <p className="text-[9px] uppercase tracking-wide text-savage-white/70 truncate">{b.label}</p>
-            <p className="text-[9px] text-savage-white/40">{b.time}</p>
+      <div className={`grid gap-1 mt-2 ${djExtraHours > 0 ? "grid-cols-4" : "grid-cols-3"}`}>
+        {segments.map((s) => (
+          <div key={s.label}>
+            <p className="text-[9px] uppercase tracking-wide text-savage-white/70 truncate">{s.label}</p>
+            <p className="text-[9px] text-savage-white/40">{s.start}</p>
           </div>
         ))}
+        <div>
+          <p className="text-[9px] uppercase tracking-wide text-savage-white/70 truncate">Close</p>
+          <p className="text-[9px] text-savage-white/40">{closeTime}</p>
+        </div>
       </div>
     </div>
   );
@@ -1262,6 +1295,10 @@ function buildEmailBody(plan: Plan): string {
   const closing = splitLines(plan.djMustClosing);
   const vetos = splitLines(plan.vetos);
   const date = plan.eventDate ? formatDate(plan.eventDate) : "(no date)";
+  const liveEnd = addMinutes(plan.partyStart, 120) || "(empty)";
+  const djEnd = addMinutes(plan.partyStart, 180) || "(empty)";
+  const closeTime = addMinutes(plan.partyStart, 180 + plan.djExtraHours * 60) || "(empty)";
+  const extraLabel = plan.djExtraHours === 0 ? "Just included (1h DJ)" : `+${plan.djExtraHours}h on top of included`;
 
   return [
     `SAVAGE PARTY · MY SHOW SUBMISSION`,
@@ -1271,6 +1308,7 @@ function buildEmailBody(plan: Plan): string {
     `  Couple:        ${plan.names || "(no name)"}`,
     `  Date:          ${date}`,
     `  Party start:   ${plan.partyStart || "(empty)"}`,
+    `  Extra DJ hrs:  ${extraLabel}`,
     `  Venue:         ${plan.venue || "(empty)"}`,
     `  Phone:         ${plan.phone || "(empty)"}`,
     `  Headcount:     ${plan.guests || "(empty)"}`,
@@ -1281,14 +1319,21 @@ function buildEmailBody(plan: Plan): string {
     `  DJ vibes:      ${plan.djVibes.length}`,
     `  DJ must total: ${bangers.length + sing.length + closing.length}`,
     ``,
+    `TIMELINE`,
+    `  Live:  ${plan.partyStart || "(empty)"} → ${liveEnd}`,
+    `  DJ:    ${liveEnd} → ${djEnd}` + (plan.djExtraHours > 0 ? ` (1h included)` : ``),
+    plan.djExtraHours > 0 ? `  +${plan.djExtraHours}h DJ: ${djEnd} → ${closeTime}` : ``,
+    `  Close: ${closeTime}`,
+    ``,
     ``,
     `01 · BASICS`,
     `-----------`,
-    `  Names:       ${plan.names || "(empty)"}`,
-    `  Date:        ${date}`,
-    `  Party start: ${plan.partyStart || "(empty)"}`,
-    `  Venue:       ${plan.venue || "(empty)"}`,
-    `  Phone:       ${plan.phone || "(empty)"}`,
+    `  Names:         ${plan.names || "(empty)"}`,
+    `  Date:          ${date}`,
+    `  Party start:   ${plan.partyStart || "(empty)"}`,
+    `  Extra DJ hrs:  ${extraLabel}`,
+    `  Venue:         ${plan.venue || "(empty)"}`,
+    `  Phone:         ${plan.phone || "(empty)"}`,
     ``,
     `02 · CROWD`,
     `----------`,
@@ -1505,6 +1550,7 @@ function SummaryModal({ onClose, plan, onSubmit, sending }: { onClose: () => voi
             <SummaryRow label="Venue" value={plan.venue || "—"} />
             <SummaryRow label="Phone" value={plan.phone || "—"} />
             <SummaryRow label="Party start" value={plan.partyStart || "—"} />
+            <SummaryRow label="Extra DJ hours" value={plan.djExtraHours === 0 ? "Just included (1h)" : `+${plan.djExtraHours}h on top of the included hour`} />
             <SummaryRow label="Headcount" value={plan.guests || "—"} />
             <SummaryRow label="Age range" value={plan.ages || "—"} />
             <SummaryRow label="Crowd vibe" value={plan.crowdVibes.join(", ") || "—"} />
