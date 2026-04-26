@@ -355,7 +355,7 @@ function Header({ plan }: { plan: Plan }) {
     <header className="border-b border-savage-white/10 px-5 sm:px-6 md:px-10 py-4">
       <div className="flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3 shrink-0">
-          <Image src="/logo-savage.png" alt="Savage Party" width={120} height={32} priority />
+          <Image src="/logo-savage.png" alt="Savage Party" width={88} height={88} className="w-[72px] h-auto sm:w-[88px]" priority />
         </Link>
         <div className="hidden md:flex items-center gap-3">
           <div className="flex -space-x-2">
@@ -398,6 +398,7 @@ function ProgressBar({ step, total, part }: { step: number; total: number; part:
   };
   return (
     <div className="px-5 sm:px-8 md:px-14 pt-5">
+      <div className="max-w-3xl mx-auto w-full">
       <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-savage-white/50">
         <span>Step {String(step).padStart(2, "0")} of {total}</span>
         <span className="text-savage-yellow">{Math.round((step / total) * 100)}%</span>
@@ -412,6 +413,7 @@ function ProgressBar({ step, total, part }: { step: number; total: number; part:
           />
         ))}
       </div>
+      </div>
     </div>
   );
 }
@@ -423,7 +425,7 @@ function StepHeader({ part, title, hint, accent }: { part: string; title: string
       <p className={`text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold ${accentColor}`}>
         {part}
       </p>
-      <h1 className="font-display uppercase mt-3 sm:mt-4 text-[1.75rem] sm:text-[2.5rem] md:text-[3.5rem] leading-[0.95] text-savage-white max-w-3xl">
+      <h1 className="font-display uppercase mt-3 sm:mt-4 text-[1.5rem] sm:text-[2.25rem] md:text-[3.25rem] leading-[1] sm:leading-[0.95] text-savage-white max-w-3xl break-words">
         {title}
       </h1>
       {hint && (
@@ -478,10 +480,10 @@ function SplashStep({ step, onContinue, onBack }: { step: StepDef; onContinue: (
     <div className="text-center max-w-2xl mx-auto relative">
       {!isLive && <div className="absolute inset-0 halftone opacity-[0.05] pointer-events-none" />}
       <div className="relative">
-        <p className={`text-[10px] sm:text-xs uppercase tracking-[0.5em] font-bold ${accent} mb-6`}>
+        <p className={`text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-bold ${accent} mb-6`}>
           {step.partLabel}
         </p>
-        <h1 className={`font-display uppercase text-[3.5rem] sm:text-[5.5rem] md:text-[7rem] leading-[0.85] ${accent}`}>
+        <h1 className={`font-display uppercase text-[2.75rem] sm:text-[5rem] md:text-[7rem] leading-[0.9] sm:leading-[0.85] break-words ${accent}`}>
           {step.title}
         </h1>
         <p className="font-editorial italic mt-8 text-lg sm:text-xl text-savage-cream/80 max-w-md mx-auto">
@@ -811,7 +813,7 @@ function WelcomeStep({ names }: { names: string }) {
   const display = names.trim() || "You two";
   return (
     <div className="space-y-6">
-      <p className="font-display uppercase text-savage-yellow text-2xl sm:text-3xl">
+      <p className="font-display uppercase text-savage-yellow text-xl sm:text-2xl md:text-3xl break-words">
         {display} — locked in.
       </p>
       <p className="text-savage-white/90 leading-relaxed text-lg sm:text-xl">
@@ -940,7 +942,13 @@ function TimeBubbles({ value, onChange, options }: {
   options: string[];
 }) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 snap-x">
+    <div
+      className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 snap-x"
+      style={{
+        maskImage: "linear-gradient(to right, transparent 0, black 12px, black calc(100% - 24px), transparent 100%)",
+        WebkitMaskImage: "linear-gradient(to right, transparent 0, black 12px, black calc(100% - 24px), transparent 100%)",
+      }}
+    >
       {options.map((opt) => {
         const active = value === opt;
         return (
