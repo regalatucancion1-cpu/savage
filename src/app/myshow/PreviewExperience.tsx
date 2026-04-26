@@ -352,10 +352,10 @@ function partAccent(part: StepDef["part"]): "yellow" | "cream" | "red" | "white"
 
 function Header({ plan }: { plan: Plan }) {
   return (
-    <header className="border-b border-savage-white/10 px-5 sm:px-6 md:px-10 py-4">
-      <div className="flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3 shrink-0">
-          <Image src="/logo-savage.png" alt="Savage Party" width={88} height={88} className="w-[72px] h-auto sm:w-[88px]" priority />
+    <header className="border-b border-savage-white/10 px-5 sm:px-8 md:px-14 py-4">
+      <div className="max-w-3xl mx-auto w-full flex items-center justify-between gap-4">
+        <Link href="/" className="flex items-center gap-3 shrink-0 -ml-2 sm:-ml-3">
+          <Image src="/logo-savage.png" alt="Savage Party" width={88} height={88} className="w-[80px] h-auto sm:w-[96px]" priority />
         </Link>
         <div className="hidden md:flex items-center gap-3">
           <div className="flex -space-x-2">
