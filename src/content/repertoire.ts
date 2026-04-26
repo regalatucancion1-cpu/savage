@@ -101,12 +101,6 @@ export const REPERTOIRE_CATEGORIES: RepertoireCategory[] = [
       "Get Busy — Sean Paul",
       "Hips Don't Lie — Shakira",
       "Tití Me Preguntó — Bad Bunny",
-    ],
-  },
-  {
-    id: "dj-selection",
-    title: "DJ selection",
-    songs: [
       "California Love — 2Pac",
       "Low — T-Pain",
       "Hotel Room Service — Pitbull",
@@ -116,6 +110,8 @@ export const REPERTOIRE_CATEGORIES: RepertoireCategory[] = [
       "Gold Digger — Jamie Foxx",
       "One Dance — Drake",
       "Get Ur Freak On — Missy Elliott",
+      "Return of the Mack — Mark Morrison",
+      "No Diggity — Blackstreet",
     ],
   },
 ];
