@@ -315,7 +315,7 @@ function resolveStepTitle(step: StepDef, plan: Plan): string {
 
 function resolveStepHint(step: StepDef, plan: Plan): string | undefined {
   if (step.id === "first-dance" && plan.partyKind === "cocktail") {
-    return "Cuando hacéis la entrada al cóctel suele sonar un tema. Si tenéis uno en mente, decídnoslo. Si no, lo elegimos nosotros.";
+    return "Si queréis sonar un tema cuando entráis al cóctel, nos lo decís vosotros. Si no nos pasáis nada, hacéis la entrada sin música.";
   }
   return step.hint;
 }
@@ -613,8 +613,8 @@ function StepBody({ step, plan, update, toggleArr }: {
       const isCocktail = plan.partyKind === "cocktail";
       const radioOptions = isCocktail
         ? [
-            { id: "dj" as const, label: "Sí, queremos un tema para entrar", subtitle: "Lo ponemos cuando hacéis la entrada al cóctel." },
-            { id: "none" as const, label: "No, lo elegís vosotros", subtitle: "Nos encargamos de elegir algo que encaje." },
+            { id: "dj" as const, label: "Sí, ya tenemos el tema", subtitle: "Lo ponemos cuando hacéis la entrada al cóctel." },
+            { id: "none" as const, label: "Aún lo estamos pensando", subtitle: "Os lo decimos antes del show. Sin tema, no hay entrada con música." },
           ]
         : [
             { id: "dj" as const, label: "Sí, queremos abrir con un tema", subtitle: "Lo ponemos desde la playlist o lo prepara la banda." },
