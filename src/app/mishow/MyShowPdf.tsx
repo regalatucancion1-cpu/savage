@@ -192,10 +192,10 @@ export default function MyShowPdf({ plan, logoSrc }: { plan: PlanData; logoSrc: 
           )}
         </Section>
 
-        <Section title="Playlist para los descansos" red>
+        <Section title="Wishlist fuera del repertorio" red>
           {breaks.length > 0
             ? <ListBlock items={breaks} />
-            : <Text style={styles.empty}>Sin canciones para los descansos.</Text>
+            : <Text style={styles.empty}>Sin canciones fuera del repertorio.</Text>
           }
         </Section>
 

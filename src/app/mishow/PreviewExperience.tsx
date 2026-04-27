@@ -123,7 +123,7 @@ const STEPS: StepDef[] = [
   { id: "dress", part: "intro", partLabel: "Dress code", title: "¿Cómo nos vestimos?", hint: "Nos adaptamos a la vibe de vuestra boda para que la banda parezca parte del sitio, no un proveedor." },
   { id: "live-genres", part: "live", partLabel: "Show · 1 de 4", title: "¿Qué géneros os representan?", hint: "Marcad lo que escucháis de verdad. Sin filtro de \"es una boda\"." },
   { id: "live-songs", part: "live", partLabel: "Show · 2 de 4", title: "Elegid del repertorio en directo.", hint: "Todo lo que tenemos rehearsing. Tocad para añadir, lo veréis acumularse en el panel." },
-  { id: "break-songs", part: "live", partLabel: "Show · 3 de 4", title: "Canciones para los descansos.", hint: "Mientras la banda hace break, suena una playlist. Decidnos qué temas tienen que estar ahí (incluidos los que no están en nuestro repertorio)." },
+  { id: "break-songs", part: "live", partLabel: "Show · 3 de 4", title: "¿Algún tema que no toquemos pero queréis que suene?", hint: "Las añadimos a la playlist que suena durante los descansos de la banda. Una por línea." },
   { id: "first-dance", part: "live", partLabel: "Show · 4 de 4", title: "¿Hay algún baile para abrir la fiesta?", hint: "A veces los primeros bailes los hacéis en la cena. Si pasan en la fiesta, contadnos cómo." },
   { id: "vetos", part: "outro", partLabel: "Lo que se queda fuera", title: "Lo que NO ponemos.", hint: "Sed crueles. Cada veto nos ahorra un momento incómodo." },
   { id: "notes", part: "outro", partLabel: "Una cosa más", title: "¿Algo que tengamos que saber?", hint: "Sorpresas, dramas familiares, dedicatorias, la canción de tu madre." },
@@ -599,7 +599,7 @@ function StepBody({ step, plan, update, toggleArr }: {
       );
     case "break-songs":
       return (
-        <Field label="Una por línea. Cualquier artista, cualquier estilo." hint="Estas suenan en la playlist mientras la banda hace break. Cuantas más nos paséis, mejor curamos el rato.">
+        <Field label="Una por línea. Cualquier artista, cualquier estilo." hint="Cualquier tema fuera de nuestro repertorio que queráis oír. Lo metemos en la playlist de los descansos.">
           <textarea
             rows={9}
             value={plan.breakSongs}
@@ -723,7 +723,7 @@ function ReviewStep({ plan }: { plan: Plan }) {
     { label: plan.partyKind === "party" ? "Fiesta" : "Cóctel", value: plan.partyStart || "—" },
     { label: "Duración live", value: liveDurationLabel(plan.partyKind) },
     { label: "Live picks", value: `${plan.liveSet.length} temas` },
-    { label: "Para los descansos", value: `${splitLines(plan.breakSongs).length} temas` },
+    { label: "Wishlist (fuera de repertorio)", value: `${splitLines(plan.breakSongs).length} temas` },
   ];
   return (
     <div className="space-y-6">
@@ -956,7 +956,7 @@ function SidePanel({ plan }: { plan: Plan }) {
       )}
 
       {breaks.length > 0 && (
-        <PanelBlock title="Playlist · descansos" count={breaks.length} accent="cream">
+        <PanelBlock title="Wishlist · fuera de repertorio" count={breaks.length} accent="cream">
           {breaks.map((s, i) => (
             <PanelSongRow key={s + i} index={i} title={s} accent="cream" muted />
           ))}
@@ -1123,7 +1123,7 @@ function buildEmailBody(plan: Plan): string {
     `Picks del repertorio (${plan.liveSet.length}):`,
     fmtList(plan.liveSet),
     ``,
-    `Canciones para los descansos (${breaks.length}):`,
+    `Canciones fuera del repertorio para la playlist (${breaks.length}):`,
     fmtList(breaks),
     ``,
     `Baile de apertura: ${firstDanceLabel}`,
