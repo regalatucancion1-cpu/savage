@@ -15,7 +15,7 @@ const BAND_AVATARS = [
   { name: "Pau", role: "Guitarra", initial: "P", color: "bg-savage-ink text-savage-yellow border border-savage-yellow/40" },
 ];
 
-const CROWD_VIBES = [
+const CROWD_VIBES_PARTY = [
   "Aguantan toda la noche",
   "Se rinden a la 1",
   "Bailan cualquier cosa",
@@ -25,6 +25,18 @@ const CROWD_VIBES = [
   "Crew joven, 25-35",
   "Reggaetón sí",
   "Reggaetón no",
+];
+
+const CROWD_VIBES_COCKTAIL = [
+  "Generaciones mezcladas",
+  "Mucha familia mayor",
+  "Hay niños",
+  "Prefieren conversar a bailar",
+  "Se animan rápido",
+  "Crew joven con ganas",
+  "Brindis y aplausos garantizados",
+  "Contexto profesional / formal",
+  "Íntimo, todos se conocen",
 ];
 
 const LIVE_GENRES = [
@@ -230,7 +242,12 @@ export default function MiShowExperience() {
       <div className="flex-1 grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_440px]">
         <section className="px-4 sm:px-8 md:px-14 py-8 sm:py-10 md:py-16 max-w-3xl mx-auto w-full pb-32 lg:pb-16">
           <div key={step.id} className="w-full">
-            <StepHeader part={step.partLabel} title={step.title} hint={step.hint} accent={partAccent(step.part)} />
+            <StepHeader
+              part={step.partLabel}
+              title={resolveStepTitle(step, plan)}
+              hint={resolveStepHint(step, plan)}
+              accent={partAccent(step.part)}
+            />
             <div className="mt-8 sm:mt-10">
               <StepBody
                 step={step.id}
@@ -287,6 +304,20 @@ export default function MiShowExperience() {
       </AnimatePresence>
     </main>
   );
+}
+
+function resolveStepTitle(step: StepDef, plan: Plan): string {
+  if (step.id === "first-dance" && plan.partyKind === "cocktail") {
+    return "¿Marcamos la entrada al cóctel?";
+  }
+  return step.title;
+}
+
+function resolveStepHint(step: StepDef, plan: Plan): string | undefined {
+  if (step.id === "first-dance" && plan.partyKind === "cocktail") {
+    return "Cuando hacéis la entrada al cóctel suele sonar un tema. Si tenéis uno en mente, decídnoslo. Si no, lo elegimos nosotros.";
+  }
+  return step.hint;
 }
 
 function partAccent(part: StepDef["part"]): "yellow" | "cream" | "red" | "white" {
@@ -549,7 +580,7 @@ function StepBody({ step, plan, update, toggleArr }: {
             />
           </Field>
           <Field label="Vibe del público" hint="Marcad lo que aplique.">
-            <Chips options={CROWD_VIBES} selected={plan.crowdVibes} onToggle={(v) => toggleArr("crowdVibes", v)} />
+            <Chips options={plan.partyKind === "cocktail" ? CROWD_VIBES_COCKTAIL : CROWD_VIBES_PARTY} selected={plan.crowdVibes} onToggle={(v) => toggleArr("crowdVibes", v)} />
           </Field>
         </div>
       );
@@ -578,31 +609,38 @@ function StepBody({ step, plan, update, toggleArr }: {
           />
         </Field>
       );
-    case "first-dance":
+    case "first-dance": {
+      const isCocktail = plan.partyKind === "cocktail";
+      const radioOptions = isCocktail
+        ? [
+            { id: "dj" as const, label: "Sí, queremos un tema para entrar", subtitle: "Lo ponemos cuando hacéis la entrada al cóctel." },
+            { id: "none" as const, label: "No, lo elegís vosotros", subtitle: "Nos encargamos de elegir algo que encaje." },
+          ]
+        : [
+            { id: "dj" as const, label: "Sí, queremos abrir con un tema", subtitle: "Lo ponemos desde la playlist o lo prepara la banda." },
+            { id: "none" as const, label: "No, los hicimos en la cena", subtitle: "Saltamos directos al live show." },
+          ];
       return (
         <div className="space-y-6">
           <Radio
-            options={[
-              { id: "dj", label: "Sí, queremos abrir con un tema", subtitle: "Lo ponemos desde la playlist o lo prepara la banda." },
-              { id: "none", label: "No, los hicimos en la cena", subtitle: "Saltamos directos al live show." },
-            ]}
+            options={radioOptions}
             value={plan.firstDance}
             onChange={(v) => update("firstDance", v as FirstDance)}
           />
           {plan.firstDance === "dj" && (
             <div className="space-y-5">
-              <Field label="Título y artista">
+              <Field label={isCocktail ? "Título y artista del tema de entrada" : "Título y artista"}>
                 <input
                   type="text"
                   value={plan.firstDanceSong}
                   onChange={(e) => update("firstDanceSong", e.target.value)}
                   className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
-                  placeholder="Can't Help Falling in Love — Elvis"
+                  placeholder={isCocktail ? "ej. La Vida Es Bella — Banda Sonora" : "Can't Help Falling in Love — Elvis"}
                 />
               </Field>
               <Field
                 label="Link (opcional)"
-                hint="Spotify, YouTube, Apple Music. Solo si es una versión o arreglo concreto que tengamos que igualar."
+                hint="Spotify, YouTube, Apple Music. Solo si es una versión concreta que tengamos que igualar."
               >
                 <input
                   type="url"
@@ -616,6 +654,7 @@ function StepBody({ step, plan, update, toggleArr }: {
           )}
         </div>
       );
+    }
     case "vetos":
       return (
         <Field label="Una por línea.">
