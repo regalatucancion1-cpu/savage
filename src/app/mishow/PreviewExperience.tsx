@@ -53,12 +53,22 @@ const DJ_VIBE_CHIPS = [
 type FirstDance = "dj" | "none" | null;
 type DjRequests = "yes" | "filtered" | "no" | null;
 type DressCode = "savage" | "suits" | null;
+type PartyKind = "cocktail" | "party" | null;
 
 const PARTY_START_OPTIONS = ["20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"];
+
+function liveDurationMinutes(kind: PartyKind): number {
+  return kind === "cocktail" ? 90 : 120;
+}
+
+function liveDurationLabel(kind: PartyKind): string {
+  return kind === "cocktail" ? "1h 30min" : "2h";
+}
 
 type Plan = {
   names: string;
   eventDate: string;
+  partyKind: PartyKind;
   partyStart: string;
   djExtraHours: number;
   venue: string;
@@ -88,6 +98,7 @@ type Plan = {
 const INITIAL: Plan = {
   names: "",
   eventDate: "",
+  partyKind: null,
   partyStart: "",
   djExtraHours: 0,
   venue: "",
@@ -124,7 +135,7 @@ type StepDef = {
 };
 
 const STEPS: StepDef[] = [
-  { id: "basics", part: "intro", partLabel: "Lo básico", title: "Empezamos por vosotros.", hint: "Nombres, fecha, sitio y hora del cóctel. Lo confirmamos contra el contrato, sin sorpresas." },
+  { id: "basics", part: "intro", partLabel: "Lo básico", title: "Empezamos por vosotros.", hint: "Nombres, fecha, sitio y cuándo arranca la noche. Lo confirmamos contra el contrato, sin sorpresas." },
   { id: "welcome", part: "intro", partLabel: "Bienvenida", title: "Estáis dentro." },
   { id: "crowd", part: "intro", partLabel: "Vuestra gente", title: "¿Quién va a estar en la pista?", hint: "Nos ayuda a calibrar cuándo darle caña y cuándo bajar." },
   { id: "dress", part: "intro", partLabel: "Dress code", title: "¿Cómo nos vestimos?", hint: "Nos adaptamos a la vibe de vuestra boda para que la banda parezca parte del sitio, no un proveedor." },
@@ -260,7 +271,7 @@ export default function MiShowExperience() {
         }>
           <div key={step.id} className="w-full">
             {step.splash ? (
-              <SplashStep step={step} onContinue={() => setStepIdx(stepIdx + 1)} onBack={() => setStepIdx(stepIdx - 1)} />
+              <SplashStep step={step} partyKind={plan.partyKind} onContinue={() => setStepIdx(stepIdx + 1)} onBack={() => setStepIdx(stepIdx - 1)} />
             ) : (
               <>
                 <StepHeader part={step.partLabel} title={step.title} hint={step.hint} accent={partAccent(step.part)} />
@@ -457,10 +468,11 @@ function Nav({ isFirst, onBack, onNext, nextLabel, accent, disabled }: {
 
 // ============== SPLASH ==============
 
-function SplashStep({ step, onContinue, onBack }: { step: StepDef; onContinue: () => void; onBack: () => void }) {
+function SplashStep({ step, partyKind, onContinue, onBack }: { step: StepDef; partyKind: PartyKind; onContinue: () => void; onBack: () => void }) {
   const isLive = step.id === "splash-live";
   const accent = isLive ? "text-savage-yellow" : "text-savage-cream";
   const buttonBg = isLive ? "bg-savage-yellow text-savage-ink" : "bg-savage-cream text-savage-ink";
+  const liveLabel = partyKind === "cocktail" ? "Hora y media" : "Dos horas";
   return (
     <div className="text-center max-w-2xl mx-auto relative">
       {!isLive && <div className="absolute inset-0 halftone opacity-[0.05] pointer-events-none" />}
@@ -473,8 +485,8 @@ function SplashStep({ step, onContinue, onBack }: { step: StepDef; onContinue: (
         </h1>
         <p className="font-editorial italic mt-8 text-lg sm:text-xl text-savage-cream/80 max-w-md mx-auto">
           {isLive
-            ? "Dos horas. Cuatro músicos. Saxo, guitarra y batería paseándose por la pista. Las canciones que de verdad queréis."
-            : "De 23:30 hasta el cierre. La cabina toma el mando. Aquí es donde la noche se hace larga."}
+            ? `${liveLabel}. Cuatro músicos. Saxo, guitarra y batería paseándose por la pista. Las canciones que de verdad queréis.`
+            : "De cierre del live hasta el final. La cabina toma el mando. Aquí es donde la noche se hace larga."}
         </p>
         <div className="mt-12 flex flex-col-reverse sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4">
           <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/50 hover:text-savage-white py-3 px-3 -mx-3 -my-3">
@@ -523,14 +535,47 @@ function StepBody({ step, plan, update, toggleArr }: {
               className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
             />
           </Field>
-          <Field label="Hora del cóctel *" hint="Cuando arranca el live show. Lo usamos para construir el timing real de la noche.">
-            <TimeBubbles
-              value={plan.partyStart}
-              onChange={(v) => update("partyStart", v)}
-              options={PARTY_START_OPTIONS}
-            />
+          <Field label="¿Empezáis con cóctel o directos a la fiesta? *">
+            <div className="flex flex-wrap gap-2">
+              {([
+                { id: "cocktail", label: "Cóctel" },
+                { id: "party", label: "Fiesta" },
+              ] as { id: PartyKind; label: string }[]).map((opt) => {
+                const active = plan.partyKind === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => update("partyKind", opt.id)}
+                    className={`text-sm uppercase tracking-wider px-4 py-2.5 rounded-full border-2 transition ${
+                      active
+                        ? "bg-savage-yellow text-savage-ink border-savage-yellow"
+                        : "border-savage-white/20 text-savage-white/70 hover:border-savage-white/50"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
           </Field>
-          <Field label="Horas extras de DJ" hint="Ya van incluidas 2h de live + 1h de DJ. Añadid extras si queréis estirar la noche.">
+          {plan.partyKind && (
+            <Field
+              label={`Hora del ${plan.partyKind === "cocktail" ? "cóctel" : "comienzo de la fiesta"} *`}
+              hint={plan.partyKind === "cocktail"
+                ? "Cuando arranca el cóctel. Es el ancla para construir el timing real de la noche."
+                : "Cuando empieza la fiesta. Lo usamos para construir el timing real de la noche."}
+            >
+              <TimeBubbles
+                value={plan.partyStart}
+                onChange={(v) => update("partyStart", v)}
+                options={PARTY_START_OPTIONS}
+              />
+            </Field>
+          )}
+          <Field
+            label="Horas extras de DJ"
+            hint={`Ya van incluidas ${liveDurationLabel(plan.partyKind)} de live + 1h de DJ. Añadid extras si queréis estirar la noche.`}
+          >
             <div className="flex flex-wrap gap-2">
               {[0, 1, 2, 3, 4].map((h) => {
                 const active = plan.djExtraHours === h;
@@ -824,7 +869,7 @@ function ReviewStep({ plan }: { plan: Plan }) {
     { label: "Pareja", value: plan.names || "—" },
     { label: "Fecha", value: plan.eventDate ? formatDate(plan.eventDate) : "—" },
     { label: "Sitio", value: plan.venue || "—" },
-    { label: "Cóctel", value: plan.partyStart || "—" },
+    { label: plan.partyKind === "party" ? "Fiesta" : "Cóctel", value: plan.partyStart || "—" },
     { label: "Live picks", value: `${plan.liveSet.length} temas` },
     { label: "Vibes DJ", value: plan.djVibes.length ? plan.djVibes.join(", ") : "—" },
   ];
@@ -1111,7 +1156,7 @@ function SidePanel({ plan }: { plan: Plan }) {
         <p className="text-xs text-savage-white/60 mt-1">{formatDate(plan.eventDate)} · {plan.venue || "—"}</p>
       </div>
 
-      <Timeline partyStart={plan.partyStart} djExtraHours={plan.djExtraHours} />
+      <Timeline partyStart={plan.partyStart} djExtraHours={plan.djExtraHours} partyKind={plan.partyKind} />
 
       {plan.liveSet.length > 0 && (
         <PanelBlock title="Live · picks" count={plan.liveSet.length} accent="yellow">
@@ -1201,8 +1246,8 @@ function addMinutes(time: string, minutes: number): string | null {
   return `${String(newHH).padStart(2, "0")}:${String(newMM).padStart(2, "0")}`;
 }
 
-function Timeline({ partyStart, djExtraHours }: { partyStart: string; djExtraHours: number }) {
-  const liveDuration = 120;
+function Timeline({ partyStart, djExtraHours, partyKind }: { partyStart: string; djExtraHours: number; partyKind: PartyKind }) {
+  const liveDuration = liveDurationMinutes(partyKind);
   const djDuration = 60;
   const extraDuration = djExtraHours * 60;
 
@@ -1325,9 +1370,10 @@ function buildEmailBody(plan: Plan): string {
   const closing = splitLines(plan.djMustClosing);
   const vetos = splitLines(plan.vetos);
   const date = plan.eventDate ? formatDate(plan.eventDate) : dash;
-  const liveEnd = addMinutes(plan.partyStart, 120) || dash;
-  const djEnd = addMinutes(plan.partyStart, 180) || dash;
-  const closeTime = addMinutes(plan.partyStart, 180 + plan.djExtraHours * 60) || dash;
+  const liveDur = liveDurationMinutes(plan.partyKind);
+  const liveEnd = addMinutes(plan.partyStart, liveDur) || dash;
+  const djEnd = addMinutes(plan.partyStart, liveDur + 60) || dash;
+  const closeTime = addMinutes(plan.partyStart, liveDur + 60 + plan.djExtraHours * 60) || dash;
   const extraLabel = plan.djExtraHours === 0 ? "Solo la hora de DJ incluida" : `+${plan.djExtraHours}h sobre la hora incluida`;
 
   return [
@@ -1341,11 +1387,12 @@ function buildEmailBody(plan: Plan): string {
     `  Sitio: ${plan.venue || dash}`,
     `  Teléfono: ${plan.phone || dash}`,
     `  Email: ${plan.email || dash}`,
-    `  Hora del cóctel: ${plan.partyStart || dash}`,
+    `  Tipo de inicio: ${plan.partyKind === "cocktail" ? "Cóctel" : plan.partyKind === "party" ? "Fiesta directa" : dash}`,
+    `  Hora de inicio: ${plan.partyStart || dash}`,
     `  Horas extra de DJ: ${extraLabel}`,
     ``,
     `Timeline`,
-    `  Live: ${plan.partyStart || dash} a ${liveEnd}`,
+    `  Live (${liveDurationLabel(plan.partyKind)}): ${plan.partyStart || dash} a ${liveEnd}`,
     `  DJ: ${liveEnd} a ${djEnd}` + (plan.djExtraHours > 0 ? ` (1h incluida)` : ``),
     plan.djExtraHours > 0 ? `  DJ extra: ${djEnd} a ${closeTime}` : ``,
     `  Cierre: ${closeTime}`,

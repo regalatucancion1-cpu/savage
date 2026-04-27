@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
 type PlanData = {
   names: string;
   eventDate: string;
+  partyKind: "cocktail" | "party" | null;
   partyStart: string;
   djExtraHours: number;
   venue: string;
@@ -163,6 +164,8 @@ export default function MyShowPdf({ plan, logoSrc }: { plan: PlanData; logoSrc: 
   const requestsLabel = plan.djRequests === "yes" ? "Micro abierto" : plan.djRequests === "filtered" ? "Filtradas por la pareja" : plan.djRequests === "no" ? "Cerrado" : "—";
   const firstDanceLabel = plan.firstDance === "dj" ? `Lo pone el DJ · ${plan.firstDanceSong || "—"}` : plan.firstDance === "none" ? "Ya hechos en la cena" : "—";
   const extraLabel = plan.djExtraHours === 0 ? "Solo la hora de DJ incluida" : `+${plan.djExtraHours}h sobre la incluida`;
+  const partyKindLabel = plan.partyKind === "cocktail" ? "Cóctel" : plan.partyKind === "party" ? "Fiesta directa" : "—";
+  const liveLengthLabel = plan.partyKind === "cocktail" ? "1h 30min" : "2h";
   const vetos = splitLines(plan.vetos);
   const liveWishlist = splitLines(plan.liveMustPlay);
   const ref = `${plan.names.replace(/\s|&|y/g, "").toUpperCase().slice(0, 12) || "—"}-${(plan.eventDate || "").replace(/-/g, "").slice(2) || "—"}`;
@@ -192,7 +195,9 @@ export default function MyShowPdf({ plan, logoSrc }: { plan: PlanData; logoSrc: 
           <Row label="Sitio" value={plan.venue || "—"} />
           <Row label="Teléfono" value={plan.phone || "—"} />
           <Row label="Email" value={plan.email || "—"} mono />
-          <Row label="Hora del cóctel" value={plan.partyStart || "—"} />
+          <Row label="Tipo de inicio" value={partyKindLabel} />
+          <Row label="Hora de inicio" value={plan.partyStart || "—"} />
+          <Row label="Duración del live" value={liveLengthLabel} />
           <Row label="Horas extra de DJ" value={extraLabel} />
           <Row label="Invitados" value={plan.guests || "—"} />
           <Row label="Rango de edades" value={plan.ages || "—"} />
