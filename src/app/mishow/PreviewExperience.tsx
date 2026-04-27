@@ -55,8 +55,6 @@ type DjRequests = "yes" | "filtered" | "no" | null;
 type DressCode = "savage" | "suits" | null;
 type PartyKind = "cocktail" | "party" | null;
 
-const PARTY_START_OPTIONS = ["20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"];
-
 function liveDurationMinutes(kind: PartyKind): number {
   return kind === "cocktail" ? 90 : 120;
 }
@@ -545,7 +543,10 @@ function StepBody({ step, plan, update, toggleArr }: {
                 return (
                   <button
                     key={opt.id}
-                    onClick={() => update("partyKind", opt.id)}
+                    onClick={() => {
+                      update("partyKind", opt.id);
+                      if (opt.id === "cocktail") update("djExtraHours", 0);
+                    }}
                     className={`text-sm uppercase tracking-wider px-4 py-2.5 rounded-full border-2 transition ${
                       active
                         ? "bg-savage-yellow text-savage-ink border-savage-yellow"
@@ -562,39 +563,42 @@ function StepBody({ step, plan, update, toggleArr }: {
             <Field
               label={`Hora del ${plan.partyKind === "cocktail" ? "cóctel" : "comienzo de la fiesta"} *`}
               hint={plan.partyKind === "cocktail"
-                ? "Cuando arranca el cóctel. Es el ancla para construir el timing real de la noche."
+                ? "El cóctel dura 1h 30min y no se alarga. Lo anclamos aquí."
                 : "Cuando empieza la fiesta. Lo usamos para construir el timing real de la noche."}
             >
-              <TimeBubbles
+              <input
+                type="time"
                 value={plan.partyStart}
-                onChange={(v) => update("partyStart", v)}
-                options={PARTY_START_OPTIONS}
+                onChange={(e) => update("partyStart", e.target.value)}
+                className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               />
             </Field>
           )}
-          <Field
-            label="Horas extras de DJ"
-            hint={`Ya van incluidas ${liveDurationLabel(plan.partyKind)} de live + 1h de DJ. Añadid extras si queréis estirar la noche.`}
-          >
-            <div className="flex flex-wrap gap-2">
-              {[0, 1, 2, 3, 4].map((h) => {
-                const active = plan.djExtraHours === h;
-                return (
-                  <button
-                    key={h}
-                    onClick={() => update("djExtraHours", h)}
-                    className={`font-display text-sm sm:text-base px-4 py-2.5 rounded-full border-2 transition tracking-wide ${
-                      active
-                        ? "bg-savage-yellow text-savage-ink border-savage-yellow"
-                        : "border-savage-white/15 text-savage-white/80 hover:border-savage-white/40"
-                    }`}
-                  >
-                    {h === 0 ? "Solo lo incluido" : `+${h}h`}
-                  </button>
-                );
-              })}
-            </div>
-          </Field>
+          {plan.partyKind === "party" && (
+            <Field
+              label="Horas extras de DJ"
+              hint={`Ya van incluidas ${liveDurationLabel(plan.partyKind)} de live + 1h de DJ. Añadid extras si queréis estirar la noche.`}
+            >
+              <div className="flex flex-wrap gap-2">
+                {[0, 1, 2, 3, 4].map((h) => {
+                  const active = plan.djExtraHours === h;
+                  return (
+                    <button
+                      key={h}
+                      onClick={() => update("djExtraHours", h)}
+                      className={`font-display text-sm sm:text-base px-4 py-2.5 rounded-full border-2 transition tracking-wide ${
+                        active
+                          ? "bg-savage-yellow text-savage-ink border-savage-yellow"
+                          : "border-savage-white/15 text-savage-white/80 hover:border-savage-white/40"
+                      }`}
+                    >
+                      {h === 0 ? "Solo lo incluido" : `+${h}h`}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+          )}
           <Field label="Sitio *">
             <input
               type="text"
@@ -952,39 +956,6 @@ function Field({ label, hint, children }: { label?: string; hint?: string; child
       {label && <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/60 mb-3">{label}</p>}
       {hint && <p className="text-savage-white/55 text-sm mb-4">{hint}</p>}
       {children}
-    </div>
-  );
-}
-
-function TimeBubbles({ value, onChange, options }: {
-  value: string;
-  onChange: (v: string) => void;
-  options: string[];
-}) {
-  return (
-    <div
-      className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 snap-x"
-      style={{
-        maskImage: "linear-gradient(to right, transparent 0, black 12px, black calc(100% - 24px), transparent 100%)",
-        WebkitMaskImage: "linear-gradient(to right, transparent 0, black 12px, black calc(100% - 24px), transparent 100%)",
-      }}
-    >
-      {options.map((opt) => {
-        const active = value === opt;
-        return (
-          <button
-            key={opt}
-            onClick={() => onChange(opt)}
-            className={`shrink-0 snap-start font-display text-sm sm:text-base px-3.5 sm:px-4 py-2.5 rounded-full border-2 transition tracking-wide ${
-              active
-                ? "bg-savage-yellow text-savage-ink border-savage-yellow"
-                : "border-savage-white/15 text-savage-white/80 hover:border-savage-white/40"
-            }`}
-          >
-            {opt}
-          </button>
-        );
-      })}
     </div>
   );
 }
