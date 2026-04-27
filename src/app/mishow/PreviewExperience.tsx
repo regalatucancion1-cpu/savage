@@ -477,7 +477,7 @@ function StepBody({ step, plan, update, toggleArr }: {
               type="date"
               value={plan.eventDate}
               onChange={(e) => update("eventDate", e.target.value)}
-              className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
+              className="w-full appearance-none bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 text-base md:px-5 md:text-lg text-savage-white outline-none focus:border-savage-yellow min-h-[48px] md:min-h-[60px]"
             />
           </Field>
           <Field label="¿Empezáis con cóctel o directos a la fiesta? *">
@@ -514,7 +514,7 @@ function StepBody({ step, plan, update, toggleArr }: {
                 type="time"
                 value={plan.partyStart}
                 onChange={(e) => update("partyStart", e.target.value)}
-                className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
+                className="w-full appearance-none bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 text-base md:px-5 md:text-lg text-savage-white outline-none focus:border-savage-yellow min-h-[48px] md:min-h-[60px]"
               />
             </Field>
           )}
