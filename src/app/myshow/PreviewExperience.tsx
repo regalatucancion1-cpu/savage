@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
 import { pdf } from "@react-pdf/renderer";
@@ -147,8 +147,6 @@ const STEPS: StepDef[] = [
 export default function PreviewExperience() {
   const [plan, setPlan] = useState<Plan>(INITIAL);
   const [stepIdx, setStepIdx] = useState(0);
-  const [showPoster, setShowPoster] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
   const [showPanelMobile, setShowPanelMobile] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -226,8 +224,6 @@ export default function PreviewExperience() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Submit failed");
-      setShowPoster(false);
-      setShowSummary(false);
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -238,7 +234,7 @@ export default function PreviewExperience() {
   }
 
   if (submitted) {
-    return <SuccessScreen names={plan.names} onDownload={handleDownloadPdf} />;
+    return <SuccessScreen plan={plan} onDownloadPdf={handleDownloadPdf} />;
   }
 
   function update<K extends keyof Plan>(k: K, v: Plan[K]) {
@@ -274,8 +270,6 @@ export default function PreviewExperience() {
                     plan={plan}
                     update={update}
                     toggleArr={toggleArr}
-                    onShowPoster={() => setShowPoster(true)}
-                    onShowSummary={() => setShowSummary(true)}
                   />
                 </div>
                 <Nav
@@ -329,14 +323,6 @@ export default function PreviewExperience() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showPoster && (
-          <PosterModal onClose={() => setShowPoster(false)} plan={plan} />
-        )}
-        {showSummary && (
-          <SummaryModal onClose={() => setShowSummary(false)} plan={plan} onSubmit={handleSubmit} sending={sending} onDownload={handleDownloadPdf} />
-        )}
-      </AnimatePresence>
     </main>
   );
 }
@@ -509,13 +495,11 @@ function SplashStep({ step, onContinue, onBack }: { step: StepDef; onContinue: (
 
 // ============== STEP BODY ==============
 
-function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }: {
+function StepBody({ step, plan, update, toggleArr }: {
   step: string;
   plan: Plan;
   update: <K extends keyof Plan>(k: K, v: Plan[K]) => void;
   toggleArr: <K extends "crowdVibes" | "liveGenres" | "djVibes" | "liveSet">(k: K, v: string) => void;
-  onShowPoster: () => void;
-  onShowSummary: () => void;
 }) {
   switch (step) {
     case "welcome":
@@ -801,7 +785,7 @@ function StepBody({ step, plan, update, toggleArr, onShowPoster, onShowSummary }
         </Field>
       );
     case "review":
-      return <ReviewStep plan={plan} onShowPoster={onShowPoster} onShowSummary={onShowSummary} />;
+      return <ReviewStep plan={plan} />;
     default:
       return null;
   }
@@ -836,36 +820,28 @@ function WelcomeStep({ names }: { names: string }) {
 
 // ============== REVIEW ==============
 
-function ReviewStep({ onShowPoster, onShowSummary }: {
-  plan: Plan;
-  onShowPoster: () => void;
-  onShowSummary: () => void;
-}) {
+function ReviewStep({ plan }: { plan: Plan }) {
+  const recap = [
+    { label: "Couple", value: plan.names || "—" },
+    { label: "Date", value: plan.eventDate ? formatDate(plan.eventDate) : "—" },
+    { label: "Venue", value: plan.venue || "—" },
+    { label: "Reception", value: plan.partyStart || "—" },
+    { label: "Live picks", value: `${plan.liveSet.length} tracks` },
+    { label: "DJ vibes", value: plan.djVibes.length ? plan.djVibes.join(", ") : "—" },
+  ];
   return (
     <div className="space-y-6">
-      <p className="text-savage-white/85 leading-relaxed text-base sm:text-lg">
-        Two things to check before you send. The poster is yours, dedicated, you can download it. The summary is the full show spec, that one goes straight to the band.
+      <p className="text-savage-white/85 leading-relaxed text-base md:text-lg">
+        Quick recap. Hit send and the band starts working on your show right away. Your poster and the show summary land back here for you to download once it&rsquo;s submitted.
       </p>
 
-      <div className="grid sm:grid-cols-2 gap-4">
-        <button
-          onClick={onShowPoster}
-          className="text-left rounded-2xl border border-savage-yellow/40 bg-savage-yellow/5 hover:bg-savage-yellow/15 transition p-6 group"
-        >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow font-bold">01 · Yours</p>
-          <h3 className="font-display uppercase text-2xl mt-3 text-savage-white group-hover:text-savage-yellow transition">Your show poster</h3>
-          <p className="text-savage-white/60 text-sm mt-3 leading-relaxed">A dedicated festival-style poster with your names, date and venue. Download as PNG to share.</p>
-          <p className="text-savage-yellow text-xs uppercase tracking-[0.3em] mt-4">Open →</p>
-        </button>
-        <button
-          onClick={onShowSummary}
-          className="text-left rounded-2xl border border-savage-cream/40 bg-savage-cream/5 hover:bg-savage-cream/15 transition p-6 group"
-        >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-savage-cream font-bold">02 · The spec</p>
-          <h3 className="font-display uppercase text-2xl mt-3 text-savage-white group-hover:text-savage-cream transition">Show summary</h3>
-          <p className="text-savage-white/60 text-sm mt-3 leading-relaxed">Everything you decided, structured like a document. Download as PDF. The band gets the same.</p>
-          <p className="text-savage-cream text-xs uppercase tracking-[0.3em] mt-4">Open →</p>
-        </button>
+      <div className="rounded-2xl border border-savage-white/10 bg-savage-ink/30 divide-y divide-savage-white/10">
+        {recap.map((s) => (
+          <div key={s.label} className="flex items-baseline justify-between gap-4 px-4 py-3 md:px-5 md:py-3.5">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/50 shrink-0">{s.label}</p>
+            <p className="text-sm text-savage-white text-right break-words">{s.value}</p>
+          </div>
+        ))}
       </div>
 
       <p className="text-savage-white/60 text-sm leading-relaxed">
@@ -1423,244 +1399,110 @@ function buildEmailBody(plan: Plan): string {
 
 // ============== POSTER MODAL ==============
 
-function PosterModal({ onClose, plan }: { onClose: () => void; plan: Plan }) {
+function PosterArtwork({ plan }: { plan: Plan }) {
   const name1 = plan.names.split(" & ")[0] || "Name 1";
   const name2 = plan.names.split(" & ")[1] || "Name 2";
   const dateLine = plan.eventDate
     ? new Date(plan.eventDate).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()
     : "DATE.MONTH.YEAR";
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-savage-black/95 overflow-y-auto"
+    <div
+      className="bg-savage-red text-savage-yellow relative overflow-hidden"
+      style={{ width: "900px", height: "1200px" }}
     >
-      <div className="min-h-screen flex flex-col items-center justify-start p-5 sm:p-10">
-        <button onClick={onClose} className="self-end text-savage-white/60 text-sm mb-4 hover:text-savage-yellow py-2 px-3 -mr-2">
-          ← Back
-        </button>
+      <div
+        className="absolute inset-0 opacity-[0.18] pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(rgba(0,0,0,0.6) 1px, transparent 1px)",
+          backgroundSize: "8px 8px",
+        }}
+      />
+      <div className="absolute top-0 left-0 right-0 h-4 bg-savage-yellow" />
+      <div className="absolute bottom-0 left-0 right-0 h-4 bg-savage-yellow" />
+      <div className="absolute top-0 bottom-0 left-0 w-4 bg-savage-yellow" />
+      <div className="absolute top-0 bottom-0 right-0 w-4 bg-savage-yellow" />
 
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          transition={{ type: "spring", damping: 22 }}
-          className="w-full max-w-xl bg-savage-red text-savage-yellow relative overflow-hidden shadow-2xl shadow-savage-black/70"
-          style={{ aspectRatio: "3 / 4" }}
-        >
-          {/* Halftone texture */}
-          <div
-            className="absolute inset-0 opacity-[0.18] pointer-events-none mix-blend-overlay"
-            style={{
-              backgroundImage: "radial-gradient(rgba(0,0,0,0.6) 1px, transparent 1px)",
-              backgroundSize: "6px 6px",
-            }}
-          />
-          {/* Yellow frame stripes */}
-          <div className="absolute top-0 left-0 right-0 h-2.5 bg-savage-yellow" />
-          <div className="absolute bottom-0 left-0 right-0 h-2.5 bg-savage-yellow" />
-          <div className="absolute top-0 bottom-0 left-0 w-2.5 bg-savage-yellow" />
-          <div className="absolute top-0 bottom-0 right-0 w-2.5 bg-savage-yellow" />
-
-          <div className="absolute inset-0 flex flex-col px-5 sm:px-9 md:px-12 pt-7 sm:pt-9 pb-6 sm:pb-8">
-
-            <div className="flex items-start justify-between gap-3">
-              <Image src="/logo-savage.png" alt="Savage Party" width={64} height={64} className="sm:w-[86px] sm:h-[86px]" />
-              <div className="text-right">
-                <p className="text-[9px] uppercase tracking-[0.3em] font-bold text-savage-yellow">Private show</p>
-                <p className="text-[9px] uppercase tracking-[0.25em] mt-1 text-savage-yellow/60 break-all">
-                  No. {(plan.names.replace(/\s|&/g, "").toUpperCase().slice(0, 6) || "—")}-{(plan.eventDate || "").replace(/-/g, "").slice(2) || "—"}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex-1 flex flex-col items-center justify-center text-center">
-              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <span className="block w-6 sm:w-10 h-[2px] bg-savage-yellow" />
-                <p className="font-display uppercase text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.5em] text-savage-yellow">
-                  Headlining
-                </p>
-                <span className="block w-6 sm:w-10 h-[2px] bg-savage-yellow" />
-              </div>
-              <h1 className="font-display uppercase text-[2.25rem] sm:text-[4rem] md:text-[5.5rem] leading-[0.85] sm:leading-[0.82] text-savage-yellow break-words">
-                {name1}
-                <br />
-                <span className="font-display text-[2.5rem] sm:text-[4.5rem] md:text-[6rem] inline-block leading-none my-1 text-savage-cream">×</span>
-                <br />
-                {name2}
-              </h1>
-              <div className="mt-6 sm:mt-9 flex flex-col items-center gap-2">
-                <p className="font-display text-[1.25rem] sm:text-[2rem] tracking-tight text-savage-yellow">{dateLine}</p>
-                <p className="text-[11px] sm:text-sm uppercase tracking-[0.25em] sm:tracking-[0.3em] font-bold text-savage-cream break-words">{plan.venue || "Venue"}</p>
-                {plan.partyStart && (
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-savage-yellow/60 mt-1">
-                    Doors {plan.partyStart}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div className="border-t-2 border-savage-yellow pt-3 flex items-center justify-between text-[9px] uppercase tracking-[0.25em] sm:tracking-[0.3em] font-bold text-savage-yellow">
-              <span>One night.</span>
-              <span className="text-savage-cream">One band.</span>
-              <span>Your show.</span>
-            </div>
+      <div className="absolute inset-0 flex flex-col px-16 pt-14 pb-12">
+        <div className="flex items-start justify-between gap-3">
+          <Image src="/logo-savage.png" alt="Savage Party" width={130} height={130} unoptimized />
+          <div className="text-right">
+            <p className="text-[14px] uppercase tracking-[0.3em] font-bold text-savage-yellow">Private show</p>
+            <p className="text-[12px] uppercase tracking-[0.25em] mt-1 text-savage-yellow/60">
+              No. {(plan.names.replace(/\s|&/g, "").toUpperCase().slice(0, 6) || "—")}-{(plan.eventDate || "").replace(/-/g, "").slice(2) || "—"}
+            </p>
           </div>
-        </motion.div>
-
-        <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          <button className="rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] hover:brightness-110 transition">
-            Download PNG
-          </button>
-        </div>
-        <p className="text-savage-white/40 text-xs mt-3 text-center max-w-xs">The poster is yours to download and share. The band keeps a copy too.</p>
-      </div>
-    </motion.div>
-  );
-}
-
-function SummaryModal({ onClose, plan, onSubmit, sending, onDownload }: { onClose: () => void; plan: Plan; onSubmit: () => void; sending: boolean; onDownload: () => void | Promise<void> }) {
-  const [downloading, setDownloading] = useState(false);
-  async function handleDownloadClick() {
-    setDownloading(true);
-    try {
-      await onDownload();
-    } finally {
-      setDownloading(false);
-    }
-  }
-  const liveWishlist = splitLines(plan.liveMustPlay);
-  const dressLabel = plan.dressCode === "savage" ? "Savage style (elegant + funky)" : plan.dressCode === "suits" ? "Full suits, gala" : "—";
-  const requestsLabel = plan.djRequests === "yes" ? "Open mic" : plan.djRequests === "filtered" ? "Filtered by couple" : "Closed";
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-savage-black/95 overflow-y-auto"
-    >
-      <div className="min-h-screen flex flex-col items-center justify-start p-4 sm:p-8">
-        <div className="w-full max-w-3xl flex items-center justify-between mb-4">
-          <button onClick={onClose} className="text-savage-white/60 text-sm hover:text-savage-cream py-2 px-3 -ml-2">
-            ← Back
-          </button>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/50">Mock · download buttons are placeholders</p>
         </div>
 
-        <motion.article
-          initial={{ scale: 0.97, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          transition={{ type: "spring", damping: 24 }}
-          className="w-full max-w-3xl bg-savage-cream text-savage-ink relative overflow-hidden shadow-2xl shadow-savage-black/60 mx-2 sm:mx-0"
-        >
-          <div className="absolute inset-0 halftone opacity-[0.06] pointer-events-none" />
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-savage-yellow" />
-          <div className="relative p-5 sm:p-8 md:p-12 pt-8 sm:pt-10">
-            <header className="border-b-2 border-savage-ink pb-5 flex items-start justify-between gap-6">
-              <Image src="/logo-savage.png" alt="Savage Party" width={72} height={72} />
-              <div className="text-right">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-savage-ink/70">Booking ref</p>
-                <p className="font-display text-sm mt-1">{plan.names.replace(/\s|&/g, "").toUpperCase().slice(0, 12) || "—"}-{(plan.eventDate || "").replace(/-/g, "").slice(2) || "—"}</p>
-              </div>
-            </header>
-
-            <p className="text-[10px] uppercase tracking-[0.4em] text-savage-red font-bold mt-6">Show specification</p>
-            <h1 className="font-display uppercase text-3xl sm:text-4xl mt-2 leading-tight">
-              Show for {plan.names || "—"}
-            </h1>
-            <p className="text-sm text-savage-ink/70 mt-1">{formatDate(plan.eventDate)} · {plan.venue || "—"}</p>
-
-          <SummarySection title="Event basics">
-            <SummaryRow label="Names" value={plan.names || "—"} />
-            <SummaryRow label="Date" value={formatDate(plan.eventDate)} />
-            <SummaryRow label="Venue" value={plan.venue || "—"} />
-            <SummaryRow label="Phone" value={plan.phone || "—"} />
-            <SummaryRow label="Email" value={plan.email || "—"} mono />
-            <SummaryRow label="Party start" value={plan.partyStart || "—"} />
-            <SummaryRow label="Extra DJ hours" value={plan.djExtraHours === 0 ? "Just included (1h)" : `+${plan.djExtraHours}h on top of the included hour`} />
-            <SummaryRow label="Headcount" value={plan.guests || "—"} />
-            <SummaryRow label="Age range" value={plan.ages || "—"} />
-            <SummaryRow label="Crowd vibe" value={plan.crowdVibes.join(", ") || "—"} />
-            <SummaryRow label="Dress code" value={dressLabel} />
-          </SummarySection>
-
-          <SummarySection title="Live show">
-            <SummaryRow label="Genres" value={plan.liveGenres.join(", ") || "—"} />
-            <SummaryRow label="Picks from repertoire" value={`${plan.liveSet.length} tracks`} />
-            {plan.liveSet.length > 0 && <SummaryList items={plan.liveSet} />}
-            <SummaryRow label="Wishlist (not in repertoire)" value={`${liveWishlist.length} tracks`} />
-            {liveWishlist.length > 0 && <SummaryList items={liveWishlist} />}
-            <SummaryRow
-              label="Opening dance"
-              value={
-                plan.firstDance === "dj" ? `DJ plays it · ${plan.firstDanceSong || "—"}` :
-                plan.firstDance === "none" ? "Already done at dinner" :
-                "—"
-              }
-            />
-            {plan.firstDance === "dj" && plan.firstDanceLink && (
-              <SummaryRow label="Reference link" value={plan.firstDanceLink} mono />
+        <div className="flex-1 flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-4 mb-10">
+            <span className="block w-16 h-[3px] bg-savage-yellow" />
+            <p className="font-display uppercase text-[18px] tracking-[0.5em] text-savage-yellow">
+              Headlining
+            </p>
+            <span className="block w-16 h-[3px] bg-savage-yellow" />
+          </div>
+          <h1 className="font-display uppercase text-[112px] leading-[0.82] text-savage-yellow">
+            {name1}
+            <br />
+            <span className="font-display text-[124px] inline-block leading-none my-2 text-savage-cream">×</span>
+            <br />
+            {name2}
+          </h1>
+          <div className="mt-12 flex flex-col items-center gap-3">
+            <p className="font-display text-[42px] tracking-tight text-savage-yellow">{dateLine}</p>
+            <p className="text-[18px] uppercase tracking-[0.3em] font-bold text-savage-cream">{plan.venue || "Venue"}</p>
+            {plan.partyStart && (
+              <p className="text-[14px] uppercase tracking-[0.4em] text-savage-yellow/60 mt-1">
+                Doors {plan.partyStart}
+              </p>
             )}
-          </SummarySection>
-
-          <SummarySection title="DJ set" cream>
-            <SummaryRow label="Vibes" value={plan.djVibes.join(", ") || "—"} />
-            <SummaryRow label="Reference playlist" value={plan.djReferenceUrl || "—"} mono />
-            <SummaryRow label="Requests from guests" value={requestsLabel} />
-            <SummaryRow label="Last song of the night" value={plan.lastSong || "—"} />
-            <SummaryDjBucket title="Peak bangers" items={splitLines(plan.djMustBangers)} />
-            <SummaryDjBucket title="Singalongs" items={splitLines(plan.djMustSingalongs)} />
-            <SummaryDjBucket title="Closing vibes" items={splitLines(plan.djMustClosing)} />
-          </SummarySection>
-
-          <SummarySection title="Banned">
-            {splitLines(plan.vetos).length > 0
-              ? <SummaryList items={splitLines(plan.vetos)} striked />
-              : <p className="text-sm text-savage-ink/60 italic">Nothing banned.</p>
-            }
-          </SummarySection>
-
-          <SummarySection title="Notes">
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">{plan.notes || "—"}</p>
-          </SummarySection>
-
-            <footer className="mt-10 pt-4 border-t-2 border-savage-ink flex items-center justify-between text-[10px] uppercase tracking-[0.3em] text-savage-ink/60">
-              <span>Generated by Savage Party · my-show</span>
-              <span>{new Date().toLocaleDateString("en-GB")}</span>
-            </footer>
           </div>
-          <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-savage-yellow" />
-        </motion.article>
-
-        <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          <button
-            onClick={onSubmit}
-            disabled={sending}
-            className={`rounded-full bg-savage-red text-savage-cream px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${sending ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
-          >
-            {sending ? "Sending…" : "Send it to the band"}
-          </button>
-          <button
-            onClick={handleDownloadClick}
-            disabled={downloading}
-            className={`rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloading ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
-          >
-            {downloading ? "Generating…" : "Download PDF"}
-          </button>
         </div>
-        <p className="text-savage-white/50 text-xs mt-3 text-center max-w-md">When you confirm, the show summary lands in the band&rsquo;s inbox. The poster stays here for you to download.</p>
+
+        <div className="border-t-2 border-savage-yellow pt-5 flex items-center justify-between text-[14px] uppercase tracking-[0.3em] font-bold text-savage-yellow">
+          <span>One night.</span>
+          <span className="text-savage-cream">One band.</span>
+          <span>Your show.</span>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-function SuccessScreen({ names, onDownload }: { names: string; onDownload: () => void | Promise<void> }) {
-  const display = names.trim() || "You two";
-  const [downloading, setDownloading] = useState(false);
-  async function handleDownloadClick() {
-    setDownloading(true);
-    try { await onDownload(); } finally { setDownloading(false); }
+function SuccessScreen({ plan, onDownloadPdf }: { plan: Plan; onDownloadPdf: () => void | Promise<void> }) {
+  const display = plan.names.trim() || "You two";
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [downloadingPoster, setDownloadingPoster] = useState(false);
+  const posterCaptureRef = useRef<HTMLDivElement>(null);
+
+  async function handleDownloadPdfClick() {
+    setDownloadingPdf(true);
+    try { await onDownloadPdf(); } finally { setDownloadingPdf(false); }
+  }
+
+  async function handleDownloadPosterClick() {
+    setDownloadingPoster(true);
+    try {
+      const node = posterCaptureRef.current;
+      if (!node) return;
+      const html2canvas = (await import("html2canvas-pro")).default;
+      const canvas = await html2canvas(node, { backgroundColor: "#E63422", scale: 2 });
+      const blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      if (!blob) return;
+      const slug = (plan.names || "show").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `myshow-poster-${slug}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDownloadingPoster(false);
+    }
   }
   return (
     <main className="min-h-screen bg-savage-red text-savage-yellow relative overflow-hidden flex flex-col">
@@ -1728,18 +1570,27 @@ function SuccessScreen({ names, onDownload }: { names: string; onDownload: () =>
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="mt-12 flex flex-col items-center gap-4"
+          className="mt-12 flex flex-col items-center gap-3 w-full max-w-md"
         >
-          <button
-            onClick={handleDownloadClick}
-            disabled={downloading}
-            className={`rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloading ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
-          >
-            {downloading ? "Generating…" : "Download your show PDF"}
-          </button>
-          <p className="text-xs text-savage-yellow/60 max-w-md text-center">
-            Keep a copy of your show summary. The band already has it.
+          <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow/70 mb-1">
+            Yours to keep
           </p>
+          <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+            <button
+              onClick={handleDownloadPosterClick}
+              disabled={downloadingPoster}
+              className={`rounded-full bg-savage-yellow text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloadingPoster ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
+            >
+              {downloadingPoster ? "Generating…" : "Download poster"}
+            </button>
+            <button
+              onClick={handleDownloadPdfClick}
+              disabled={downloadingPdf}
+              className={`rounded-full bg-savage-cream text-savage-ink px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] transition ${downloadingPdf ? "opacity-50 cursor-not-allowed" : "hover:brightness-110"}`}
+            >
+              {downloadingPdf ? "Generating…" : "Download show PDF"}
+            </button>
+          </div>
         </motion.div>
 
         <motion.p
@@ -1774,6 +1625,13 @@ function SuccessScreen({ names, onDownload }: { names: string; onDownload: () =>
         <span className="text-savage-cream">One band.</span>
         <span>Your show.</span>
       </div>
+
+      {/* Hidden off-screen poster used by html2canvas for download */}
+      <div className="fixed -left-[3000px] top-0 pointer-events-none" aria-hidden>
+        <div ref={posterCaptureRef}>
+          <PosterArtwork plan={plan} />
+        </div>
+      </div>
     </main>
   );
 }
@@ -1787,53 +1645,3 @@ function SuccessStep({ n, text }: { n: string; text: string }) {
   );
 }
 
-function SummarySection({ title, cream, children }: { title: string; cream?: boolean; children: React.ReactNode }) {
-  return (
-    <section className="mt-8">
-      <div className="flex items-baseline gap-3 mb-3">
-        <span className={`inline-block w-2.5 h-2.5 rounded-full ${cream ? "bg-savage-red" : "bg-savage-yellow"}`} />
-        <h2 className={`font-display uppercase text-sm tracking-[0.3em] flex-1 pb-2 border-b-2 ${cream ? "text-savage-red border-savage-red/40" : "text-savage-ink border-savage-ink/40"}`}>
-          {title}
-        </h2>
-      </div>
-      <div className="space-y-1.5">
-        {children}
-      </div>
-    </section>
-  );
-}
-
-function SummaryRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3 py-1">
-      <span className="text-[10px] uppercase tracking-[0.25em] text-savage-ink/55 sm:shrink-0 sm:w-48 mb-0.5 sm:mb-0">{label}</span>
-      <span className={`text-sm text-savage-ink break-words ${mono ? "font-mono break-all" : ""}`}>{value}</span>
-    </div>
-  );
-}
-
-function SummaryList({ items, striked }: { items: string[]; striked?: boolean }) {
-  return (
-    <ul className="sm:ml-48 list-none mt-1 mb-3 space-y-0.5">
-      {items.map((it, i) => (
-        <li key={it + i} className={`text-sm break-words ${striked ? "line-through text-savage-ink/60" : "text-savage-ink"}`}>
-          · {it}
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function SummaryDjBucket({ title, items }: { title: string; items: string[] }) {
-  if (items.length === 0) return null;
-  return (
-    <div className="mt-3">
-      <p className="text-[10px] uppercase tracking-[0.25em] text-savage-ink/55 mb-1">{title} · {items.length}</p>
-      <ul className="space-y-0.5">
-        {items.map((it, i) => (
-          <li key={it + i} className="text-sm text-savage-ink">· {it}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
