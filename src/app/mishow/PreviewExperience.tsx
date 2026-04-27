@@ -39,19 +39,7 @@ const LIVE_GENRES = [
   "Soul · Motown",
 ];
 
-const DJ_VIBE_CHIPS = [
-  "Tech house clubero",
-  "Afro house",
-  "Pop comercial 2010s",
-  "House elegante",
-  "Open format peak",
-  "Reggaetón",
-  "Disco closing",
-  "Afterparty suave",
-];
-
 type FirstDance = "dj" | "none" | null;
-type DjRequests = "yes" | "filtered" | "no" | null;
 type DressCode = "savage" | "suits" | null;
 type PartyKind = "cocktail" | "party" | null;
 
@@ -68,7 +56,6 @@ type Plan = {
   eventDate: string;
   partyKind: PartyKind;
   partyStart: string;
-  djExtraHours: number;
   venue: string;
   phone: string;
   email: string;
@@ -78,17 +65,10 @@ type Plan = {
   dressCode: DressCode;
   liveGenres: string[];
   liveSet: string[];
-  liveMustPlay: string;
+  breakSongs: string;
   firstDance: FirstDance;
   firstDanceSong: string;
   firstDanceLink: string;
-  djVibes: string[];
-  djReferenceUrl: string;
-  djMustBangers: string;
-  djMustSingalongs: string;
-  djMustClosing: string;
-  djRequests: DjRequests;
-  lastSong: string;
   vetos: string;
   notes: string;
 };
@@ -98,7 +78,6 @@ const INITIAL: Plan = {
   eventDate: "",
   partyKind: null,
   partyStart: "",
-  djExtraHours: 0,
   venue: "",
   phone: "",
   email: "",
@@ -108,17 +87,10 @@ const INITIAL: Plan = {
   dressCode: null,
   liveGenres: [],
   liveSet: [],
-  liveMustPlay: "",
+  breakSongs: "",
   firstDance: null,
   firstDanceSong: "",
   firstDanceLink: "",
-  djVibes: [],
-  djReferenceUrl: "",
-  djMustBangers: "",
-  djMustSingalongs: "",
-  djMustClosing: "",
-  djRequests: null,
-  lastSong: "",
   vetos: "",
   notes: "",
 };
@@ -133,21 +105,14 @@ type StepDef = {
 };
 
 const STEPS: StepDef[] = [
-  { id: "basics", part: "intro", partLabel: "Lo básico", title: "Empezamos por vosotros.", hint: "Nombres, fecha, sitio y cuándo arranca la noche. Lo confirmamos contra el contrato, sin sorpresas." },
+  { id: "basics", part: "intro", partLabel: "Lo básico", title: "Empezamos por vosotros.", hint: "Nombres, fecha, sitio y cuándo arranca el show. Lo confirmamos contra el contrato, sin sorpresas." },
   { id: "welcome", part: "intro", partLabel: "Bienvenida", title: "Estáis dentro." },
   { id: "crowd", part: "intro", partLabel: "Vuestra gente", title: "¿Quién va a estar en la pista?", hint: "Nos ayuda a calibrar cuándo darle caña y cuándo bajar." },
   { id: "dress", part: "intro", partLabel: "Dress code", title: "¿Cómo nos vestimos?", hint: "Nos adaptamos a la vibe de vuestra boda para que la banda parezca parte del sitio, no un proveedor." },
-  { id: "splash-live", part: "live", partLabel: "Parte uno", title: "BANDA EN DIRECTO", splash: true },
-  { id: "live-genres", part: "live", partLabel: "Live · 1 de 4", title: "¿Qué géneros os representan?", hint: "Marcad lo que escucháis de verdad. Sin filtro de \"es una boda\"." },
-  { id: "live-songs", part: "live", partLabel: "Live · 2 de 4", title: "Elegid del repertorio en directo.", hint: "Todo lo que tenemos rehearsing. Tocad para añadir, lo veréis acumularse en el panel." },
-  { id: "live-must", part: "live", partLabel: "Live · 3 de 4", title: "¿Nos hemos dejado algo?", hint: "Si hay un tema que NO está en nuestro repertorio y os flipa que sonara en directo, escribidlo aquí. Veremos qué podemos sacar." },
-  { id: "first-dance", part: "live", partLabel: "Live · 4 de 4", title: "¿Hay algún baile para abrir la fiesta?", hint: "A veces los primeros bailes los hacéis en la cena. Si pasan en la fiesta, contadnos cómo." },
-  { id: "splash-dj", part: "dj", partLabel: "Parte dos", title: "DJ SET", splash: true },
-  { id: "dj-vibes", part: "dj", partLabel: "DJ · 1 de 5", title: "¿Hacia dónde va el DJ set?", hint: "Cuando la banda baja del escenario, este es el mapa." },
-  { id: "dj-ref", part: "dj", partLabel: "DJ · 2 de 5", title: "Pegad una playlist de referencia.", hint: "Más útil que cien preguntas." },
-  { id: "dj-must", part: "dj", partLabel: "DJ · 3 de 5", title: "Must del DJ.", hint: "Listas distintas a la del live. Temas que tienen que sonar sí o sí en cabina." },
-  { id: "dj-requests", part: "dj", partLabel: "DJ · 4 de 5", title: "¿Aceptamos peticiones de los invitados?", hint: "Sed sinceros." },
-  { id: "last-song", part: "dj", partLabel: "DJ · 5 de 5", title: "La última canción de la noche.", hint: "La que suena cuando se encienden las luces y os vais." },
+  { id: "live-genres", part: "live", partLabel: "Show · 1 de 4", title: "¿Qué géneros os representan?", hint: "Marcad lo que escucháis de verdad. Sin filtro de \"es una boda\"." },
+  { id: "live-songs", part: "live", partLabel: "Show · 2 de 4", title: "Elegid del repertorio en directo.", hint: "Todo lo que tenemos rehearsing. Tocad para añadir, lo veréis acumularse en el panel." },
+  { id: "break-songs", part: "live", partLabel: "Show · 3 de 4", title: "Canciones para los descansos.", hint: "Mientras la banda hace break, suena una playlist. Decidnos qué temas tienen que estar ahí (incluidos los que no están en nuestro repertorio)." },
+  { id: "first-dance", part: "live", partLabel: "Show · 4 de 4", title: "¿Hay algún baile para abrir la fiesta?", hint: "A veces los primeros bailes los hacéis en la cena. Si pasan en la fiesta, contadnos cómo." },
   { id: "vetos", part: "outro", partLabel: "Lo que se queda fuera", title: "Lo que NO ponemos.", hint: "Sed crueles. Cada veto nos ahorra un momento incómodo." },
   { id: "notes", part: "outro", partLabel: "Una cosa más", title: "¿Algo que tengamos que saber?", hint: "Sorpresas, dramas familiares, dedicatorias, la canción de tu madre." },
   { id: "review", part: "outro", partLabel: "Cerrar", title: "Esta es vuestra noche.", hint: "Repaso rápido y lo mandamos a rehearsal." },
@@ -245,7 +210,7 @@ export default function MiShowExperience() {
   function update<K extends keyof Plan>(k: K, v: Plan[K]) {
     setPlan((prev) => ({ ...prev, [k]: v }));
   }
-  function toggleArr<K extends "crowdVibes" | "liveGenres" | "djVibes" | "liveSet">(k: K, v: string) {
+  function toggleArr<K extends "crowdVibes" | "liveGenres" | "liveSet">(k: K, v: string) {
     setPlan((prev) => {
       const arr = prev[k];
       return { ...prev, [k]: arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v] };
@@ -260,42 +225,33 @@ export default function MiShowExperience() {
     <main className="min-h-screen bg-savage-black text-savage-white flex flex-col">
       <Header plan={plan} />
 
-      {!step.splash && <ProgressBar step={stepIdx + 1} total={totalSteps} part={step.part} />}
+      <ProgressBar step={stepIdx + 1} total={totalSteps} part={step.part} />
 
       <div className="flex-1 grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_440px]">
-        <section className={step.splash
-          ? "flex items-center justify-center px-5 py-16 min-h-[60vh]"
-          : "px-4 sm:px-8 md:px-14 py-8 sm:py-10 md:py-16 max-w-3xl mx-auto w-full pb-32 lg:pb-16"
-        }>
+        <section className="px-4 sm:px-8 md:px-14 py-8 sm:py-10 md:py-16 max-w-3xl mx-auto w-full pb-32 lg:pb-16">
           <div key={step.id} className="w-full">
-            {step.splash ? (
-              <SplashStep step={step} partyKind={plan.partyKind} onContinue={() => setStepIdx(stepIdx + 1)} onBack={() => setStepIdx(stepIdx - 1)} />
-            ) : (
-              <>
-                <StepHeader part={step.partLabel} title={step.title} hint={step.hint} accent={partAccent(step.part)} />
-                <div className="mt-8 sm:mt-10">
-                  <StepBody
-                    step={step.id}
-                    plan={plan}
-                    update={update}
-                    toggleArr={toggleArr}
-                  />
-                </div>
-                <Nav
-                  isFirst={isFirst}
-                  isLast={isLast}
-                  onBack={() => setStepIdx(stepIdx - 1)}
-                  onNext={() => isLast ? handleSubmit() : setStepIdx(stepIdx + 1)}
-                  nextLabel={isLast ? (sending ? "Enviando a la banda…" : "Enviar a la banda →") : "Siguiente →"}
-                  accent={isLast ? "red" : partAccent(step.part)}
-                  disabled={sending}
-                />
-                {isLast && submitError && (
-                  <p className="mt-4 text-sm text-savage-red">
-                    Algo ha ido mal: {submitError}. Probad otra vez en un momento.
-                  </p>
-                )}
-              </>
+            <StepHeader part={step.partLabel} title={step.title} hint={step.hint} accent={partAccent(step.part)} />
+            <div className="mt-8 sm:mt-10">
+              <StepBody
+                step={step.id}
+                plan={plan}
+                update={update}
+                toggleArr={toggleArr}
+              />
+            </div>
+            <Nav
+              isFirst={isFirst}
+              isLast={isLast}
+              onBack={() => setStepIdx(stepIdx - 1)}
+              onNext={() => isLast ? handleSubmit() : setStepIdx(stepIdx + 1)}
+              nextLabel={isLast ? (sending ? "Enviando a la banda…" : "Enviar a la banda →") : "Siguiente →"}
+              accent={isLast ? "red" : partAccent(step.part)}
+              disabled={sending}
+            />
+            {isLast && submitError && (
+              <p className="mt-4 text-sm text-savage-red">
+                Algo ha ido mal: {submitError}. Probad otra vez en un momento.
+              </p>
             )}
           </div>
         </section>
@@ -305,14 +261,12 @@ export default function MiShowExperience() {
         </aside>
       </div>
 
-      {!step.splash && (
-        <button
-          onClick={() => setShowPanelMobile(true)}
-          className="lg:hidden fixed bottom-5 right-5 z-30 rounded-full bg-savage-yellow text-savage-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-savage-yellow/30"
-        >
-          Vuestro show · {plan.liveSet.length}
-        </button>
-      )}
+      <button
+        onClick={() => setShowPanelMobile(true)}
+        className="lg:hidden fixed bottom-5 right-5 z-30 rounded-full bg-savage-yellow text-savage-ink px-5 py-3 text-xs font-bold uppercase tracking-[0.2em] shadow-lg shadow-savage-yellow/30"
+      >
+        Vuestro show · {plan.liveSet.length}
+      </button>
 
       <AnimatePresence>
         {showPanelMobile && (
@@ -464,51 +418,13 @@ function Nav({ isFirst, onBack, onNext, nextLabel, accent, disabled }: {
   );
 }
 
-// ============== SPLASH ==============
-
-function SplashStep({ step, partyKind, onContinue, onBack }: { step: StepDef; partyKind: PartyKind; onContinue: () => void; onBack: () => void }) {
-  const isLive = step.id === "splash-live";
-  const accent = isLive ? "text-savage-yellow" : "text-savage-cream";
-  const buttonBg = isLive ? "bg-savage-yellow text-savage-ink" : "bg-savage-cream text-savage-ink";
-  const liveLabel = partyKind === "cocktail" ? "Hora y media" : "Dos horas";
-  return (
-    <div className="text-center max-w-2xl mx-auto relative">
-      {!isLive && <div className="absolute inset-0 halftone opacity-[0.05] pointer-events-none" />}
-      <div className="relative">
-        <p className={`text-[10px] sm:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-bold ${accent} mb-6`}>
-          {step.partLabel}
-        </p>
-        <h1 className={`font-display uppercase text-[2.75rem] sm:text-[5rem] md:text-[7rem] leading-[0.9] sm:leading-[0.85] break-words ${accent}`}>
-          {step.title}
-        </h1>
-        <p className="font-editorial italic mt-8 text-lg sm:text-xl text-savage-cream/80 max-w-md mx-auto">
-          {isLive
-            ? `${liveLabel}. Cuatro músicos. Saxo, guitarra y batería paseándose por la pista. Las canciones que de verdad queréis.`
-            : "De cierre del live hasta el final. La cabina toma el mando. Aquí es donde la noche se hace larga."}
-        </p>
-        <div className="mt-12 flex flex-col-reverse sm:flex-row items-center justify-center gap-4 sm:gap-6 px-4">
-          <button onClick={onBack} className="text-xs uppercase tracking-[0.3em] text-savage-white/50 hover:text-savage-white py-3 px-3 -mx-3 -my-3">
-            ← Atrás
-          </button>
-          <button
-            onClick={onContinue}
-            className={`rounded-full px-6 sm:px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] hover:brightness-110 transition w-full sm:w-auto ${buttonBg}`}
-          >
-            {isLive ? "Empezar el live →" : "Entrar en cabina →"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ============== STEP BODY ==============
 
 function StepBody({ step, plan, update, toggleArr }: {
   step: string;
   plan: Plan;
   update: <K extends keyof Plan>(k: K, v: Plan[K]) => void;
-  toggleArr: <K extends "crowdVibes" | "liveGenres" | "djVibes" | "liveSet">(k: K, v: string) => void;
+  toggleArr: <K extends "crowdVibes" | "liveGenres" | "liveSet">(k: K, v: string) => void;
 }) {
   switch (step) {
     case "welcome":
@@ -543,10 +459,7 @@ function StepBody({ step, plan, update, toggleArr }: {
                 return (
                   <button
                     key={opt.id}
-                    onClick={() => {
-                      update("partyKind", opt.id);
-                      if (opt.id === "cocktail") update("djExtraHours", 0);
-                    }}
+                    onClick={() => update("partyKind", opt.id)}
                     className={`text-sm uppercase tracking-wider px-4 py-2.5 rounded-full border-2 transition ${
                       active
                         ? "bg-savage-yellow text-savage-ink border-savage-yellow"
@@ -572,31 +485,6 @@ function StepBody({ step, plan, update, toggleArr }: {
                 onChange={(e) => update("partyStart", e.target.value)}
                 className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-white outline-none focus:border-savage-yellow"
               />
-            </Field>
-          )}
-          {plan.partyKind === "party" && (
-            <Field
-              label="Horas extras de DJ"
-              hint={`Ya van incluidas ${liveDurationLabel(plan.partyKind)} de live + 1h de DJ. Añadid extras si queréis estirar la noche.`}
-            >
-              <div className="flex flex-wrap gap-2">
-                {[0, 1, 2, 3, 4].map((h) => {
-                  const active = plan.djExtraHours === h;
-                  return (
-                    <button
-                      key={h}
-                      onClick={() => update("djExtraHours", h)}
-                      className={`font-display text-sm sm:text-base px-4 py-2.5 rounded-full border-2 transition tracking-wide ${
-                        active
-                          ? "bg-savage-yellow text-savage-ink border-savage-yellow"
-                          : "border-savage-white/15 text-savage-white/80 hover:border-savage-white/40"
-                      }`}
-                    >
-                      {h === 0 ? "Solo lo incluido" : `+${h}h`}
-                    </button>
-                  );
-                })}
-              </div>
             </Field>
           )}
           <Field label="Sitio *">
@@ -678,13 +566,13 @@ function StepBody({ step, plan, update, toggleArr }: {
           onToggle={(v) => toggleArr("liveSet", v)}
         />
       );
-    case "live-must":
+    case "break-songs":
       return (
-        <Field label="Una por línea. Cualquier artista, cualquier estilo." hint="Sin promesas, pero lo intentamos. Cuanto más sinceros, mejor.">
+        <Field label="Una por línea. Cualquier artista, cualquier estilo." hint="Estas suenan en la playlist mientras la banda hace break. Cuantas más nos paséis, mejor curamos el rato.">
           <textarea
             rows={9}
-            value={plan.liveMustPlay}
-            onChange={(e) => update("liveMustPlay", e.target.value)}
+            value={plan.breakSongs}
+            onChange={(e) => update("breakSongs", e.target.value)}
             className="w-full bg-savage-ink/40 border border-savage-white/15 rounded-xl px-4 py-3 sm:px-5 sm:py-4 text-base text-savage-white outline-none focus:border-savage-yellow resize-none leading-relaxed"
             placeholder={"Sweet Caroline — Neil Diamond\nDespacito — Luis Fonsi\n…"}
           />
@@ -695,7 +583,7 @@ function StepBody({ step, plan, update, toggleArr }: {
         <div className="space-y-6">
           <Radio
             options={[
-              { id: "dj", label: "Sí, lo pone el DJ", subtitle: "Tema original o la versión que nos paséis." },
+              { id: "dj", label: "Sí, queremos abrir con un tema", subtitle: "Lo ponemos desde la playlist o lo prepara la banda." },
               { id: "none", label: "No, los hicimos en la cena", subtitle: "Saltamos directos al live show." },
             ]}
             value={plan.firstDance}
@@ -727,86 +615,6 @@ function StepBody({ step, plan, update, toggleArr }: {
             </div>
           )}
         </div>
-      );
-    case "dj-vibes":
-      return (
-        <DJWrap>
-          <Field hint="Marcad las que apliquen, o tocad + para añadir otra (EDM, drum & bass, lo que escuchéis).">
-            <Chips options={DJ_VIBE_CHIPS} selected={plan.djVibes} onToggle={(v) => toggleArr("djVibes", v)} accent="cream" large allowCustom />
-          </Field>
-        </DJWrap>
-      );
-    case "dj-ref":
-      return (
-        <DJWrap>
-          <Field label="Spotify, Apple Music, SoundCloud…">
-            <input
-              type="url"
-              value={plan.djReferenceUrl}
-              onChange={(e) => update("djReferenceUrl", e.target.value)}
-              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-cream outline-none focus:border-savage-cream"
-              placeholder="https://open.spotify.com/playlist/…"
-            />
-          </Field>
-        </DJWrap>
-      );
-    case "dj-must":
-      return (
-        <DJWrap>
-          <p className="text-savage-cream/60 text-sm mb-6 -mt-2">Repartid los must por momento. Una por línea en cada caja. El DJ los usa como anclas mientras lee la pista.</p>
-          <div className="space-y-5">
-            <DJBox
-              label="Bangers de peak"
-              hint="Alta energía, los drops. Cuando la pista está lockeada."
-              value={plan.djMustBangers}
-              onChange={(v) => update("djMustBangers", v)}
-              placeholder={"One More Time — Daft Punk\nMusic Sounds Better With You — Stardust"}
-            />
-            <DJBox
-              label="Singalongs / himnos"
-              hint="Cuando el público te grita la letra de vuelta."
-              value={plan.djMustSingalongs}
-              onChange={(v) => update("djMustSingalongs", v)}
-              placeholder={"Mr. Brightside — The Killers\nDancing Queen — ABBA"}
-            />
-            <DJBox
-              label="Cierre"
-              hint="Última hora, fade más suave antes de subir luces."
-              value={plan.djMustClosing}
-              onChange={(v) => update("djMustClosing", v)}
-              placeholder={"Strobe — deadmau5\nCloser — The Chainsmokers"}
-            />
-          </div>
-        </DJWrap>
-      );
-    case "dj-requests":
-      return (
-        <DJWrap>
-          <Radio
-            accent="cream"
-            options={[
-              { id: "yes", label: "Sí, abrid el micro", subtitle: "Si la canción encaja con el flow, la pongo." },
-              { id: "filtered", label: "Sí, pero filtradas por nosotros", subtitle: "Validamos antes de pinchar." },
-              { id: "no", label: "No, vosotros decidís", subtitle: "Cero peticiones del público." },
-            ]}
-            value={plan.djRequests}
-            onChange={(v) => update("djRequests", v as DjRequests)}
-          />
-        </DJWrap>
-      );
-    case "last-song":
-      return (
-        <DJWrap>
-          <Field label="Título y artista">
-            <input
-              type="text"
-              value={plan.lastSong}
-              onChange={(e) => update("lastSong", e.target.value)}
-              className="w-full bg-savage-ink/60 border border-savage-cream/20 rounded-xl px-4 py-3 text-base md:px-5 md:py-4 md:text-lg text-savage-cream outline-none focus:border-savage-cream"
-              placeholder="Closing Time — Semisonic"
-            />
-          </Field>
-        </DJWrap>
       );
     case "vetos":
       return (
@@ -857,7 +665,7 @@ function WelcomeStep({ names }: { names: string }) {
       <div className="rounded-2xl border border-savage-yellow/30 bg-savage-yellow/5 p-5 sm:p-6 mt-2">
         <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow font-bold mb-3">Cómo va esto</p>
         <ul className="space-y-2 text-savage-white/80 text-sm sm:text-base leading-relaxed">
-          <li>· Dos partes. <span className="text-savage-yellow font-bold">BANDA EN DIRECTO</span> primero, <span className="text-savage-cream font-bold">DJ SET</span> después.</li>
+          <li>· Solo banda en directo. Vosotros marcáis géneros, picks del repertorio y qué suena en los descansos.</li>
           <li>· Unos 10 minutos del tirón. No cerréis la pestaña, no se guarda nada hasta que le deis a enviar.</li>
           <li>· Una vez enviado, está con la banda. Solo escribimos si algo necesita aclararse.</li>
         </ul>
@@ -874,8 +682,9 @@ function ReviewStep({ plan }: { plan: Plan }) {
     { label: "Fecha", value: plan.eventDate ? formatDate(plan.eventDate) : "—" },
     { label: "Sitio", value: plan.venue || "—" },
     { label: plan.partyKind === "party" ? "Fiesta" : "Cóctel", value: plan.partyStart || "—" },
+    { label: "Duración live", value: liveDurationLabel(plan.partyKind) },
     { label: "Live picks", value: `${plan.liveSet.length} temas` },
-    { label: "Vibes DJ", value: plan.djVibes.length ? plan.djVibes.join(", ") : "—" },
+    { label: "Para los descansos", value: `${splitLines(plan.breakSongs).length} temas` },
   ];
   return (
     <div className="space-y-6">
@@ -1069,55 +878,13 @@ function Radio<T extends string>({ options, value, onChange, accent = "yellow" }
   );
 }
 
-function DJBox({ label, hint, value, onChange, placeholder }: {
-  label: string;
-  hint?: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-savage-cream/15 bg-savage-black/40 p-4">
-      <p className="text-[10px] uppercase tracking-[0.3em] text-savage-cream font-bold">{label}</p>
-      {hint && <p className="text-savage-cream/50 text-xs mt-1">{hint}</p>}
-      <textarea
-        rows={4}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="mt-3 w-full bg-transparent border-t border-savage-cream/10 pt-3 text-base text-savage-cream outline-none resize-none leading-relaxed placeholder:text-savage-cream/25"
-      />
-    </div>
-  );
-}
-
-function DJWrap({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-3xl bg-gradient-to-b from-savage-ink/60 to-savage-black border border-savage-cream/15 p-5 sm:p-6 relative overflow-hidden">
-      <div className="absolute inset-0 halftone opacity-[0.04] pointer-events-none" />
-      <div className="relative">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-savage-cream/60 mb-5">
-          ◇ Cabina · 23:30 → cierre
-        </p>
-        {children}
-      </div>
-    </div>
-  );
-}
-
 // ============== SIDE PANEL ==============
 
 function SidePanel({ plan }: { plan: Plan }) {
   const [liveExpanded, setLiveExpanded] = useState(false);
   const LIVE_PREVIEW_COUNT = 4;
   const vetos = splitLines(plan.vetos);
-  const liveMust = splitLines(plan.liveMustPlay);
-  const djMustGroups: { label: string; songs: string[] }[] = [
-    { label: "Bangers", songs: splitLines(plan.djMustBangers) },
-    { label: "Singalongs", songs: splitLines(plan.djMustSingalongs) },
-    { label: "Cierre", songs: splitLines(plan.djMustClosing) },
-  ].filter((g) => g.songs.length > 0);
-  const djMustTotal = djMustGroups.reduce((acc, g) => acc + g.songs.length, 0);
+  const breaks = splitLines(plan.breakSongs);
 
   return (
     <div className="lg:sticky lg:top-0 lg:h-screen overflow-y-auto p-6">
@@ -1127,7 +894,7 @@ function SidePanel({ plan }: { plan: Plan }) {
         <p className="text-xs text-savage-white/60 mt-1">{formatDate(plan.eventDate)} · {plan.venue || "—"}</p>
       </div>
 
-      <Timeline partyStart={plan.partyStart} djExtraHours={plan.djExtraHours} partyKind={plan.partyKind} />
+      <Timeline partyStart={plan.partyStart} partyKind={plan.partyKind} />
 
       {plan.liveSet.length > 0 && (
         <PanelBlock title="Live · picks" count={plan.liveSet.length} accent="yellow">
@@ -1149,46 +916,12 @@ function SidePanel({ plan }: { plan: Plan }) {
         </PanelBlock>
       )}
 
-      {liveMust.length > 0 && (
-        <PanelBlock title="Live · wishlist" count={liveMust.length} accent="yellow">
-          {liveMust.map((s, i) => (
-            <PanelSongRow key={s + i} index={i} title={s} accent="yellow" muted />
+      {breaks.length > 0 && (
+        <PanelBlock title="Playlist · descansos" count={breaks.length} accent="cream">
+          {breaks.map((s, i) => (
+            <PanelSongRow key={s + i} index={i} title={s} accent="cream" muted />
           ))}
         </PanelBlock>
-      )}
-
-      {plan.djVibes.length > 0 && (
-        <PanelBlock title="DJ · vibes" count={plan.djVibes.length} accent="cream">
-          <div className="flex flex-wrap gap-1.5">
-            {plan.djVibes.map((v) => (
-              <span key={v} className="text-[10px] uppercase tracking-wide text-savage-cream bg-savage-cream/10 border border-savage-cream/20 px-2 py-1 rounded">
-                {v}
-              </span>
-            ))}
-          </div>
-        </PanelBlock>
-      )}
-
-      {djMustTotal > 0 && (
-        <PanelBlock title="DJ · must-plays" count={djMustTotal} accent="cream">
-          {djMustGroups.map((g) => (
-            <div key={g.label} className="mt-2 first:mt-0">
-              <p className="text-[9px] uppercase tracking-[0.3em] text-savage-cream/50 mb-1.5 px-1">{g.label}</p>
-              <div className="space-y-1">
-                {g.songs.map((s, i) => (
-                  <PanelSongRow key={g.label + s + i} index={i} title={s} accent="cream" muted />
-                ))}
-              </div>
-            </div>
-          ))}
-        </PanelBlock>
-      )}
-
-      {plan.lastSong && (
-        <div className="mt-3 rounded-lg bg-savage-yellow/8 border border-savage-yellow/25 px-3 py-2.5">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-savage-yellow">Última canción</p>
-          <p className="text-sm text-savage-white mt-0.5">{plan.lastSong}</p>
-        </div>
       )}
 
       {vetos.length > 0 && (
@@ -1217,39 +950,22 @@ function addMinutes(time: string, minutes: number): string | null {
   return `${String(newHH).padStart(2, "0")}:${String(newMM).padStart(2, "0")}`;
 }
 
-function Timeline({ partyStart, djExtraHours, partyKind }: { partyStart: string; djExtraHours: number; partyKind: PartyKind }) {
+function Timeline({ partyStart, partyKind }: { partyStart: string; partyKind: PartyKind }) {
   const liveDuration = liveDurationMinutes(partyKind);
-  const djDuration = 60;
-  const extraDuration = djExtraHours * 60;
-
   const liveStart = partyStart || "—";
-  const djStart = addMinutes(partyStart, liveDuration) || "—";
-  const extraStart = addMinutes(partyStart, liveDuration + djDuration) || "—";
-  const closeTime = addMinutes(partyStart, liveDuration + djDuration + extraDuration) || "—";
-
-  const segments: { label: string; color: string; flex: number; start: string }[] = [
-    { label: "Live", color: "bg-savage-yellow", flex: liveDuration, start: liveStart },
-    { label: "DJ", color: "bg-savage-cream", flex: djDuration, start: djStart },
-  ];
-  if (djExtraHours > 0) {
-    segments.push({ label: `+${djExtraHours}h DJ`, color: "bg-savage-red", flex: extraDuration, start: extraStart });
-  }
+  const closeTime = addMinutes(partyStart, liveDuration) || "—";
 
   return (
     <div className="mt-5">
       <p className="text-[10px] uppercase tracking-[0.3em] text-savage-white/50 mb-2">Timeline</p>
       <div className="flex h-2 rounded-full overflow-hidden">
-        {segments.map((s) => (
-          <div key={s.label} className={s.color} style={{ flex: s.flex }} title={`${s.label} · ${s.start}`} />
-        ))}
+        <div className="bg-savage-yellow" style={{ flex: liveDuration }} title={`Banda · ${liveStart}`} />
       </div>
-      <div className={`grid gap-1 mt-2 ${djExtraHours > 0 ? "grid-cols-4" : "grid-cols-3"}`}>
-        {segments.map((s) => (
-          <div key={s.label}>
-            <p className="text-[10px] uppercase tracking-wide text-savage-white/70 truncate">{s.label}</p>
-            <p className="text-[10px] text-savage-white/40">{s.start}</p>
-          </div>
-        ))}
+      <div className="grid gap-1 mt-2 grid-cols-2">
+        <div>
+          <p className="text-[10px] uppercase tracking-wide text-savage-white/70 truncate">Banda</p>
+          <p className="text-[10px] text-savage-white/40">{liveStart}</p>
+        </div>
         <div>
           <p className="text-[10px] uppercase tracking-wide text-savage-white/70 truncate">Cierre</p>
           <p className="text-[10px] text-savage-white/40">{closeTime}</p>
@@ -1328,24 +1044,13 @@ function buildEmailBody(plan: Plan): string {
   const dressLabel =
     plan.dressCode === "savage" ? "Estilo Savage (elegante y funky)" :
     plan.dressCode === "suits" ? "Traje completo, gala" : dash;
-  const requestsLabel =
-    plan.djRequests === "yes" ? "Micro abierto" :
-    plan.djRequests === "filtered" ? "Filtradas por la pareja" :
-    plan.djRequests === "no" ? "Cerrado" : dash;
   const firstDanceLabel =
-    plan.firstDance === "dj" ? `Lo pone el DJ (${plan.firstDanceSong || "sin título"})` :
+    plan.firstDance === "dj" ? `Sí (${plan.firstDanceSong || "sin título"})` :
     plan.firstDance === "none" ? "Ya hechos en la cena" : dash;
-  const liveMust = splitLines(plan.liveMustPlay);
-  const bangers = splitLines(plan.djMustBangers);
-  const sing = splitLines(plan.djMustSingalongs);
-  const closing = splitLines(plan.djMustClosing);
+  const breaks = splitLines(plan.breakSongs);
   const vetos = splitLines(plan.vetos);
   const date = plan.eventDate ? formatDate(plan.eventDate) : dash;
-  const liveDur = liveDurationMinutes(plan.partyKind);
-  const liveEnd = addMinutes(plan.partyStart, liveDur) || dash;
-  const djEnd = addMinutes(plan.partyStart, liveDur + 60) || dash;
-  const closeTime = addMinutes(plan.partyStart, liveDur + 60 + plan.djExtraHours * 60) || dash;
-  const extraLabel = plan.djExtraHours === 0 ? "Solo la hora de DJ incluida" : `+${plan.djExtraHours}h sobre la hora incluida`;
+  const liveEnd = addMinutes(plan.partyStart, liveDurationMinutes(plan.partyKind)) || dash;
 
   return [
     `Hola,`,
@@ -1360,13 +1065,10 @@ function buildEmailBody(plan: Plan): string {
     `  Email: ${plan.email || dash}`,
     `  Tipo de inicio: ${plan.partyKind === "cocktail" ? "Cóctel" : plan.partyKind === "party" ? "Fiesta directa" : dash}`,
     `  Hora de inicio: ${plan.partyStart || dash}`,
-    `  Horas extra de DJ: ${extraLabel}`,
+    `  Duración del live: ${liveDurationLabel(plan.partyKind)}`,
     ``,
     `Timeline`,
-    `  Live (${liveDurationLabel(plan.partyKind)}): ${plan.partyStart || dash} a ${liveEnd}`,
-    `  DJ: ${liveEnd} a ${djEnd}` + (plan.djExtraHours > 0 ? ` (1h incluida)` : ``),
-    plan.djExtraHours > 0 ? `  DJ extra: ${djEnd} a ${closeTime}` : ``,
-    `  Cierre: ${closeTime}`,
+    `  Banda en directo: ${plan.partyStart || dash} a ${liveEnd}`,
     ``,
     `Público`,
     `  Invitados: ${plan.guests || dash}`,
@@ -1382,27 +1084,11 @@ function buildEmailBody(plan: Plan): string {
     `Picks del repertorio (${plan.liveSet.length}):`,
     fmtList(plan.liveSet),
     ``,
-    `Wishlist fuera del repertorio (${liveMust.length}):`,
-    fmtList(liveMust),
+    `Canciones para los descansos (${breaks.length}):`,
+    fmtList(breaks),
     ``,
     `Baile de apertura: ${firstDanceLabel}`,
     plan.firstDanceLink ? `Link de referencia: ${plan.firstDanceLink}` : ``,
-    ``,
-    `Vibes del DJ set (${plan.djVibes.length}):`,
-    fmtList(plan.djVibes),
-    ``,
-    `Playlist de referencia DJ: ${plan.djReferenceUrl || dash}`,
-    `Peticiones de invitados: ${requestsLabel}`,
-    `Última canción de la noche: ${plan.lastSong || dash}`,
-    ``,
-    `Bangers de peak DJ (${bangers.length}):`,
-    fmtList(bangers),
-    ``,
-    `Singalongs DJ (${sing.length}):`,
-    fmtList(sing),
-    ``,
-    `Cierre DJ (${closing.length}):`,
-    fmtList(closing),
     ``,
     `Vetados (${vetos.length}):`,
     fmtList(vetos),
