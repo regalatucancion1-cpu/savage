@@ -1003,7 +1003,7 @@ function LeadCapture({
           ? "3h (base set)"
           : `${formatHours(totalHours)} (3h base + ${formatHours(extendHours)} DJ extension)`;
       const endTime = addMinutes(startTime, 210 + extendHours * 60);
-      const scheduleLabel = `${startTime} → ${endTime}`;
+      const scheduleLabel = `${startTime} to ${endTime}`;
       const prettyDate = (() => {
         if (!date) return "(not set)";
         const d = new Date(date);
@@ -1017,34 +1017,33 @@ function LeadCapture({
       })();
 
       const message = [
-        "New inquiry from the build-your-show flow on savageparty.es.",
+        "New inquiry from the Build Your Show form.",
         "",
-        "━━━ COUPLE ━━━",
+        "COUPLE",
         `Names:    ${names}`,
         `Email:    ${email}`,
         `Phone:    ${phone || "(not provided)"}`,
         "",
-        "━━━ WEDDING ━━━",
+        "WEDDING",
         `Date:     ${prettyDate}`,
         `Venue:    ${venue}`,
         `Guests:   ${guests.trim() || "(not provided)"}`,
         "",
-        "━━━ SHOW ━━━",
+        "SHOW",
         `Vibe:     ${vibeLabels[vibe]}`,
         `Crowd:    ${crowdNote.trim() || "(not provided)"}`,
         `Length:   ${lengthLabel}`,
         `Schedule: ${scheduleLabel}`,
         "",
-        "━━━ LEAD INTEL ━━━",
+        "LEAD INTEL",
         `Budget:   ${budget || "(not provided)"}`,
         `Found us: ${foundUs || "(not provided)"}`,
         "",
-        "━━━ EVENT DESCRIPTION ━━━",
+        "EVENT DESCRIPTION",
         description.trim() ? description.trim() : "(not provided)",
         "",
-        "━━━ NEXT STEPS ━━━",
+        "NEXT STEPS",
         "Reply within 24h with availability and a price bracket.",
-        "Source: savageparty.es/build-your-show",
       ].join("\n");
 
       const res = await fetch("https://api.web3forms.com/submit", {
@@ -1055,8 +1054,8 @@ function LeadCapture({
         },
         body: JSON.stringify({
           access_key: accessKey,
-          subject: `New lead · ${names} · ${prettyDate} · ${venue}`,
-          from_name: "Savage Party · savageparty.es",
+          subject: `New lead: ${names} - ${prettyDate} - ${venue}`,
+          from_name: "Savage Party",
           replyto: email,
           name: names,
           email,
