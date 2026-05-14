@@ -125,6 +125,32 @@ const timeline: { offsetMin: number; title: string; note: string }[] = [
 
 const startTimeOptions = ["20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"];
 
+const foundUsOptions = [
+  "Instagram",
+  "TikTok",
+  "YouTube",
+  "Google",
+  "Wedding planner",
+  "Friend / past client",
+  "Other",
+] as const;
+
+const budgetOptions = [
+  "Under €2,500",
+  "€2,500–3,000",
+  "€3,000–3,500",
+  "€3,500+",
+  "Not sure yet",
+] as const;
+
+function formatHours(h: number): string {
+  const whole = Math.floor(h);
+  const mins = Math.round((h - whole) * 60);
+  if (mins === 0) return `${whole}h`;
+  if (whole === 0) return `${mins}m`;
+  return `${whole}h ${mins}m`;
+}
+
 function addMinutes(time: string, minutes: number): string {
   const [h, m] = time.split(":").map(Number);
   const total = (h * 60 + m + minutes + 24 * 60) % (24 * 60);
@@ -141,7 +167,8 @@ export default function TeaserFlow() {
   const [date, setDate] = useState("");
   const [venue, setVenue] = useState("");
   const [vibe, setVibe] = useState<Vibe | null>(null);
-  const [extendHours, setExtendHours] = useState<0 | 1 | 2>(0);
+  const [crowdNote, setCrowdNote] = useState("");
+  const [extendHours, setExtendHours] = useState<number>(0);
   const [startTime, setStartTime] = useState<string>("23:00");
 
   const canNext1 = names.trim().length > 1 && date.length > 0;
@@ -169,6 +196,7 @@ export default function TeaserFlow() {
         date={date}
         venue={venue}
         vibe={vibe}
+        crowdNote={crowdNote}
         extendHours={extendHours}
         onExtend={setExtendHours}
         startTime={startTime}
@@ -178,6 +206,7 @@ export default function TeaserFlow() {
           setDate("");
           setVenue("");
           setVibe(null);
+          setCrowdNote("");
           setExtendHours(0);
           setStartTime("23:00");
         }}
@@ -198,6 +227,7 @@ export default function TeaserFlow() {
             startTime={startTime}
             venue={venue}
             vibe={vibe}
+            crowdNote={crowdNote}
             canNext1={canNext1}
             canNext2={canNext2}
             canNext3={canNext3}
@@ -206,6 +236,7 @@ export default function TeaserFlow() {
             setStartTime={setStartTime}
             setVenue={setVenue}
             setVibe={setVibe}
+            setCrowdNote={setCrowdNote}
             setStep={setStep}
           />
 
@@ -228,6 +259,7 @@ function StepArea({
   startTime,
   venue,
   vibe,
+  crowdNote,
   canNext1,
   canNext2,
   canNext3,
@@ -236,6 +268,7 @@ function StepArea({
   setStartTime,
   setVenue,
   setVibe,
+  setCrowdNote,
   setStep,
 }: {
   step: Step;
@@ -244,6 +277,7 @@ function StepArea({
   startTime: string;
   venue: string;
   vibe: Vibe | null;
+  crowdNote: string;
   canNext1: boolean;
   canNext2: boolean;
   canNext3: boolean;
@@ -252,6 +286,7 @@ function StepArea({
   setStartTime: (v: string) => void;
   setVenue: (v: string) => void;
   setVibe: (v: Vibe) => void;
+  setCrowdNote: (v: string) => void;
   setStep: (s: Step) => void;
 }) {
   const reduce = useReducedMotion();
@@ -439,6 +474,22 @@ function StepArea({
                     </motion.button>
                   );
                 })}
+              </div>
+
+              <div className="mt-5">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+                  Make it yours{" "}
+                  <span className="text-savage-white/40 normal-case tracking-normal">
+                    · optional
+                  </span>
+                </span>
+                <input
+                  type="text"
+                  value={crowdNote}
+                  onChange={(e) => setCrowdNote(e.target.value)}
+                  placeholder="e.g. half British half Spanish crowd, big Motown family, skip the reggaetón"
+                  className="mt-2 w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 sm:px-5 py-3.5 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
+                />
               </div>
 
               <NavRow
@@ -652,6 +703,7 @@ function Result({
   date,
   venue,
   vibe,
+  crowdNote,
   extendHours,
   onExtend,
   startTime,
@@ -661,8 +713,9 @@ function Result({
   date: string;
   venue: string;
   vibe: Vibe;
-  extendHours: 0 | 1 | 2;
-  onExtend: (v: 0 | 1 | 2) => void;
+  crowdNote: string;
+  extendHours: number;
+  onExtend: (v: number) => void;
   startTime: string;
   onReset: () => void;
 }) {
@@ -798,16 +851,16 @@ function Result({
                 Extend your night
               </p>
               <p className="font-display text-xl sm:text-2xl text-savage-yellow">
-                {totalHours}h
+                {formatHours(totalHours)}
               </p>
             </div>
             <input
               type="range"
               min={0}
               max={2}
-              step={1}
+              step={0.5}
               value={extendHours}
-              onChange={(e) => onExtend(Number(e.target.value) as 0 | 1 | 2)}
+              onChange={(e) => onExtend(Number(e.target.value))}
               className="savage-slider mt-4 w-full"
               aria-label="Extend hours"
             />
@@ -851,6 +904,7 @@ function Result({
             date={date}
             venue={venue}
             vibe={vibe}
+            crowdNote={crowdNote}
             extendHours={extendHours}
             startTime={startTime}
             onReset={onReset}
@@ -897,6 +951,7 @@ function LeadCapture({
   date,
   venue,
   vibe,
+  crowdNote,
   extendHours,
   startTime,
   onReset,
@@ -905,19 +960,25 @@ function LeadCapture({
   date: string;
   venue: string;
   vibe: Vibe;
-  extendHours: 0 | 1 | 2;
+  crowdNote: string;
+  extendHours: number;
   startTime: string;
   onReset: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [guests, setGuests] = useState("");
+  const [foundUs, setFoundUs] = useState("");
+  const [budget, setBudget] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phoneValid = phone.replace(/[^\d]/g, "").length >= 6;
+  const valid = emailValid && phoneValid && budget !== "";
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -929,9 +990,6 @@ function LeadCapture({
     try {
       const accessKey = (process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "").trim();
       if (!accessKey) throw new Error("Form not configured");
-      if (typeof window !== "undefined") {
-        console.log("[lead] key length:", accessKey.length, "first 8:", accessKey.slice(0, 8));
-      }
 
       const vibeLabels: Record<Vibe, string> = {
         international: "International mix (pop, disco, house)",
@@ -943,7 +1001,7 @@ function LeadCapture({
       const lengthLabel =
         extendHours === 0
           ? "3h (base set)"
-          : `${totalHours}h (3h base + ${extendHours}h DJ extension)`;
+          : `${formatHours(totalHours)} (3h base + ${formatHours(extendHours)} DJ extension)`;
       const endTime = addMinutes(startTime, 210 + extendHours * 60);
       const scheduleLabel = `${startTime} → ${endTime}`;
       const prettyDate = (() => {
@@ -969,11 +1027,17 @@ function LeadCapture({
         "━━━ WEDDING ━━━",
         `Date:     ${prettyDate}`,
         `Venue:    ${venue}`,
+        `Guests:   ${guests.trim() || "(not provided)"}`,
         "",
         "━━━ SHOW ━━━",
         `Vibe:     ${vibeLabels[vibe]}`,
+        `Crowd:    ${crowdNote.trim() || "(not provided)"}`,
         `Length:   ${lengthLabel}`,
         `Schedule: ${scheduleLabel}`,
+        "",
+        "━━━ LEAD INTEL ━━━",
+        `Budget:   ${budget || "(not provided)"}`,
+        `Found us: ${foundUs || "(not provided)"}`,
         "",
         "━━━ EVENT DESCRIPTION ━━━",
         description.trim() ? description.trim() : "(not provided)",
@@ -997,6 +1061,10 @@ function LeadCapture({
           name: names,
           email,
           phone: phone || "(not provided)",
+          crowd: crowdNote.trim() || "(not provided)",
+          guests: guests.trim() || "(not provided)",
+          budget: budget || "(not provided)",
+          found_us: foundUs || "(not provided)",
           description: description.trim() || "(not provided)",
           schedule: scheduleLabel,
           message,
@@ -1051,41 +1119,80 @@ function LeadCapture({
         Reserve your date
       </p>
       <p className="font-editorial italic mt-2 text-sm sm:text-base text-savage-cream/90">
-        Drop your email and we&apos;ll send availability.
+        Tell us a bit more and we&apos;ll come back with availability and a tailored quote.
       </p>
 
       <label className="mt-4 sm:mt-5 block">
-        <span className="sr-only">Email</span>
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+          Email
+        </span>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@email.com"
-          className="w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
-        />
-      </label>
-
-      <label className="mt-3 block">
-        <span className="sr-only">Phone (optional)</span>
-        <input
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="Phone / WhatsApp (optional)"
-          className="w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
+          className="mt-2 w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
         />
       </label>
 
       <label className="mt-3 block">
         <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
-          Describe your event
+          Phone / WhatsApp{" "}
+          <span className="text-savage-white/40 normal-case tracking-normal">
+            · this is how we reach you fastest
+          </span>
+        </span>
+        <input
+          type="tel"
+          required
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="+44 7700 900000"
+          className="mt-2 w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
+        />
+      </label>
+
+      <label className="mt-3 block">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+          Guest count{" "}
+          <span className="text-savage-white/40 normal-case tracking-normal">
+            · roughly
+          </span>
+        </span>
+        <input
+          type="text"
+          inputMode="numeric"
+          value={guests}
+          onChange={(e) => setGuests(e.target.value)}
+          placeholder="e.g. 110"
+          className="mt-2 w-full rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
+        />
+      </label>
+
+      <ChipGroup
+        label="How did you find us?"
+        options={foundUsOptions}
+        value={foundUs}
+        onChange={setFoundUs}
+      />
+
+      <ChipGroup
+        label="Budget"
+        options={budgetOptions}
+        value={budget}
+        onChange={setBudget}
+      />
+
+      <label className="mt-4 block">
+        <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+          Anything else about your event?
         </span>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          placeholder="Describe here your event"
+          placeholder="Venue type, timings, must-play tracks, anything we should know."
           className="mt-2 w-full resize-y rounded-xl border border-savage-white/20 bg-savage-black px-4 py-3 text-savage-white outline-none placeholder:text-savage-white/30 focus:border-savage-yellow"
         />
       </label>
@@ -1113,6 +1220,45 @@ function LeadCapture({
         ← Start over
       </button>
     </form>
+  );
+}
+
+function ChipGroup({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: readonly string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="mt-4">
+      <span className="text-[10px] sm:text-xs uppercase tracking-[0.3em] text-savage-white/60">
+        {label}
+      </span>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {options.map((opt) => {
+          const active = opt === value;
+          return (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => onChange(active ? "" : opt)}
+              className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
+                active
+                  ? "border-savage-yellow bg-savage-yellow text-savage-ink"
+                  : "border-savage-white/25 text-savage-white/80 hover:border-savage-yellow/60 hover:text-savage-yellow"
+              }`}
+            >
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
