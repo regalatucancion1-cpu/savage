@@ -207,18 +207,6 @@ export default function PreviewExperience() {
     return await pdf(<MyShowPdf plan={plan} logoSrc={logoSrc} />).toBlob();
   }
 
-  async function blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result.split(",")[1] ?? "");
-      };
-      reader.onerror = () => reject(new Error("Failed to read PDF blob"));
-      reader.readAsDataURL(blob);
-    });
-  }
-
   function pdfFilename(): string {
     const slug = (plan.names || "show").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const dateSlug = (plan.eventDate || "").replace(/-/g, "");
@@ -249,18 +237,9 @@ export default function PreviewExperience() {
       const message = buildEmailBody(plan);
       const subject = `New show submission from ${plan.names || "(no name)"} for ${plan.eventDate ? formatDate(plan.eventDate) : "an upcoming wedding"}`;
 
-      // The PDF is a nice-to-have. If generating it fails (e.g. low memory on
-      // a phone), send the submission anyway — the band still gets every
-      // detail in the email body, and the API treats the PDF as optional.
-      let pdfBase64: string | undefined;
-      try {
-        const blob = await generatePdfBlob();
-        pdfBase64 = await blobToBase64(blob);
-      } catch (pdfErr) {
-        console.error("PDF generation failed, submitting without it", pdfErr);
-      }
-
-      // Don't let a stalled mobile network leave them stuck on "Sending…".
+      // The phone only sends the plan (a few KB). The PDF is rendered on the
+      // server, so the heavy library never runs on mobile and the request
+      // body stays small.
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 45000);
       let res: Response;
@@ -272,7 +251,7 @@ export default function PreviewExperience() {
           body: JSON.stringify({
             subject,
             message,
-            pdfBase64,
+            plan,
             pdfFilename: pdfFilename(),
             replyTo: plan.email || undefined,
           }),

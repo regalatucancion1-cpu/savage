@@ -1,5 +1,8 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
+import { createElement, type ReactElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import MyShowPdf from "../../mishow/MyShowPdf";
 
 export const runtime = "nodejs";
 
@@ -16,6 +19,8 @@ export async function POST(req: NextRequest) {
   let body: {
     subject?: string;
     message?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    plan?: any;
     pdfBase64?: string;
     pdfFilename?: string;
     replyTo?: string;
@@ -26,20 +31,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { subject, message, pdfBase64, pdfFilename, replyTo } = body;
+  const { subject, message, plan, pdfBase64, pdfFilename, replyTo } = body;
+
+  // El PDF se construye en el servidor a partir del plan para que el cliente
+  // nunca tenga que generarlo ni subirlo (menos memoria en el móvil y sin
+  // cuerpos de petición enormes). Se respeta un pdfBase64 ya generado como
+  // fallback.
+  let attachmentContent: Buffer | string | undefined = pdfBase64;
+  if (!attachmentContent && plan) {
+    try {
+      const logoSrc = new URL("/logo-savage.png", req.nextUrl.origin).href;
+      attachmentContent = await renderToBuffer(
+        createElement(MyShowPdf, { plan, logoSrc }) as ReactElement<DocumentProps>,
+      );
+    } catch (e) {
+      // El cuerpo del email lleva todos los detalles, así que enviamos sin el
+      // PDF en vez de fallar todo el envío.
+      console.error("mishow PDF render failed, sending without attachment", e);
+    }
+  }
 
   try {
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: TO_EMAIL,
       replyTo: replyTo || undefined,
-      subject: subject || "New show submission",
+      subject: subject || "Nueva petición de show",
       text: message || "",
-      attachments: pdfBase64
+      attachments: attachmentContent
         ? [
             {
-              filename: pdfFilename || "myshow.pdf",
-              content: pdfBase64,
+              filename: pdfFilename || "mishow.pdf",
+              content: attachmentContent,
             },
           ]
         : undefined,
@@ -47,7 +70,7 @@ export async function POST(req: NextRequest) {
     if (error) throw new Error(error.message || "Resend error");
     return NextResponse.json({ success: true });
   } catch (e) {
-    console.error("myshow send error", e);
+    console.error("mishow send error", e);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Send failed" },
       { status: 500 },

@@ -1,5 +1,8 @@
 import { Resend } from "resend";
 import { NextRequest, NextResponse } from "next/server";
+import { createElement, type ReactElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import MyShowPdf from "../../myshow/MyShowPdf";
 
 export const runtime = "nodejs";
 
@@ -16,6 +19,8 @@ export async function POST(req: NextRequest) {
   let body: {
     subject?: string;
     message?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    plan?: any;
     pdfBase64?: string;
     pdfFilename?: string;
     replyTo?: string;
@@ -26,7 +31,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { subject, message, pdfBase64, pdfFilename, replyTo } = body;
+  const { subject, message, plan, pdfBase64, pdfFilename, replyTo } = body;
+
+  // Build the PDF on the server from the plan so the client never has to
+  // generate or upload it (keeps mobile memory low and avoids large request
+  // bodies). A pre-rendered pdfBase64 is still honoured as a fallback.
+  let attachmentContent: Buffer | string | undefined = pdfBase64;
+  if (!attachmentContent && plan) {
+    try {
+      const logoSrc = new URL("/logo-savage.png", req.nextUrl.origin).href;
+      attachmentContent = await renderToBuffer(
+        createElement(MyShowPdf, { plan, logoSrc }) as ReactElement<DocumentProps>,
+      );
+    } catch (e) {
+      // The email body has every detail, so send without the PDF rather
+      // than failing the whole submission.
+      console.error("myshow PDF render failed, sending without attachment", e);
+    }
+  }
 
   try {
     const { error } = await resend.emails.send({
@@ -35,11 +57,11 @@ export async function POST(req: NextRequest) {
       replyTo: replyTo || undefined,
       subject: subject || "New show submission",
       text: message || "",
-      attachments: pdfBase64
+      attachments: attachmentContent
         ? [
             {
               filename: pdfFilename || "myshow.pdf",
-              content: pdfBase64,
+              content: attachmentContent,
             },
           ]
         : undefined,
