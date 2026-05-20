@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { REPERTOIRE_CATEGORIES_ES as REPERTOIRE_CATEGORIES } from "@/content/repertoire-es";
-import { pdf } from "@react-pdf/renderer";
-import MyShowPdf from "./MyShowPdf";
+
+const DRAFT_KEY = "savage-mishow-draft";
 
 const BAND_AVATARS = [
   { name: "Chris", role: "DJ + productor", initial: "C", color: "bg-savage-yellow text-savage-ink" },
@@ -147,7 +147,48 @@ export default function MiShowExperience() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [stepIdx]);
 
+  // Restaura cualquier borrador guardado en este dispositivo para que un
+  // recarga/crash nunca les devuelva al principio perdiéndolo todo.
+  const draftLoaded = useRef(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as { plan?: Partial<Plan>; stepIdx?: number };
+        if (saved.plan) setPlan({ ...INITIAL, ...saved.plan });
+        if (typeof saved.stepIdx === "number") {
+          setStepIdx(Math.min(Math.max(saved.stepIdx, 0), STEPS.length - 1));
+        }
+      }
+    } catch {
+      // borrador corrupto, lo ignoramos
+    }
+    draftLoaded.current = true;
+  }, []);
+
+  // Autoguardado en cada cambio (salta el primer render para no sobrescribir
+  // un borrador restaurado con el estado inicial vacío).
+  const firstSave = useRef(true);
+  useEffect(() => {
+    if (firstSave.current) {
+      firstSave.current = false;
+      return;
+    }
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ plan, stepIdx }));
+    } catch {
+      // almacenamiento lleno / no disponible
+    }
+  }, [plan, stepIdx]);
+
   async function generatePdfBlob(): Promise<Blob> {
+    // Se carga bajo demanda para que la librería pesada de PDF nunca entre en
+    // el bundle del formulario. Mantenerla fuera de la carga inicial es lo que
+    // evita que el navegador del móvil se quede sin memoria y recargue.
+    const [{ pdf }, { default: MyShowPdf }] = await Promise.all([
+      import("@react-pdf/renderer"),
+      import("./MyShowPdf"),
+    ]);
     const logoSrc = `${window.location.origin}/logo-savage.png`;
     return await pdf(<MyShowPdf plan={plan} logoSrc={logoSrc} />).toBlob();
   }
@@ -194,22 +235,44 @@ export default function MiShowExperience() {
       const message = buildEmailBody(plan);
       const subject = `Nueva petición de show de ${plan.names || "(sin nombre)"} para ${plan.eventDate ? formatDate(plan.eventDate) : "una boda"}`;
 
-      const blob = await generatePdfBlob();
-      const pdfBase64 = await blobToBase64(blob);
+      // El PDF es opcional. Si falla al generarse (p. ej. poca memoria en el
+      // móvil), enviamos igualmente: la banda recibe todos los detalles en el
+      // cuerpo del email y la API trata el PDF como opcional.
+      let pdfBase64: string | undefined;
+      try {
+        const blob = await generatePdfBlob();
+        pdfBase64 = await blobToBase64(blob);
+      } catch (pdfErr) {
+        console.error("Falló la generación del PDF, se envía sin él", pdfErr);
+      }
 
-      const res = await fetch("/api/mishow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subject,
-          message,
-          pdfBase64,
-          pdfFilename: pdfFilename(),
-          replyTo: plan.email || undefined,
-        }),
-      });
+      // Evita que una red móvil colgada les deje atascados en "Enviando…".
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      let res: Response;
+      try {
+        res = await fetch("/api/mishow", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            subject,
+            message,
+            pdfBase64,
+            pdfFilename: pdfFilename(),
+            replyTo: plan.email || undefined,
+          }),
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Error al enviar");
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        // ignorar
+      }
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -705,7 +768,7 @@ function WelcomeStep({ names }: { names: string }) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow font-bold mb-3">Cómo va esto</p>
         <ul className="space-y-2 text-savage-white/80 text-sm sm:text-base leading-relaxed">
           <li>· Solo banda en directo. Vosotros marcáis géneros, picks del repertorio y qué suena en los descansos.</li>
-          <li>· Unos 10 minutos del tirón. No cerréis la pestaña, no se guarda nada hasta que le deis a enviar.</li>
+          <li>· Unos 10 minutos. Vuestro progreso se guarda solo en este dispositivo, podéis parar y seguir donde lo dejasteis.</li>
           <li>· Una vez enviado, está con la banda. Solo escribimos si algo necesita aclararse.</li>
         </ul>
       </div>
@@ -1036,11 +1099,10 @@ function PanelBlock({ title, count, accent, children }: {
 function PanelSongRow({ index, title, subtitle, accent, muted }: { index: number; title: string; subtitle?: string; accent: "yellow" | "cream"; muted?: boolean }) {
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, x: 30, scale: 0.95 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: -30, scale: 0.95 }}
-      transition={{ type: "spring", damping: 22 }}
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -30 }}
+      transition={{ duration: 0.18 }}
       className={`flex items-center gap-3 rounded-lg px-3 py-2 ${
         muted
           ? "bg-savage-black/30 border border-savage-white/10"

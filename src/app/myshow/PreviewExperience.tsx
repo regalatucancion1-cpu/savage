@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { REPERTOIRE_CATEGORIES } from "@/content/repertoire";
-import { pdf } from "@react-pdf/renderer";
-import MyShowPdf from "./MyShowPdf";
+
+const DRAFT_KEY = "savage-myshow-draft";
 
 const BAND_AVATARS = [
   { name: "Chris", role: "DJ + producer", initial: "C", color: "bg-savage-yellow text-savage-ink" },
@@ -161,7 +161,48 @@ export default function PreviewExperience() {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [stepIdx]);
 
+  // Restore any draft saved on this device so a reload/crash never sends
+  // them back to the start with everything lost.
+  const draftLoaded = useRef(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as { plan?: Partial<Plan>; stepIdx?: number };
+        if (saved.plan) setPlan({ ...INITIAL, ...saved.plan });
+        if (typeof saved.stepIdx === "number") {
+          setStepIdx(Math.min(Math.max(saved.stepIdx, 0), STEPS.length - 1));
+        }
+      }
+    } catch {
+      // ignore malformed draft
+    }
+    draftLoaded.current = true;
+  }, []);
+
+  // Autosave on every change (skips the first render so it can't overwrite a
+  // restored draft with the empty initial state).
+  const firstSave = useRef(true);
+  useEffect(() => {
+    if (firstSave.current) {
+      firstSave.current = false;
+      return;
+    }
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ plan, stepIdx }));
+    } catch {
+      // storage full / unavailable — ignore
+    }
+  }, [plan, stepIdx]);
+
   async function generatePdfBlob(): Promise<Blob> {
+    // Loaded on demand so the heavy PDF library never enters the form bundle.
+    // Keeping it out of the initial load is what stops mobile tabs from
+    // running out of memory and reloading mid-form.
+    const [{ pdf }, { default: MyShowPdf }] = await Promise.all([
+      import("@react-pdf/renderer"),
+      import("./MyShowPdf"),
+    ]);
     const logoSrc = `${window.location.origin}/logo-savage.png`;
     return await pdf(<MyShowPdf plan={plan} logoSrc={logoSrc} />).toBlob();
   }
@@ -208,22 +249,44 @@ export default function PreviewExperience() {
       const message = buildEmailBody(plan);
       const subject = `New show submission from ${plan.names || "(no name)"} for ${plan.eventDate ? formatDate(plan.eventDate) : "an upcoming wedding"}`;
 
-      const blob = await generatePdfBlob();
-      const pdfBase64 = await blobToBase64(blob);
+      // The PDF is a nice-to-have. If generating it fails (e.g. low memory on
+      // a phone), send the submission anyway — the band still gets every
+      // detail in the email body, and the API treats the PDF as optional.
+      let pdfBase64: string | undefined;
+      try {
+        const blob = await generatePdfBlob();
+        pdfBase64 = await blobToBase64(blob);
+      } catch (pdfErr) {
+        console.error("PDF generation failed, submitting without it", pdfErr);
+      }
 
-      const res = await fetch("/api/myshow", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subject,
-          message,
-          pdfBase64,
-          pdfFilename: pdfFilename(),
-          replyTo: plan.email || undefined,
-        }),
-      });
+      // Don't let a stalled mobile network leave them stuck on "Sending…".
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      let res: Response;
+      try {
+        res = await fetch("/api/myshow", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            subject,
+            message,
+            pdfBase64,
+            pdfFilename: pdfFilename(),
+            replyTo: plan.email || undefined,
+          }),
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Submit failed");
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {
+        // ignore
+      }
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -810,7 +873,7 @@ function WelcomeStep({ names }: { names: string }) {
         <p className="text-[10px] uppercase tracking-[0.3em] text-savage-yellow font-bold mb-3">How this works</p>
         <ul className="space-y-2 text-savage-white/80 text-sm sm:text-base leading-relaxed">
           <li>· Two parts. <span className="text-savage-yellow font-bold">LIVE BAND</span> first, <span className="text-savage-cream font-bold">DJ SET</span> after.</li>
-          <li>· Around 10 minutes in one go. Don&rsquo;t close the tab, nothing saves until you hit send.</li>
+          <li>· Around 10 minutes. Your progress saves automatically on this device, so you can stop and pick up where you left off.</li>
           <li>· Once you submit it&rsquo;s with the band. We&rsquo;ll write to you only if something needs clarifying.</li>
         </ul>
       </div>
@@ -1266,11 +1329,10 @@ function PanelBlock({ title, count, accent, children }: {
 function PanelSongRow({ index, title, subtitle, accent, muted }: { index: number; title: string; subtitle?: string; accent: "yellow" | "cream"; muted?: boolean }) {
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, x: 30, scale: 0.95 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: -30, scale: 0.95 }}
-      transition={{ type: "spring", damping: 22 }}
+      initial={{ opacity: 0, x: 30 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -30 }}
+      transition={{ duration: 0.18 }}
       className={`flex items-center gap-3 rounded-lg px-3 py-2 ${
         muted
           ? "bg-savage-black/30 border border-savage-white/10"
